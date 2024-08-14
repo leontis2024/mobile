@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="branco">#FBEDE7</color>
+    <color name="bege_claro">#F5DED4</color>
+    <color name="bege_escuro">#EEB08C</color>
+    <color name="laranja">#A1562D</color>
+    <color name="vinho_claro">#7C3939</color>
+    <color name="vinho_escuro">#683131</color>
+    <color name="preto">#282525</color>
+    <color name="hint">#888888</color>
 </resources>
