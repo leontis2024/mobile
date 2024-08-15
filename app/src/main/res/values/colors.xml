@@ -4,6 +4,8 @@
     <color name="bege_claro">#F5DED4</color>
     <color name="bege_escuro">#EEB08C</color>
     <color name="laranja">#A1562D</color>
+    <color name="vermelho_erro">#B93030</color>
+    <color name="vermelho_erro_hint">#80B93030</color>
     <color name="vinho_claro">#7C3939</color>
     <color name="vinho_escuro">#683131</color>
     <color name="preto">#282525</color>
