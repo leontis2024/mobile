@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Leontis</string>
+    <string name="app_name_upper_case">LEONTIS</string>
+    <string-array name="sexo_array">
+        <item>Selecione seu gênero</item>
+        <item>Feminino</item>
+        <item>Masculino</item>
+        <item>Não binário</item>
+        <item>Outro</item>
+    </string-array>
 </resources>

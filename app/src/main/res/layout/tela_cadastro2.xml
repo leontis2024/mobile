@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bege_claro"
+    tools:context=".TelaCadastro2">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="Queremos te conhecer melhor"
+        android:textAlignment="center"
+        android:textColor="@color/preto"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/apelido_cadastro"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
+        android:background="@drawable/input"
+        android:ems="10"
+        android:fontFamily="@font/inter"
+        android:hint="Apelido"
+        android:inputType="text"
+        android:textColorHint="@color/hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <Spinner
+        android:id="@+id/sexo_cadastro"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_apelido" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Para que você tenha a melhor experiencia dentro do Leontis, precisamos te conhecer melhor"
+        android:textAlignment="center"
+        android:textColor="@color/cinza"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/info_apelido"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="O apelido é para o caso de você preferir ser chamado de um jeito diferente de seu nome"
+        android:textAlignment="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/apelido_cadastro" />
+
+    <EditText
+        android:id="@+id/biografia_cadastro"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/input"
+        android:ems="10"
+        android:fontFamily="@font/inter"
+        android:gravity="start|top"
+        android:hint="Fale um pouco sobre você"
+        android:inputType="text|textMultiLine"
+        android:textAlignment="textStart"
+        android:textColorHint="@color/hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/erro_sexo" />
+
+    <TextView
+        android:id="@+id/erro_sexo"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="TextView"
+        android:textAlignment="textStart"
+        android:textColor="@color/vermelho_erro"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sexo_cadastro" />
+
+    <Button
+        android:id="@+id/btn_continuar"
+        android:layout_width="160dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="70dp"
+        android:background="@drawable/botao"
+        android:fontFamily="@font/lexend_exa"
+        android:text="Continuar"
+        android:textColor="@color/branco"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/biografia_cadastro" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
