@@ -13,10 +13,19 @@
         android:theme="@style/Theme.Leontis"
         tools:targetApi="31">
         <activity
-            android:name=".TelaLogin"
+            android:name=".TelaCadastroInteresses"
             android:exported="false" />
         <activity
             android:name=".TelaSplashScreen"
+            android:exported="false" />
+        <activity
+            android:name=".TelaCadastro"
+            android:exported="false" />
+        <activity
+            android:name=".TelaLogin"
+            android:exported="false" />
+        <activity
+            android:name=".TelaCadastro2"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

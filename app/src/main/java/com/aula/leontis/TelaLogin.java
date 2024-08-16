@@ -16,7 +16,7 @@ import android.widget.Toast;
 public class TelaLogin extends AppCompatActivity {
     Button entrar;
     EditText email,senha;
-    TextView errorEmail, errorSenha;
+    TextView errorEmail, errorSenha, cadastro;
 
     String[] emailTeste = {"samira.campos@germinare.org.br","ana.romera@germinare.org.br"};
     String[] senhaTeste  = {"samira","12345678@"};
@@ -31,6 +31,16 @@ public class TelaLogin extends AppCompatActivity {
         senha = findViewById(R.id.senha_login);
         errorEmail = findViewById(R.id.erro_email);
         errorSenha = findViewById(R.id.erro_senha);
+        cadastro = findViewById(R.id.cadastrar);
+
+        cadastro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent telCadastro = new Intent(TelaLogin.this, TelaCadastro.class);
+                startActivity(telCadastro);
+                finish();
+            }
+        });
 
 
         entrar.setOnClickListener(new View.OnClickListener() {
