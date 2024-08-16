@@ -55,6 +55,7 @@ public class TelaCadastro extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Boolean erro = false;
+                //verificando se os input estão vazios, se sim da erro
                 if(nome.getText().toString()==null || nome.getText().toString().equals("")){
                     erroInput("Digite seu nome",erroNome,nome);
                     erro = true;
@@ -73,6 +74,7 @@ public class TelaCadastro extends AppCompatActivity {
                     erroInput("Digite seu e-mail",erroEmail,email);
                     erro = true;
                 }else if(!emailValido(email.getText().toString())) {
+                    //verificando se o e-mail é válido
                     erroInput("Digite um e-mail válido", erroEmail, email);
                     erro = true;
                 }else{
@@ -100,6 +102,7 @@ public class TelaCadastro extends AppCompatActivity {
                     erro = false;
                 }
                 if(!erro){
+                    //caso não de erro, cria um bundle com as informações de login e passa para a tela de cadastro2
                     Bundle infoCadastro = new Bundle();
                     infoCadastro.putString("nome",nome.getText().toString());
                     infoCadastro.putString("sobrenome",sobrenome.getText().toString());
@@ -117,6 +120,7 @@ public class TelaCadastro extends AppCompatActivity {
             }
         });
 
+        //configurando o calendário
         btCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,9 +144,11 @@ public class TelaCadastro extends AppCompatActivity {
             }
         });
     }
+    //verifica se o e-mail é válido
     public boolean emailValido(String emailString) {
         return emailString != null && Patterns.EMAIL_ADDRESS.matcher(emailString).matches();
     }
+    //mostra mensagem de erro
     public void erroInput(String mensagem, TextView texto, EditText input){
         input.setBackground(ContextCompat.getDrawable(TelaCadastro.this, R.drawable.input_erro));
         input.setHintTextColor(ContextCompat.getColor(TelaCadastro.this, R.color.vermelho_erro_hint));
@@ -150,6 +156,7 @@ public class TelaCadastro extends AppCompatActivity {
         texto.setText(mensagem);
         texto.setVisibility(View.VISIBLE);
     }
+    //oculta mensagem de erro
     public void semErroInput(TextView erro, EditText input){
         input.setBackground(ContextCompat.getDrawable(TelaCadastro.this, R.drawable.input));
         input.setHintTextColor(ContextCompat.getColor(TelaCadastro.this, R.color.hint));

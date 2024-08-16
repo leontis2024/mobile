@@ -16,7 +16,7 @@
             android:name=".TelaCadastroInteresses"
             android:exported="false" />
         <activity
-            android:name=".TelaSplashScreen"
+            android:name=".TelaCadastro2"
             android:exported="false" />
         <activity
             android:name=".TelaCadastro"
@@ -25,7 +25,7 @@
             android:name=".TelaLogin"
             android:exported="false" />
         <activity
-            android:name=".TelaCadastro2"
+            android:name=".TelaSplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

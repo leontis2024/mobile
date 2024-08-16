@@ -14,6 +14,7 @@ public class TelaSplashScreen extends AppCompatActivity {
         setContentView(R.layout.tela_splash_screen);
 
         Handler handler = new Handler();
+        //Esperando 3 segundos para abrir a tela de login
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

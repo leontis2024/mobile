@@ -12,6 +12,7 @@ public class TelaCadastroInteresses extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_cadastro_interesses);
 
+        //pegando informações de cadastro das telas anteriores
         Intent infoCadastro = getIntent();
         String nome = infoCadastro.getStringExtra("nome");
         String sobrenome = infoCadastro.getStringExtra("sobrenome");

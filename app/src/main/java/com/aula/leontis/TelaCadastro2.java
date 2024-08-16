@@ -36,6 +36,7 @@ public class TelaCadastro2 extends AppCompatActivity {
 
         continuar = findViewById(R.id.btn_continuar);
 
+        //pegando informações do cadastro da tela anterior
         Intent infoCadastro = getIntent();
 
         String nome = infoCadastro.getStringExtra("nome");
@@ -46,6 +47,7 @@ public class TelaCadastro2 extends AppCompatActivity {
         String senha = infoCadastro.getStringExtra("senha");
 
 
+        //adapter para configurar o spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sexo_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -55,6 +57,7 @@ public class TelaCadastro2 extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
+                //verifica se o gênero foi selecionado e não o hint
                 if(selectedItem.equals("Selecione seu gênero")){
                     generoValido = false;
                 }else{
@@ -64,13 +67,14 @@ public class TelaCadastro2 extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Nada selecionado
+                generoValido = false;
             }
         });
 
           continuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //verificando se o gênero foi selecionado, se não, da erro
                 if(sexo.getSelectedItem().toString().equals("Selecione seu gênero")){
                     erroInput("Selecione seu gênero",erroSexo,sexo);
                     generoValido=false;
@@ -79,6 +83,7 @@ public class TelaCadastro2 extends AppCompatActivity {
                     generoValido=true;
                 }
                 if(generoValido){
+                    //passando as informações de cadastro para a tela de interesses
                     Bundle infoCadastro2 = new Bundle();
                     infoCadastro2.putString("nome",nome);
                     infoCadastro2.putString("sobrenome",sobrenome);
@@ -99,6 +104,7 @@ public class TelaCadastro2 extends AppCompatActivity {
         });
 
     }
+    //mostra mensagem de erro
     public void erroInput(String mensagem, TextView texto, Spinner input){
         input.setBackground(ContextCompat.getDrawable(TelaCadastro2.this, R.drawable.input_erro));
         //input.setHintTextColor(ContextCompat.getColor(TelaCadastro2.this, R.color.vermelho_erro_hint));
@@ -106,6 +112,7 @@ public class TelaCadastro2 extends AppCompatActivity {
         texto.setText(mensagem);
         texto.setVisibility(View.VISIBLE);
     }
+    //oculta mensagem de erro
     public void semErroInput(TextView erro, Spinner input){
         input.setBackground(ContextCompat.getDrawable(TelaCadastro2.this, R.drawable.input));
       //  input.setHintTextColor(ContextCompat.getColor(TelaCadastro2.this, R.color.hint));
