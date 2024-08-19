@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,18 @@ public class TelaCadastroInteresses extends AppCompatActivity {
         listaGeneros.add(new Genero(1,"Ação", true,"Ação e aventura."));
         listaGeneros.add(new Genero(2,"Aventura", false,"Aventuraaaaa."));
         listaGeneros.add(new Genero(3,"Comedia", false,"Comediaaaaa."));
-        listaGeneros.add(new Genero(4,"Drama", false,"Dramaaaaa."));
+        listaGeneros.add(new Genero(4,"Drama", true,"Dramaaaaa."));
         listaGeneros.add(new Genero(5,"Ficcao Cientifica", false,"Ficcao Cientificaaaaaa."));
-        listaGeneros.add(new Genero(6,"Romance", false,"Romanceeeeee."));
+        listaGeneros.add(new Genero(6,"Romance", true,"Romanceeeeee."));
 
         rvGeneros.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
 
+        List<Genero> listaGenerosInteressados = new ArrayList<>();
+        for(Genero genero : listaGeneros){
+            if(genero.getCheckInteresse()){
+                listaGenerosInteressados.add(genero);
+            }
+        }
 
         //pegando informações de cadastro das telas anteriores
         Intent infoCadastro = getIntent();
@@ -42,8 +49,9 @@ public class TelaCadastroInteresses extends AppCompatActivity {
         String apelido = infoCadastro.getStringExtra("apelido");
         String biografia = infoCadastro.getStringExtra("biografia");
         String sexo = infoCadastro.getStringExtra("sexo");
-
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            List<Genero> generos = infoCadastro.getParcelableArrayListExtra("listaGenerosInteressados", Genero.class);
+        }
 
 
     }
