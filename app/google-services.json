@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "68734369776",
+    "project_id": "leontisfotos",
+    "storage_bucket": "leontisfotos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68734369776:android:84442406a04acdee10a735",
+        "android_client_info": {
+          "package_name": "com.aula.leontis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKC1ebk9l_L39CoLfYoePImaxHmmiqTTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

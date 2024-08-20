@@ -64,7 +64,7 @@ public class TelaCadastroInteresses extends AppCompatActivity {
         infos.putString("apelido", apelido);
         infos.putString("biografia", biografia);
         infos.putString("sexo", sexo);
-        infos.putParcelableArrayList("listaGenerosInteressados", (ArrayList<? extends Parcelable>) listaGenerosInteressados);
+//        infos.putParcelableArrayList("listaGenerosInteressados", Genero.class);
 
         Intent telaFotoPerfil = new Intent(TelaCadastroInteresses.this, TelaCadastroFotoPerfil.class);
         telaFotoPerfil.putExtras(infos);
