@@ -44,11 +44,13 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
         titulo = findViewById(R.id.textView8);
         descricao = findViewById(R.id.textView9);
 
+        //abrindo galeria
         btnAbrirGaleria.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             resultLauncherGaleria.launch(intent);
         });
     }
+    //Activity result para abrir a galeria
     private ActivityResultLauncher<Intent> resultLauncherGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -56,18 +58,21 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                 if(imagemUri != null){
                     btnAbrirGaleria.setVisibility(View.INVISIBLE);
                     fotoPerfil.setVisibility(View.VISIBLE);
+                    //Glide para carregar a imagem no firebase
                     Glide.with(this)
                             .load(imagemUri)
                             .circleCrop()
                             .into(new SimpleTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    // Aqui você pode acessar o Drawable e convertê-lo em Bitmap
+                                    // acessar o Drawable e convertê-lo em Bitmap
                                     Bitmap bitmap = drawableToBitmap(resource);
-                                    // Agora você pode fazer o upload do Bitmap para o Firebase Storage
+                                    // upload do Bitmap para o Firebase Storage
                                     dataBaseFotos.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, "12345");
                                 }
                             });
+
+                    //Glide para carregar a imagem na tela
                     Glide.with(this)
                             .load(imagemUri)
                             .circleCrop()
@@ -75,8 +80,11 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                     titulo.setText("Tudo pronto!");
                     descricao.setText("Uh lá lá, bela foto");
                     Toast.makeText(this, "Aguarde enquanto fazemos upload da sua foto", Toast.LENGTH_SHORT).show();
+
+
                     Handler handler = new Handler();
-                    //Esperando 3 segundos para abrir a tela de login
+
+                    //Esperando 6 segundos para abrir a tela de bem-vindo
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -88,10 +96,12 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 }
                             });
                         }
-                    }, 5000);
+                    }, 6000);
 
                 }
             });
+
+    //método que converte uma imagem em Bitmap
     private Bitmap drawableToBitmap(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();

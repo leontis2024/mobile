@@ -32,6 +32,7 @@ public class TelaCadastroInteresses extends AppCompatActivity {
 
         rvGeneros.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
 
+        //Pegando os generos de interesse
         List<Genero> listaGenerosInteressados = new ArrayList<>();
         for(Genero genero : listaGeneros){
             if(genero.getCheckInteresse()){

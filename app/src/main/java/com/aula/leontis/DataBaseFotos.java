@@ -16,8 +16,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-
+//Classe para manipulação de imagem do firebase storage
 public class DataBaseFotos {
+    //Método para subir a foto de perfil do usuário no firebase
     public void subirFotoUsuario(Context c, Bitmap foto, String idUser) {
         // Verifique se o ImageView contém uma imagem
         if (foto == null) {
