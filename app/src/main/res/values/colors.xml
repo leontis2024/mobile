@@ -7,6 +7,7 @@
     <color name="vermelho_erro">#B93030</color>
     <color name="vermelho_erro_hint">#80B93030</color>
     <color name="vinho_claro">#7C3939</color>
+    <color name="vinho_claro_baixa_opacidade">#807C3939</color>
     <color name="vinho_escuro">#683131</color>
     <color name="preto">#282525</color>
     <color name="cinza">#5C5C5C</color>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bege_claro"
+    tools:context=".TelaCadastroFotoPerfil">
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:fontFamily="@font/inter"
+        android:text="Escolha uma foto"
+        android:textAlignment="center"
+        android:textColor="@color/preto"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/inter"
+        android:text="Estamos quase lá...Por que não deixar seu perfil com a sua cara?"
+        android:textAlignment="center"
+        android:textColor="@color/preto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <Button
+        android:id="@+id/btn_continuar_foto_perfil"
+        android:layout_width="160dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/botao_inativo"
+        android:fontFamily="@font/lexend_exa"
+        android:text="Continuar"
+        android:textColor="@color/branco"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_abrir_galeria" />
+
+    <ImageView
+        android:id="@+id/imagem_perfil"
+        android:layout_width="270dp"
+        android:layout_height="270dp"
+        android:layout_marginTop="60dp"
+        android:scaleType="centerCrop"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/btn_abrir_galeria"
+        android:layout_width="270dp"
+        android:layout_height="270dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/redondo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:srcCompat="@drawable/ic_camera" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
