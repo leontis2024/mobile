@@ -61,14 +61,13 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                     //Glide para carregar a imagem no firebase
                     Glide.with(this)
                             .load(imagemUri)
-                            .circleCrop()
                             .into(new SimpleTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                                     // acessar o Drawable e convertê-lo em Bitmap
                                     Bitmap bitmap = drawableToBitmap(resource);
                                     // upload do Bitmap para o Firebase Storage
-                                    dataBaseFotos.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, "12345");
+                                    dataBaseFotos.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, "12347");
                                 }
                             });
 
@@ -92,7 +91,9 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                             btnContinuar.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(TelaCadastroFotoPerfil.this, "Deu bom", Toast.LENGTH_SHORT).show();
+                                    Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
+                                    startActivity(telBemVindo);
+                                    finish();
                                 }
                             });
                         }

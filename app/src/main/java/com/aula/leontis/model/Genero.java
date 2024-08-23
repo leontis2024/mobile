@@ -1,4 +1,4 @@
-package com.aula.leontis;
+package com.aula.leontis.model;
 
 public class Genero {
     private long id;

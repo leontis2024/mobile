@@ -1,8 +1,6 @@
-package com.aula.leontis;
+package com.aula.leontis.adapter;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
-import static com.google.android.material.resources.MaterialResources.getDrawable;
 
 import android.app.Dialog;
 import android.view.LayoutInflater;
@@ -15,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.aula.leontis.R;
+import com.aula.leontis.model.Genero;
 
 import java.util.List;
 
@@ -71,6 +71,7 @@ public class AdapterGenero extends RecyclerView.Adapter<AdapterGenero.viewHolder
                 dialog.getWindow().setLayout(WRAP_CONTENT,WRAP_CONTENT);
                 dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
                 dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(true);
 
                 TextView titulo = dialog.findViewById(R.id.titulo);
                 TextView introducao = dialog.findViewById(R.id.mensagem);

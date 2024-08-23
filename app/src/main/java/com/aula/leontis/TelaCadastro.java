@@ -57,15 +57,20 @@ public class TelaCadastro extends AppCompatActivity {
                 //verificando se os input estão vazios, se sim da erro
                 if(nome.getText().toString()==null || nome.getText().toString().equals("")){
                     erroInput("Digite seu nome",erroNome,nome);
+                }else if(nome.getText().length() < 3 || nome.getText().length() > 100){
+                    erroInput("O nome deve ter mais que 3 caracteres e menos que 100",erroNome,nome);
                 }else{
                     semErroInput(erroNome,nome);
                 }
 
                 if(sobrenome.getText().toString()==null || sobrenome.getText().toString().equals("")){
                     erroInput("Digite seu sobrenome",erroSobrenome,sobrenome);
+                }else if(sobrenome.getText().length() < 3 || sobrenome.getText().length() > 100){
+                    erroInput("O sobrenome deve ter mais que 3 caracteres e menos que 100",erroSobrenome,sobrenome);
                 }else{
                     semErroInput(erroSobrenome,sobrenome);
                 }
+
                 if(email.getText().toString()==null || email.getText().toString().equals("")) {
                     erroInput("Digite seu e-mail",erroEmail,email);
                 }else if(!emailValido(email.getText().toString())) {
@@ -77,7 +82,10 @@ public class TelaCadastro extends AppCompatActivity {
 
                 if(telefone.getText().toString()==null || telefone.getText().toString().equals("")){
                     erroInput("Digite seu telefone",erroTelefone,telefone);
-                }else{
+                }else if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
+                    erroInput("Digite o telefone sem espaços e com o DDD",erroTelefone,telefone);
+                }
+                else{
                     semErroInput(erroTelefone,telefone);
                 }
 
@@ -89,6 +97,8 @@ public class TelaCadastro extends AppCompatActivity {
 
                 if(senha.getText().toString()==null || senha.getText().toString().equals("")){
                     erroInput("Digite sua senha",erroSenha,senha);
+                }else if(senha.getText().length()<5 || senha.getText().length()>20){
+                    erroInput("A senha deve ter no mínimo 5 caracteres e no máximo 20",erroSenha,senha);
                 }else{
                     semErroInput(erroSenha,senha);
                 }
@@ -148,21 +158,60 @@ public class TelaCadastro extends AppCompatActivity {
         if(nome.getBackground().equals(R.drawable.input_erro)){
             nomeValido = false;
         }
+        if(nome.getText().toString().equals("")){
+            nomeValido = false;
+        }
+        if(nome.getText().length() < 3 || nome.getText().length() > 100) {
+            nomeValido = false;
+        }
+
         if(sobrenome.getBackground().equals(R.drawable.input_erro)){
             sobrenomeValido = false;
         }
+        if(sobrenome.getText().toString().equals("")){
+            sobrenomeValido = false;
+        }
+        if(sobrenome.getText().length() < 3 || sobrenome.getText().length() > 100){
+            sobrenomeValido = false;
+        }
+
         if(email.getBackground().equals(R.drawable.input_erro)){
             emailValido = false;
         }
+        if(email.getText().toString().equals("")){
+            emailValido = false;
+        }
+        if(!emailValido(email.getText().toString())){
+            emailValido = false;
+        }
+
         if(telefone.getBackground().equals(R.drawable.input_erro)){
             telefoneValido = false;
         }
+        if(telefone.getText().toString().equals("")){
+            telefoneValido = false;
+        }
+        if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
+            telefoneValido = false;
+        }
+
         if(dtNasc.getBackground().equals(R.drawable.input_erro)){
             dtNascValido = false;
         }
+        if(dtNasc.getText().toString().equals("")){
+            dtNascValido = false;
+        }
+
         if(senha.getBackground().equals(R.drawable.input_erro)){
             senhaValido = false;
         }
+        if(senha.getText().toString().equals("")){
+            senhaValido = false;
+        }
+        if(senha.getText().length()<5 || senha.getText().length()>20){
+            senhaValido = false;
+        }
+
         return nomeValido && sobrenomeValido && emailValido && telefoneValido && dtNascValido && senhaValido;
     }
 
