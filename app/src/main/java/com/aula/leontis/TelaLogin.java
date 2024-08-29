@@ -1,10 +1,12 @@
 package com.aula.leontis;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,19 +15,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+
 public class TelaLogin extends AppCompatActivity {
     Button entrar;
     EditText email,senha;
-    TextView errorEmail, errorSenha, cadastro;
-
-    //e-mails e senhas de teste
-    String[] emailTeste = {"samira.campos@germinare.org.br","ana.romera@germinare.org.br"};
-    String[] senhaTeste  = {"samira","12345678@"};
+    TextView errorEmail, errorSenha, cadastro, erroGeral;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_login);
+
+        verificarUsuarioLogado();
 
         entrar = findViewById(R.id.btn_entrar);
         email = findViewById(R.id.email_login);
@@ -33,6 +40,7 @@ public class TelaLogin extends AppCompatActivity {
         errorEmail = findViewById(R.id.erro_email);
         errorSenha = findViewById(R.id.erro_senha);
         cadastro = findViewById(R.id.cadastrar);
+        erroGeral = findViewById(R.id.erro_geral);
 
         cadastro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,37 +56,44 @@ public class TelaLogin extends AppCompatActivity {
         entrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Boolean erro = false;
+                boolean erroEmail = false;
+                boolean erroSenha= false;
 
                 // Verificando se o e-mail é válido
-                if (emailValido(email.getText().toString())) {
-                    // E-mail é válido, sem erro
-                    if(email.getText().toString().equals(emailTeste[0]) || email.getText().toString().equals(emailTeste[1])){
+                if(email.getText().toString()==null || email.getText().toString().equals("")){
+                    erroInput("Digite seu e-mail",errorEmail,email);
+                    erroEmail = true;
+
+                }else{
+                    if (emailValido(email.getText().toString())) {
                         semErroInput(errorEmail,email);
-                        erro = false;
-                    }else{
-                        // E-mail inválido, erro
-                        erroInput("Não há uma conta vinculada a esse e-mail",errorEmail,email);
-                        erro = true;
+                        erroEmail = false;
+                    } else {
+                        // E-mail é inválido, erro
+                        erroInput("E-mail inválido",errorEmail,email);
+                        erroEmail = true;
                     }
-                } else {
-                    // E-mail é inválido, erro
-                    erroInput("E-mail inválido",errorEmail,email);
-                    erro = true;
                 }
 
+
                 //verificando se o e-mail e a senha estão entre os de teste
-                if((senha.getText().toString().equals(senhaTeste[0]) && email.getText().toString().equals(emailTeste[0]))|| (senha.getText().toString().equals(senhaTeste[1]) && email.getText().toString().equals(emailTeste[1]))){
-                    semErroInput(errorSenha,senha);
-                    erro = false;
-                }else{
+                if(senha.getText().toString()==null || senha.getText().toString().equals("")){
+                    erroInput("Digite sua senha",errorSenha,senha);
+                    erroSenha = true;
+                }else if(senha.getText().length() < 6 || senha.getText().length() > 20) {
                     erroInput("Senha inválida",errorSenha,senha);
-                    erro = true;
+                    erroSenha = true;
+                }
+                else{
+                    semErroInput(errorSenha,senha);
+                    erroSenha = false;
                 }
                 //leva para a tela do feed
-                if(!erro){
-                    Toast.makeText(TelaLogin.this, "Leva para o feed", Toast.LENGTH_SHORT).show();
+                if(!erroEmail && !erroSenha){
+                    fazerAutenticacao(email.getText().toString(), senha.getText().toString());
                 }
+
+
 
             }
         });
@@ -99,6 +114,42 @@ public class TelaLogin extends AppCompatActivity {
         input.setBackground(ContextCompat.getDrawable(TelaLogin.this, R.drawable.input));
         input.setHintTextColor(ContextCompat.getColor(TelaLogin.this, R.color.hint));
         erro.setVisibility(View.INVISIBLE);
+    }
+    public void fazerAutenticacao(String emailStr, String senhaStr){
+        FirebaseAuth autenticar = FirebaseAuth.getInstance();
+        autenticar.signInWithEmailAndPassword(emailStr, senhaStr)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        String msg="Não foi possível efetuar sua autenticação";
+                        if (task.isSuccessful()) {
+                            //redirecionar para a proxima tela
+                            erroGeral.setVisibility(View.INVISIBLE);
+                            Intent main = new Intent(TelaLogin.this, TelaBemVindo.class);
+                            startActivity(main);
+                            finish();
+                        }else{
+                            try{
+                                throw task.getException();
+                            }catch (FirebaseAuthInvalidCredentialsException e) {
+                                msg="Email ou Senha inválidos";
+                            }catch (Exception e){
+                                Log.e("ERRO",e.getMessage());
+
+                            }
+                            erroGeral.setText(msg);
+                            erroGeral.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+    }
+    public void verificarUsuarioLogado(){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if(auth.getCurrentUser() != null){
+            Intent feed = new Intent(TelaLogin.this, TelaBemVindo.class);
+            startActivity(feed);
+            finish();
+        }
     }
 
 }

@@ -1,11 +1,13 @@
 package com.aula.leontis;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Patterns;
@@ -16,6 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 
@@ -54,67 +60,67 @@ public class TelaCadastro extends AppCompatActivity {
         continuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Boolean erro = false;
                 //verificando se os input estão vazios, se sim da erro
                 if(nome.getText().toString()==null || nome.getText().toString().equals("")){
                     erroInput("Digite seu nome",erroNome,nome);
-                    erro = true;
+                }else if(nome.getText().length() < 3 || nome.getText().length() > 100){
+                    erroInput("O nome deve ter mais que 3 caracteres e menos que 100",erroNome,nome);
                 }else{
                     semErroInput(erroNome,nome);
-                    erro = false;
                 }
+
                 if(sobrenome.getText().toString()==null || sobrenome.getText().toString().equals("")){
                     erroInput("Digite seu sobrenome",erroSobrenome,sobrenome);
-                    erro = true;
+                }else if(sobrenome.getText().length() < 3 || sobrenome.getText().length() > 100){
+                    erroInput("O sobrenome deve ter mais que 3 caracteres e menos que 100",erroSobrenome,sobrenome);
                 }else{
                     semErroInput(erroSobrenome,sobrenome);
-                    erro = false;
                 }
+
                 if(email.getText().toString()==null || email.getText().toString().equals("")) {
                     erroInput("Digite seu e-mail",erroEmail,email);
-                    erro = true;
                 }else if(!emailValido(email.getText().toString())) {
                     //verificando se o e-mail é válido
                     erroInput("Digite um e-mail válido", erroEmail, email);
-                    erro = true;
                 }else{
                     semErroInput(erroEmail,email);
-                    erro = false;
                 }
+
                 if(telefone.getText().toString()==null || telefone.getText().toString().equals("")){
                     erroInput("Digite seu telefone",erroTelefone,telefone);
-                    erro = true;
+                }else if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
+                    erroInput("Digite o telefone com o DDD sem espaços",erroTelefone,telefone);
                 }else{
                     semErroInput(erroTelefone,telefone);
-                    erro = false;
                 }
+
                 if(dtNasc.getText().toString()==null || dtNasc.getText().toString().equals("")){
                     erroInput("Digite sua data de nascimento",erroDtNasc,dtNasc);
-                    erro = true;
                 }else{
                     semErroInput(erroDtNasc,dtNasc);
-                    erro = false;
                 }
+
                 if(senha.getText().toString()==null || senha.getText().toString().equals("")){
                     erroInput("Digite sua senha",erroSenha,senha);
+                }else if(senha.getText().length()<6 || senha.getText().length()>20){
+                    erroInput("A senha deve ter no mínimo 6 caracteres e no máximo 20",erroSenha,senha);
                 }else{
                     semErroInput(erroSenha,senha);
-                    erro = false;
                 }
-                if(!erro){
+
+                if(informacoesValidas()){
                     //caso não de erro, cria um bundle com as informações de login e passa para a tela de cadastro2
                     Bundle infoCadastro = new Bundle();
                     infoCadastro.putString("nome",nome.getText().toString());
                     infoCadastro.putString("sobrenome",sobrenome.getText().toString());
                     infoCadastro.putString("email",email.getText().toString());
                     infoCadastro.putString("dtNasc",dtNasc.getText().toString());
-                    infoCadastro.putString("tel",telefone.getText().toString());
+                    infoCadastro.putString("tel",formatarNumero(telefone.getText().toString()));
                     infoCadastro.putString("senha",senha.getText().toString());
 
                     Intent telaCadastro2 = new Intent(TelaCadastro.this, TelaCadastro2.class);
                     telaCadastro2.putExtras(infoCadastro);
                     startActivity(telaCadastro2);
-                    finish();
                 }
 
             }
@@ -144,6 +150,75 @@ public class TelaCadastro extends AppCompatActivity {
             }
         });
     }
+    //Verifica se todos os campos estão sem erro
+    public boolean informacoesValidas(){
+        boolean nomeValido = true;
+        boolean sobrenomeValido = true;
+        boolean emailValido = true;
+        boolean telefoneValido = true;
+        boolean dtNascValido = true;
+        boolean senhaValido = true;
+
+        if(nome.getBackground().equals(R.drawable.input_erro)){
+            nomeValido = false;
+        }
+        if(nome.getText().toString().equals("")){
+            nomeValido = false;
+        }
+        if(nome.getText().length() < 3 || nome.getText().length() > 100) {
+            nomeValido = false;
+        }
+
+        if(sobrenome.getBackground().equals(R.drawable.input_erro)){
+            sobrenomeValido = false;
+        }
+        if(sobrenome.getText().toString().equals("")){
+            sobrenomeValido = false;
+        }
+        if(sobrenome.getText().length() < 3 || sobrenome.getText().length() > 100){
+            sobrenomeValido = false;
+        }
+
+        if(email.getBackground().equals(R.drawable.input_erro)){
+            emailValido = false;
+        }
+        if(email.getText().toString().equals("")){
+            emailValido = false;
+        }
+        if(!emailValido(email.getText().toString())){
+            emailValido = false;
+        }
+
+        if(telefone.getBackground().equals(R.drawable.input_erro)){
+            telefoneValido = false;
+        }
+        if(telefone.getText().toString().equals("")){
+            telefoneValido = false;
+        }
+        if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
+            telefoneValido = false;
+        }
+
+        if(dtNasc.getBackground().equals(R.drawable.input_erro)){
+            dtNascValido = false;
+        }
+        if(dtNasc.getText().toString().equals("")){
+            dtNascValido = false;
+        }
+
+        if(senha.getBackground().equals(R.drawable.input_erro)){
+            senhaValido = false;
+        }
+        if(senha.getText().toString().equals("")){
+            senhaValido = false;
+        }
+        if(senha.getText().length()<6|| senha.getText().length()>20){
+            senhaValido = false;
+        }
+
+        return nomeValido && sobrenomeValido && emailValido && telefoneValido && dtNascValido && senhaValido;
+    }
+
     //verifica se o e-mail é válido
     public boolean emailValido(String emailString) {
         return emailString != null && Patterns.EMAIL_ADDRESS.matcher(emailString).matches();
@@ -162,4 +237,16 @@ public class TelaCadastro extends AppCompatActivity {
         input.setHintTextColor(ContextCompat.getColor(TelaCadastro.this, R.color.hint));
         erro.setVisibility(View.INVISIBLE);
     }
+
+    public String formatarNumero(String phoneNumber) {
+        // Formata o número
+        String formato = String.format("(%s) %s-%s",
+                phoneNumber.substring(0, 2),    // DDD
+                phoneNumber.substring(2, 7),    // Parte do número antes do hífen
+                phoneNumber.substring(7));      // Parte do número depois do hífen
+        return formato;
+    }
+
+
+
 }

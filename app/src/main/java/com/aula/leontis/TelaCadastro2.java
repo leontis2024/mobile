@@ -98,7 +98,6 @@ public class TelaCadastro2 extends AppCompatActivity {
                     Intent telaCadastroInteresses = new Intent(TelaCadastro2.this, TelaCadastroInteresses.class);
                     telaCadastroInteresses.putExtras(infoCadastro2);
                     startActivity(telaCadastroInteresses);
-                    finish();
                 }
             }
         });
