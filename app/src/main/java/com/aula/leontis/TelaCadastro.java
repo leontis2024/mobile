@@ -1,11 +1,13 @@
 package com.aula.leontis;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Patterns;
@@ -16,6 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 
@@ -83,9 +89,8 @@ public class TelaCadastro extends AppCompatActivity {
                 if(telefone.getText().toString()==null || telefone.getText().toString().equals("")){
                     erroInput("Digite seu telefone",erroTelefone,telefone);
                 }else if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
-                    erroInput("Digite o telefone sem espaços e com o DDD",erroTelefone,telefone);
-                }
-                else{
+                    erroInput("Digite o telefone com o DDD sem espaços",erroTelefone,telefone);
+                }else{
                     semErroInput(erroTelefone,telefone);
                 }
 
@@ -97,8 +102,8 @@ public class TelaCadastro extends AppCompatActivity {
 
                 if(senha.getText().toString()==null || senha.getText().toString().equals("")){
                     erroInput("Digite sua senha",erroSenha,senha);
-                }else if(senha.getText().length()<5 || senha.getText().length()>20){
-                    erroInput("A senha deve ter no mínimo 5 caracteres e no máximo 20",erroSenha,senha);
+                }else if(senha.getText().length()<6 || senha.getText().length()>20){
+                    erroInput("A senha deve ter no mínimo 6 caracteres e no máximo 20",erroSenha,senha);
                 }else{
                     semErroInput(erroSenha,senha);
                 }
@@ -110,13 +115,12 @@ public class TelaCadastro extends AppCompatActivity {
                     infoCadastro.putString("sobrenome",sobrenome.getText().toString());
                     infoCadastro.putString("email",email.getText().toString());
                     infoCadastro.putString("dtNasc",dtNasc.getText().toString());
-                    infoCadastro.putString("tel",telefone.getText().toString());
+                    infoCadastro.putString("tel",formatarNumero(telefone.getText().toString()));
                     infoCadastro.putString("senha",senha.getText().toString());
 
                     Intent telaCadastro2 = new Intent(TelaCadastro.this, TelaCadastro2.class);
                     telaCadastro2.putExtras(infoCadastro);
                     startActivity(telaCadastro2);
-                    finish();
                 }
 
             }
@@ -208,7 +212,7 @@ public class TelaCadastro extends AppCompatActivity {
         if(senha.getText().toString().equals("")){
             senhaValido = false;
         }
-        if(senha.getText().length()<5 || senha.getText().length()>20){
+        if(senha.getText().length()<6|| senha.getText().length()>20){
             senhaValido = false;
         }
 
@@ -233,4 +237,16 @@ public class TelaCadastro extends AppCompatActivity {
         input.setHintTextColor(ContextCompat.getColor(TelaCadastro.this, R.color.hint));
         erro.setVisibility(View.INVISIBLE);
     }
+
+    public String formatarNumero(String phoneNumber) {
+        // Formata o número
+        String formato = String.format("(%s) %s-%s",
+                phoneNumber.substring(0, 2),    // DDD
+                phoneNumber.substring(2, 7),    // Parte do número antes do hífen
+                phoneNumber.substring(7));      // Parte do número depois do hífen
+        return formato;
+    }
+
+
+
 }

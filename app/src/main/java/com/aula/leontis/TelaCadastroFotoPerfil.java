@@ -25,6 +25,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class TelaCadastroFotoPerfil extends AppCompatActivity {
     ImageButton btnAbrirGaleria;
@@ -32,6 +38,8 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
     Button btnContinuar;
     TextView titulo, descricao;
     DataBaseFotos dataBaseFotos = new DataBaseFotos();
+    Uri imagemUri;
+    String nome, sobrenome, email, telefone, dtNasc, senha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,14 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
         titulo = findViewById(R.id.textView8);
         descricao = findViewById(R.id.textView9);
 
+        Intent informacoes = getIntent();
+        nome = informacoes.getStringExtra("nome");
+        sobrenome = informacoes.getStringExtra("sobrenome");
+        email = informacoes.getStringExtra("email");
+        telefone = informacoes.getStringExtra("telefone");
+        dtNasc = informacoes.getStringExtra("dtNasc");
+        senha = informacoes.getStringExtra("senha");
+
         //abrindo galeria
         btnAbrirGaleria.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -54,7 +70,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
     private ActivityResultLauncher<Intent> resultLauncherGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                Uri imagemUri = result.getData().getData();
+                imagemUri = result.getData().getData();
                 if(imagemUri != null){
                     btnAbrirGaleria.setVisibility(View.INVISIBLE);
                     fotoPerfil.setVisibility(View.VISIBLE);
@@ -93,6 +109,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
                                     startActivity(telBemVindo);
+                                    cadastrarUsuario(email, senha, nome);
                                     finish();
                                 }
                             });
@@ -113,5 +130,32 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+    public void cadastrarUsuario(String email, String senha, String nome){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (task.isSuccessful()) {
+                    Toast.makeText(TelaCadastroFotoPerfil.this, "Cadastro efetuado com sucesso", Toast.LENGTH_SHORT).show();
+
+                    //Atualizar o nome do usuario e foto
+                    FirebaseUser user = auth.getCurrentUser();
+                    UserProfileChangeRequest profileChangeRequest= new UserProfileChangeRequest.Builder()
+                            .setDisplayName(nome)
+                            .setPhotoUri(imagemUri)
+                            .build();
+                    user.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(TelaCadastroFotoPerfil.this, "Não foi possível efetuar seu cadastro", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }
