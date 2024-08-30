@@ -21,17 +21,18 @@ public class TelaBemVindo extends AppCompatActivity {
 
         Intent info = getIntent();
         Bundle infoCadastro = info.getExtras();
-
-        nome = infoCadastro.getString("nome");
-        sobrenome = infoCadastro.getString("sobrenome");
-        email = infoCadastro.getString("email");
-        telefone = infoCadastro.getString("telefone");
-        dtNasc = infoCadastro.getString("dtNasc");
-        senha = infoCadastro.getString("senha");
-        apelido = infoCadastro.getString("apelido");
-        biografia = infoCadastro.getString("biografia");
-        sexo = infoCadastro.getString("sexo");
-        listaGenerosInteresse = infoCadastro.getLongArray("listaGenerosInteresse");
+        if(infoCadastro != null) {
+            nome = infoCadastro.getString("nome");
+            sobrenome = infoCadastro.getString("sobrenome");
+            email = infoCadastro.getString("email");
+            telefone = infoCadastro.getString("telefone");
+            dtNasc = infoCadastro.getString("dtNasc");
+            senha = infoCadastro.getString("senha");
+            apelido = infoCadastro.getString("apelido");
+            biografia = infoCadastro.getString("biografia");
+            sexo = infoCadastro.getString("sexo");
+            listaGenerosInteresse = infoCadastro.getLongArray("listaGenerosInteresse");
+        }
 
 
         btnFinalizar = findViewById(R.id.btn_finalizar_bem_vindo);
@@ -40,13 +41,7 @@ public class TelaBemVindo extends AppCompatActivity {
             startActivity(feed);
             finish();
 
-           // logout();
         });
     }
-    public void logout(){
-        FirebaseAuth.getInstance().signOut();
-        Intent login = new Intent(TelaBemVindo.this, TelaLogin.class);
-        startActivity(login);
-        finish();
-    }
+
 }

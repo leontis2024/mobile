@@ -12,10 +12,15 @@ import android.widget.Toast;
 
 
 import com.aula.leontis.adapter.AdapterGenero;
+import com.aula.leontis.interfaces.GeneroService;
 import com.aula.leontis.model.Genero;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TelaCadastroInteresses extends AppCompatActivity {
     RecyclerView rvGeneros;
@@ -33,16 +38,16 @@ public class TelaCadastroInteresses extends AppCompatActivity {
         rvGeneros.setAdapter(adapterGenero);
         btnContinuar = findViewById(R.id.btn_continuar_interesses);
         erroGenero = findViewById(R.id.erro_interesse);
-
-
-        listaGeneros.add(new Genero(1,"Neorrealismo", false,"O neorrealismo foi movimento artístico que surgiu no início de século XX que teve influências de movimento políticos como o socialismo, o comunismo e o marxismo."));
-        listaGeneros.add(new Genero(2,"Simbolismo", false,"A poesia simbolista apresenta teor metafísico, musicalidade, alienação social, rigor formal e caráter sinestésico.."));
-        listaGeneros.add(new Genero(3,"Natureza-morta", false,"Esse tipo de pintura surgiu no século XVI e o objetivo era representar objetos inanimados como flores, frutas, jarros de metal, taças de cristal, vidros, porcelanas, instrumentos musicais, livros e muitas outras coisas."));
-        listaGeneros.add(new Genero(4,"Paisagem", false,"A arte paisagem se caracteriza pela representação de cenários naturais, como montanhas e rios, com foco na composição espacial, uso da luz e cor, e detalhamento dos elementos. Pode evocar emoções específicas e mostrar a interação entre humanos e a natureza, variando de representações realistas a estilizadas.."));
-        listaGeneros.add(new Genero(5,"Impressionista", false,"A proposta central do movimento impressionista consistia em representar, por meio das artes visuais, sobretudo na pintura, os efeitos luminosos no ambiente."));
-        listaGeneros.add(new Genero(6,"Abstrata", false,"A arte abstrata, como seu próprio nome indica, trata-se de um estilo artístico que foca nas abstrações, e não na realidade. Em outras palavras: a arte abstrata não tenta reproduzir o mundo a partir de imagens conhecidas ou de formas definidas da realidade.."));
-
         rvGeneros.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+
+//        listaGeneros.add(new Genero(1,"Neorrealismo", false,"O neorrealismo foi movimento artístico que surgiu no início de século XX que teve influências de movimento políticos como o socialismo, o comunismo e o marxismo."));
+//        listaGeneros.add(new Genero(2,"Simbolismo", false,"A poesia simbolista apresenta teor metafísico, musicalidade, alienação social, rigor formal e caráter sinestésico.."));
+//        listaGeneros.add(new Genero(3,"Natureza-morta", false,"Esse tipo de pintura surgiu no século XVI e o objetivo era representar objetos inanimados como flores, frutas, jarros de metal, taças de cristal, vidros, porcelanas, instrumentos musicais, livros e muitas outras coisas."));
+//        listaGeneros.add(new Genero(4,"Paisagem", false,"A arte paisagem se caracteriza pela representação de cenários naturais, como montanhas e rios, com foco na composição espacial, uso da luz e cor, e detalhamento dos elementos. Pode evocar emoções específicas e mostrar a interação entre humanos e a natureza, variando de representações realistas a estilizadas.."));
+//        listaGeneros.add(new Genero(5,"Impressionista", false,"A proposta central do movimento impressionista consistia em representar, por meio das artes visuais, sobretudo na pintura, os efeitos luminosos no ambiente."));
+//        listaGeneros.add(new Genero(6,"Abstrata", false,"A arte abstrata, como seu próprio nome indica, trata-se de um estilo artístico que foca nas abstrações, e não na realidade. Em outras palavras: a arte abstrata não tenta reproduzir o mundo a partir de imagens conhecidas ou de formas definidas da realidade.."));
+//
+//
 
 
         //pegando informações de cadastro das telas anteriores
@@ -59,6 +64,30 @@ public class TelaCadastroInteresses extends AppCompatActivity {
             biografia = infoCadastro.getString("biografia");
             sexo = infoCadastro.getString("sexo");
         }
+
+        // Configurar Retrofit
+        GeneroService generoService = RetrofitClient.getClient("https://dev2-tfqz.onrender.com").create(GeneroService.class);
+
+        // Buscar todos os gêneros
+        generoService.buscarTodosGenerosParciais().enqueue(new Callback<List<Genero>>() {
+            @Override
+            public void onResponse(Call<List<Genero>> call, Response<List<Genero>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listaGeneros = response.body();
+
+                    // Configurar o Adapter da RecyclerView
+                    adapterGenero = new AdapterGenero(listaGeneros);
+                    rvGeneros.setAdapter(adapterGenero);
+                } else {
+                    Toast.makeText(TelaCadastroInteresses.this, "Falha ao obter dados dos gêneros", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Genero>> call, Throwable t) {
+                Toast.makeText(TelaCadastroInteresses.this, "Erro de conexão", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 

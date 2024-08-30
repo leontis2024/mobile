@@ -2,13 +2,13 @@ package com.aula.leontis.model;
 
 public class Genero {
     private long id;
-    private String nome;
+    private String nomeGenero;
     private boolean checkInteresse;
     private String introducao;
 
-    public Genero(long id,String nome, boolean checkInteresse,String introducao) {
+    public Genero(long id,String nomeGenero, boolean checkInteresse,String introducao) {
         this.id = id;
-        this.nome = nome;
+        this.nomeGenero = nomeGenero;
         this.introducao = introducao;
         this.checkInteresse = checkInteresse;
     }
@@ -22,11 +22,11 @@ public class Genero {
     }
 
     public String getNome() {
-        return nome;
+        return nomeGenero;
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nomeGenero = nomeGenero;
     }
 
     public String getIntroducao() {
