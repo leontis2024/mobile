@@ -13,6 +13,7 @@
  
 - [ ] Feat
 - [ ] Fix
+- [ ] Docs
 - [ ] Style
 - [ ] Refactor
 - [ ] Test
