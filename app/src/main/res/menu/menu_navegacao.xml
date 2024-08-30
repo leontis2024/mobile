@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/generos"
+        android:enabled="true"
+        android:icon="@drawable/generos"
+        android:title="Gêneros" />
+    <item
+        android:id="@+id/noticias"
+        android:enabled="true"
+        android:icon="@drawable/noticias"
+        android:title="Notícias" />
+    <item
+        android:id="@+id/feed"
+        android:enabled="true"
+        android:icon="@drawable/logo_clara"
+        android:title="Feed" />
+    <item
+        android:id="@+id/museus"
+        android:enabled="true"
+        android:icon="@drawable/museus"
+        android:title="Museus" />
+    <item
+        android:id="@+id/perfil"
+        android:enabled="true"
+        android:icon="@drawable/perfil"
+        android:title="Perfil" />
+</menu>

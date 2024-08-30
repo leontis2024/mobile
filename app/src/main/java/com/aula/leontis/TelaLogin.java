@@ -146,7 +146,7 @@ public class TelaLogin extends AppCompatActivity {
     public void verificarUsuarioLogado(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if(auth.getCurrentUser() != null){
-            Intent feed = new Intent(TelaLogin.this, TelaBemVindo.class);
+            Intent feed = new Intent(TelaLogin.this, TelaPrincipal.class);
             startActivity(feed);
             finish();
         }

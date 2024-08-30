@@ -14,7 +14,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,10 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aula.leontis.model.Genero;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,9 +42,10 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
     ImageView fotoPerfil;
     Button btnContinuar;
     TextView titulo, descricao;
-    DataBaseFotos dataBaseFotos = new DataBaseFotos();
+    DataBaseFotos dataBase = new DataBaseFotos();
     Uri imagemUri;
-    String nome, sobrenome, email, telefone, dtNasc, senha;
+    String nome, sobrenome, email, telefone, dtNasc, senha, urlFoto, apelido, biografia, sexo;
+    long[] listaGenerosInteresse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +58,22 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
         titulo = findViewById(R.id.textView8);
         descricao = findViewById(R.id.textView9);
 
-        Intent informacoes = getIntent();
-        nome = informacoes.getStringExtra("nome");
-        sobrenome = informacoes.getStringExtra("sobrenome");
-        email = informacoes.getStringExtra("email");
-        telefone = informacoes.getStringExtra("telefone");
-        dtNasc = informacoes.getStringExtra("dtNasc");
-        senha = informacoes.getStringExtra("senha");
+        Intent info = getIntent();
+        Bundle informacoes = info.getExtras();
+        if(informacoes != null){
+            nome = informacoes.getString("nome");
+            sobrenome = informacoes.getString("sobrenome");
+            email = informacoes.getString("email");
+            telefone = informacoes.getString("telefone");
+            dtNasc = informacoes.getString("dtNasc");
+            senha = informacoes.getString("senha");
+            apelido = informacoes.getString("apelido");
+            biografia = informacoes.getString("biografia");
+            sexo = informacoes.getString("sexo");
+            listaGenerosInteresse = informacoes.getLongArray("listaGenerosInteresse");
+        }
+
+
 
         //abrindo galeria
         btnAbrirGaleria.setOnClickListener(v -> {
@@ -66,6 +81,9 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
             resultLauncherGaleria.launch(intent);
         });
     }
+
+
+
     //Activity result para abrir a galeria
     private ActivityResultLauncher<Intent> resultLauncherGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -82,8 +100,23 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                                     // acessar o Drawable e convertê-lo em Bitmap
                                     Bitmap bitmap = drawableToBitmap(resource);
-                                    // upload do Bitmap para o Firebase Storage
-                                    dataBaseFotos.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, "12347");
+
+                                    // upload do Bitmap para o Firebase Storage retornando a url dela
+                                    dataBase.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, "12345").addOnSuccessListener(new OnSuccessListener<String>() {
+                                        @Override
+                                        public void onSuccess(String url) {
+                                            // Aqui você pode usar a URL da imagem
+                                            Log.d("URL", "URL da imagem: " + url);
+                                            urlFoto = url;
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e("URL", "Erro ao obter a URL da imagem", e);
+
+                                        }
+                                    });
+
                                 }
                             });
 
@@ -107,6 +140,18 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                             btnContinuar.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    Bundle info = new Bundle();
+                                    info.putString("nome", nome);
+                                    info.putString("sobrenome", sobrenome);
+                                    info.putString("email", email);
+                                    info.putString("telefone", telefone);
+                                    info.putString("dtNasc", dtNasc);
+                                    info.putString("senha", senha);
+                                    info.putString("apelido", apelido);
+                                    info.putString("biografia", biografia);
+                                    info.putString("sexo", sexo);
+                                    info.putLongArray("listaGenerosInteresse", listaGenerosInteresse);
+                                    info.putString("urlFoto", urlFoto);
                                     Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
                                     startActivity(telBemVindo);
                                     cadastrarUsuario(email, senha, nome);
@@ -150,7 +195,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(TelaCadastroFotoPerfil.this, "Não foi possível efetuar seu cadastro", Toast.LENGTH_SHORT).show();
+                                Log.d("Cadastro","Sucesso");
                             }
                         }
                     });

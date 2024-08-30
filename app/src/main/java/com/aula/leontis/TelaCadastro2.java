@@ -20,6 +20,7 @@ public class TelaCadastro2 extends AppCompatActivity {
     TextView infoApelido,erroSexo;
     Boolean generoValido = true;
     Button continuar;
+    String nome, sobrenome, email, telefone, dtNasc, senha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +38,17 @@ public class TelaCadastro2 extends AppCompatActivity {
         continuar = findViewById(R.id.btn_continuar);
 
         //pegando informações do cadastro da tela anterior
-        Intent infoCadastro = getIntent();
+        Intent info = getIntent();
+        Bundle infoCadastro = info.getExtras();
+        if(infoCadastro != null) {
 
-        String nome = infoCadastro.getStringExtra("nome");
-        String sobrenome = infoCadastro.getStringExtra("sobrenome");
-        String email = infoCadastro.getStringExtra("email");
-        String telefone = infoCadastro.getStringExtra("telefone");
-        String dtNasc = infoCadastro.getStringExtra("dtNasc");
-        String senha = infoCadastro.getStringExtra("senha");
+            nome = infoCadastro.getString("nome");
+            sobrenome = infoCadastro.getString("sobrenome");
+            email = infoCadastro.getString("email");
+            telefone = infoCadastro.getString("telefone");
+            dtNasc = infoCadastro.getString("dtNasc");
+            senha = infoCadastro.getString("senha");
+        }
 
 
         //adapter para configurar o spinner
