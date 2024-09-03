@@ -21,40 +21,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 //Classe para manipulação de imagem do firebase storage
 public class DataBaseFotos {
-    //Método para subir a foto de perfil do usuário no firebase
-//    public void subirFotoUsuario(Context c, Bitmap foto, String idUser) {
-//        // Verifique se o ImageView contém uma imagem
-//        if (foto == null) {
-//            Toast.makeText(c, "Imagem não encontrada!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        // Conversão da imagem para Bitmap
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        foto.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-//        byte[] databyte = baos.toByteArray();
-//
-//        // Abrir Database
-//        FirebaseStorage storage = FirebaseStorage.getInstance();
-//        storage.getReference("usuarios").child("fotouser_" + idUser + ".jpg")
-//                .putBytes(databyte)
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        Toast.makeText(c, "Upload feito com sucesso!", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(c, "Upload falhou!", Toast.LENGTH_SHORT).show();
-//                        Log.d("upload", e.getMessage());
-//                    }
-//                });
-//    }
-//
-
-    public Task<String> subirFotoUsuario(Context c, Bitmap foto, String idUser) {
+       public Task<String> subirFotoUsuario(Context c, Bitmap foto, String idUser) {
         // Criação do TaskCompletionSource para retornar a URL
         TaskCompletionSource<String> tcs = new TaskCompletionSource<>();
 

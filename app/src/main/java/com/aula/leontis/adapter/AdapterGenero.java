@@ -15,12 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.leontis.MetodosAux;
 import com.aula.leontis.R;
 import com.aula.leontis.model.Genero;
 
 import java.util.List;
 
 public class AdapterGenero extends RecyclerView.Adapter<AdapterGenero.viewHolderGenero>{
+    MetodosAux aux = new MetodosAux();
     private List<Genero> listaGeneros;
     public AdapterGenero(List<Genero> listaGeneros){
         this.listaGeneros = listaGeneros;
@@ -66,26 +68,9 @@ public class AdapterGenero extends RecyclerView.Adapter<AdapterGenero.viewHolder
         holder.btnInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(holder.itemView.getContext());
-                dialog.setContentView(R.layout.caixa_mensagem);
-                dialog.getWindow().setLayout(WRAP_CONTENT,WRAP_CONTENT);
-                dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(true);
-
-                TextView titulo = dialog.findViewById(R.id.titulo);
-                TextView introducao = dialog.findViewById(R.id.mensagem);
-                titulo.setText(listaGeneros.get(holder.getAdapterPosition()).getNome());
-                introducao.setText(listaGeneros.get(holder.getAdapterPosition()).getIntroducao());
-
-                Button btnFechar = dialog.findViewById(R.id.btn_fechar);
-                btnFechar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
+                aux.abrirDialog(holder.itemView.getContext(),
+                        listaGeneros.get(holder.getAdapterPosition()).getNome(),
+                        listaGeneros.get(holder.getAdapterPosition()).getIntroducao());
             }
         });
 

@@ -22,4 +22,9 @@
         <item name="colorOnPrimary">@color/bege_claro</item>
     </style>
     <style name="Theme.Leontis" parent="Base.Theme.Leontis" />
+    <style name="arredondar" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">30dp</item>
+        <item name="color">@color/vinho_claro</item>
+    </style>
 </resources>

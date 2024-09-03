@@ -14,6 +14,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class TelaCadastro2 extends AppCompatActivity {
     EditText apelido,biografia;
     Spinner sexo;
@@ -48,6 +52,7 @@ public class TelaCadastro2 extends AppCompatActivity {
             telefone = infoCadastro.getString("telefone");
             dtNasc = infoCadastro.getString("dtNasc");
             senha = infoCadastro.getString("senha");
+
         }
 
 
@@ -93,7 +98,7 @@ public class TelaCadastro2 extends AppCompatActivity {
                     infoCadastro2.putString("sobrenome",sobrenome);
                     infoCadastro2.putString("email",email);
                     infoCadastro2.putString("telefone",telefone);
-                    infoCadastro2.putString("dtNasc",dtNasc);
+                    infoCadastro2.putString("dtNasc",converterData(dtNasc));
                     infoCadastro2.putString("senha",senha);
                     infoCadastro2.putString("apelido",apelido.getText().toString());
                     infoCadastro2.putString("biografia",biografia.getText().toString());
@@ -120,5 +125,22 @@ public class TelaCadastro2 extends AppCompatActivity {
         input.setBackground(ContextCompat.getDrawable(TelaCadastro2.this, R.drawable.input));
       //  input.setHintTextColor(ContextCompat.getColor(TelaCadastro2.this, R.color.hint));
         erro.setVisibility(View.INVISIBLE);
+    }
+    public String converterData(String dateStr) {
+        // Defina o formato da data original
+        SimpleDateFormat originalFormat = new SimpleDateFormat("dd/MM/yyyy");
+        // Defina o formato da data desejado
+        SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            // Converta a string original para um objeto Date
+            Date date = originalFormat.parse(dateStr);
+            // Converta o objeto Date para a string no formato desejado
+            return targetFormat.format(date);
+        } catch (ParseException e) {
+            // Em caso de erro, você pode optar por lançar uma exceção ou retornar uma string padrão
+            e.printStackTrace();
+            return null; // Retorna null em caso de erro
+        }
     }
 }
