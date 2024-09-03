@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navegacao_principal"
+    app:startDestination="@id/feed">
+
+    <fragment
+        android:id="@+id/feed"
+        android:name="com.aula.leontis.Fragments.Feed"
+        android:label="fragment_feed"
+        tools:layout="@layout/fragment_feed" />
+    <fragment
+        android:id="@+id/generos"
+        android:name="com.aula.leontis.Fragments.Generos"
+        android:label="fragment_generos"
+        tools:layout="@layout/fragment_generos" />
+    <fragment
+        android:id="@+id/noticias"
+        android:name="com.aula.leontis.Fragments.Noticias"
+        android:label="fragment_noticias"
+        tools:layout="@layout/fragment_noticias" />
+    <fragment
+        android:id="@+id/museus"
+        android:name="com.aula.leontis.Fragments.Museus"
+        android:label="fragment_museus"
+        tools:layout="@layout/fragment_museus" />
+    <fragment
+        android:id="@+id/perfil"
+        android:name="com.aula.leontis.Fragments.Perfil"
+        android:label="fragment_perfil"
+        tools:layout="@layout/fragment_perfil" />
+</navigation>

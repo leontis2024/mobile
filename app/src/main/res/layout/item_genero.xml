@@ -29,9 +29,10 @@
 
         <CheckBox
             android:id="@+id/check_interesse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="13dp"
             app:layout_constraintEnd_toStartOf="@+id/btn_info"
             app:layout_constraintTop_toTopOf="parent" />
 

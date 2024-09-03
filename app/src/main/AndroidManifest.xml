@@ -15,9 +15,12 @@
         android:theme="@style/Theme.Leontis"
         tools:targetApi="31">
         <activity
+            android:name=".TelaPrincipal"
+            android:exported="false" />
+        <activity
             android:name=".TelaBemVindo"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".TelaCadastroFotoPerfil"
             android:exported="false"

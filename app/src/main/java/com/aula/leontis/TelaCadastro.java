@@ -115,7 +115,7 @@ public class TelaCadastro extends AppCompatActivity {
                     infoCadastro.putString("sobrenome",sobrenome.getText().toString());
                     infoCadastro.putString("email",email.getText().toString());
                     infoCadastro.putString("dtNasc",dtNasc.getText().toString());
-                    infoCadastro.putString("tel",formatarNumero(telefone.getText().toString()));
+                    infoCadastro.putString("telefone",formatarNumero(telefone.getText().toString()));
                     infoCadastro.putString("senha",senha.getText().toString());
 
                     Intent telaCadastro2 = new Intent(TelaCadastro.this, TelaCadastro2.class);
@@ -240,7 +240,7 @@ public class TelaCadastro extends AppCompatActivity {
 
     public String formatarNumero(String phoneNumber) {
         // Formata o número
-        String formato = String.format("(%s) %s-%s",
+        String formato = String.format("(%s)%s-%s",
                 phoneNumber.substring(0, 2),    // DDD
                 phoneNumber.substring(2, 7),    // Parte do número antes do hífen
                 phoneNumber.substring(7));      // Parte do número depois do hífen

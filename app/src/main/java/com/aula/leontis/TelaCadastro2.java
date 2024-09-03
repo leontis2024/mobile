@@ -14,12 +14,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class TelaCadastro2 extends AppCompatActivity {
     EditText apelido,biografia;
     Spinner sexo;
     TextView infoApelido,erroSexo;
     Boolean generoValido = true;
     Button continuar;
+    String nome, sobrenome, email, telefone, dtNasc, senha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +42,18 @@ public class TelaCadastro2 extends AppCompatActivity {
         continuar = findViewById(R.id.btn_continuar);
 
         //pegando informações do cadastro da tela anterior
-        Intent infoCadastro = getIntent();
+        Intent info = getIntent();
+        Bundle infoCadastro = info.getExtras();
+        if(infoCadastro != null) {
 
-        String nome = infoCadastro.getStringExtra("nome");
-        String sobrenome = infoCadastro.getStringExtra("sobrenome");
-        String email = infoCadastro.getStringExtra("email");
-        String telefone = infoCadastro.getStringExtra("telefone");
-        String dtNasc = infoCadastro.getStringExtra("dtNasc");
-        String senha = infoCadastro.getStringExtra("senha");
+            nome = infoCadastro.getString("nome");
+            sobrenome = infoCadastro.getString("sobrenome");
+            email = infoCadastro.getString("email");
+            telefone = infoCadastro.getString("telefone");
+            dtNasc = infoCadastro.getString("dtNasc");
+            senha = infoCadastro.getString("senha");
+
+        }
 
 
         //adapter para configurar o spinner
@@ -89,7 +98,7 @@ public class TelaCadastro2 extends AppCompatActivity {
                     infoCadastro2.putString("sobrenome",sobrenome);
                     infoCadastro2.putString("email",email);
                     infoCadastro2.putString("telefone",telefone);
-                    infoCadastro2.putString("dtNasc",dtNasc);
+                    infoCadastro2.putString("dtNasc",converterData(dtNasc));
                     infoCadastro2.putString("senha",senha);
                     infoCadastro2.putString("apelido",apelido.getText().toString());
                     infoCadastro2.putString("biografia",biografia.getText().toString());
@@ -116,5 +125,22 @@ public class TelaCadastro2 extends AppCompatActivity {
         input.setBackground(ContextCompat.getDrawable(TelaCadastro2.this, R.drawable.input));
       //  input.setHintTextColor(ContextCompat.getColor(TelaCadastro2.this, R.color.hint));
         erro.setVisibility(View.INVISIBLE);
+    }
+    public String converterData(String dateStr) {
+        // Defina o formato da data original
+        SimpleDateFormat originalFormat = new SimpleDateFormat("dd/MM/yyyy");
+        // Defina o formato da data desejado
+        SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            // Converta a string original para um objeto Date
+            Date date = originalFormat.parse(dateStr);
+            // Converta o objeto Date para a string no formato desejado
+            return targetFormat.format(date);
+        } catch (ParseException e) {
+            // Em caso de erro, você pode optar por lançar uma exceção ou retornar uma string padrão
+            e.printStackTrace();
+            return null; // Retorna null em caso de erro
+        }
     }
 }
