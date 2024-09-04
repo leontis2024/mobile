@@ -114,25 +114,35 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                                     // acessar o Drawable e convertê-lo em Bitmap
                                     Bitmap bitmap = drawableToBitmap(resource);
-                                   Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc, senha, apelido, biografia, sexo,null);
+                                   Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,null);
                                    cadastrarUsuarioApi(usuario);
+                                   Toast.makeText(TelaCadastroFotoPerfil.this, "Aguarde enquanto cadastramos seu usuário...", Toast.LENGTH_SHORT).show();
 
-                                    // upload do Bitmap para o Firebase Storage retornando a url dela
-                                    dataBase.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, id[0]).addOnSuccessListener(new OnSuccessListener<String>() {
+                                    Handler esperar = new Handler();
+                                    esperar.postDelayed(new Runnable() {
                                         @Override
-                                        public void onSuccess(String url) {
-                                            // Aqui você pode usar a URL da imagem
-                                            Log.d("URL", "URL da imagem: " + url);
-                                            urlFoto = url;
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.e("URL", "Erro ao obter a URL da imagem", e);
+                                        public void run() {
+                                            if(!(id[0].equals(""))) {
+                                                Toast.makeText(TelaCadastroFotoPerfil.this, "Usuário cadastrado com sucesso", Toast.LENGTH_SHORT).show();
 
-                                        }
-                                    });
+                                                // upload do Bitmap para o Firebase Storage retornando a url dela
+                                                dataBase.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, id[0]).addOnSuccessListener(new OnSuccessListener<String>() {
+                                                    @Override
+                                                    public void onSuccess(String url) {
+                                                        // Aqui você pode usar a URL da imagem
+                                                        Log.d("URL", "URL da imagem: " + url);
+                                                        urlFoto = url;
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.e("URL", "Erro ao obter a URL da imagem", e);
 
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }, 6000);
                                 }
                             });
 
@@ -157,15 +167,6 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     Bundle info = new Bundle();
-//                                    info.putString("nome", nome);
-//                                    info.putString("sobrenome", sobrenome);
-//                                    info.putString("email", email);
-//                                    info.putString("telefone", telefone);
-//                                    info.putString("dtNasc", dtNasc);
-//                                    info.putString("senha", senha);
-//                                    info.putString("apelido", apelido);
-//                                    info.putString("biografia", biografia);
-//                                    info.putString("sexo", sexo);
                                     info.putString("id", id[0]);
                                     info.putLongArray("listaGenerosInteresse", listaGenerosInteresse);
                                     info.putString("urlFoto", urlFoto);

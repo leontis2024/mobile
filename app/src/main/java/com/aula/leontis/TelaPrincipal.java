@@ -7,6 +7,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 
+import com.aula.leontis.fragments.Perfil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class TelaPrincipal extends AppCompatActivity {
@@ -17,6 +18,7 @@ public class TelaPrincipal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_principal);
+        String id = getIntent().getStringExtra("id");
 
         initNavigation();
     }

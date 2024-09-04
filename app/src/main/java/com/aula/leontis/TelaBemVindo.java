@@ -37,15 +37,7 @@ public class TelaBemVindo extends AppCompatActivity {
         Intent info = getIntent();
         Bundle infoCadastro = info.getExtras();
         if(infoCadastro != null) {
-//            nome=infoCadastro.getString("nome");
-//            sobrenome=infoCadastro.getString("sobrenome");
-//            email=infoCadastro.getString("email");
-//            telefone=infoCadastro.getString("telefone");
-//            dtNasc=infoCadastro.getString("dtNasc");
-//            senha=infoCadastro.getString("senha");
-//            apelido=infoCadastro.getString("apelido");
-//            biografia=infoCadastro.getString("biografia");
-//            sexo=infoCadastro.getString("sexo");
+
             id=infoCadastro.getString("id");
             url=infoCadastro.getString("urlFoto");
             listaGenerosInteresse = infoCadastro.getLongArray("listaGenerosInteresse");
@@ -59,6 +51,7 @@ public class TelaBemVindo extends AppCompatActivity {
         btnFinalizar = findViewById(R.id.btn_finalizar_bem_vindo);
         btnFinalizar.setOnClickListener(v -> {
             Intent feed = new Intent(TelaBemVindo.this, TelaPrincipal.class);
+            feed.putExtra("id", id);
             startActivity(feed);
             finish();
 

@@ -20,6 +20,6 @@ public interface UsuarioInterface {
     @POST("api/usuario/inserir")
     Call<ResponseBody> salvarUsuario(@Body Usuario usuario);
 
-    @GET("/api/usuario/selecionarPorEmail")
-    Call<String> buscarUsuarioPorEmail(@Body String email);
+    @GET("/api/usuario/selecionarUsuarioPorID/{id}")
+    Call<ResponseBody> buscarUsuarioPorID(@Path("id") String id);
 }

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Perfil">
+    tools:context=".fragments.Perfil">
 
     <!-- TODO: Update blank fragment layout -->
 <!--    <ImageButton-->
@@ -14,70 +15,100 @@
 <!--        android:src="@drawable/setaVoltarPreta"-->
 <!--        android:backgroundTint="#00FFFFFF"-->
 <!--        android:clickable="true" />-->
-    <ImageButton
-        android:id="@+id/btnAreaRestrita"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:backgroundTint="#00FFFFFF"
-        android:layout_marginRight="50dp"
-        android:src="@drawable/area_restrita"
-        android:clickable="true" />
-    <ImageButton
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:backgroundTint="#00FFFFFF"
-        android:src="@drawable/logout"
-        android:clickable="true" />
-    <ImageView
-        android:id="@+id/fotoPerfil"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/perfil"
-        android:backgroundTint="#00FFFFFF"
-        android:layout_marginTop="120dp"
-        android:layout_gravity="center_horizontal"
-        />
-    <TextView
-        android:id="@+id/nomeUsuario"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Nome"
-        android:layout_marginTop="300dp"
-        android:fontFamily="@font/lexend_exa"
-        android:textSize="20dp"
-        android:textColor="@color/preto"/>
-    <TextView
-        android:id="@+id/label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Biografia"
-        android:layout_marginTop="350dp"
-        android:layout_marginLeft="48dp"
-        android:fontFamily="@font/lexend_exa"
-        android:textSize="17dp"
-        android:textColor="@color/preto"/>
-    <TextView
-        android:id="@+id/biografia"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Biografia"
-        android:layout_marginTop="380dp"
-        android:fontFamily="@font/inter"
-        android:textSize="20dp"
-        android:background="@drawable/input"
-        android:textColor="@color/preto"/>
-    <ImageButton
-        android:id="@+id/btnDeletarConta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="600dp"
-        android:src="@drawable/deletar_conta"
-        android:backgroundTint="#00FFFFFF"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/btnAreaRestrita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:backgroundTint="#00FFFFFF"
+            android:clickable="true"
+            android:src="@drawable/area_restrita"
+            app:layout_constraintEnd_toStartOf="@+id/btnLogout"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="2dp"
+            android:backgroundTint="#00FFFFFF"
+            android:clickable="true"
+            android:src="@drawable/logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/fotoPerfil"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/perfil"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/nomeUsuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/lexend_exa"
+            android:text="Nome"
+            android:textColor="@color/preto"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fotoPerfil" />
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="200dp"
+            android:fontFamily="@font/lexend_exa"
+            android:text="Biografia"
+            android:textColor="@color/preto"
+            android:textSize="17dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nomeUsuario" />
+
+        <TextView
+            android:id="@+id/biografia"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/input"
+            android:fontFamily="@font/inter"
+            android:text="Biografia"
+            android:textColor="@color/preto"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label" />
+
+        <ImageButton
+            android:id="@+id/btnDeletarConta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="215dp"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/deletar_conta"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/biografia" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

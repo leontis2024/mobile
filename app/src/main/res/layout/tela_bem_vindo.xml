@@ -41,15 +41,14 @@
         android:id="@+id/btn_finalizar_bem_vindo"
         android:layout_width="160dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="90dp"
         android:background="@drawable/botao"
         android:fontFamily="@font/lexend_exa"
         android:text="Finalizar"
         android:textColor="@color/branco"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView4"

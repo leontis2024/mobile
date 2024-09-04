@@ -1,4 +1,4 @@
-package com.aula.leontis.Fragments;
+package com.aula.leontis.fragments;
 
 import android.os.Bundle;
 
@@ -12,10 +12,10 @@ import com.aula.leontis.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Generos#newInstance} factory method to
+ * Use the {@link Noticias#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Generos extends Fragment {
+public class Noticias extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class Generos extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Generos() {
+    public Noticias() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class Generos extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Generos.
+     * @return A new instance of fragment Noticias.
      */
     // TODO: Rename and change types and number of parameters
-    public static Generos newInstance(String param1, String param2) {
-        Generos fragment = new Generos();
+    public static Noticias newInstance(String param1, String param2) {
+        Noticias fragment = new Noticias();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class Generos extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_generos, container, false);
+        return inflater.inflate(R.layout.fragment_noticias, container, false);
     }
 }
