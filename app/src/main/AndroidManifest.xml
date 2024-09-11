@@ -15,34 +15,37 @@
         android:theme="@style/Theme.Leontis"
         tools:targetApi="31">
         <activity
-            android:name=".TelaPrincipal"
+            android:name=".activitys.TelaInfoGenero"
             android:exported="false" />
         <activity
-            android:name=".TelaBemVindo"
+            android:name=".activitys.TelaPrincipal"
+            android:exported="false" />
+        <activity
+            android:name=".activitys.TelaBemVindo"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TelaCadastroFotoPerfil"
+            android:name=".activitys.TelaCadastroFotoPerfil"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TelaCadastroInteresses"
+            android:name=".activitys.TelaCadastroInteresses"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TelaCadastro2"
+            android:name=".activitys.TelaCadastro2"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TelaCadastro"
+            android:name=".activitys.TelaCadastro"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TelaLogin"
+            android:name=".activitys.TelaLogin"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TelaSplashScreen"
+            android:name=".activitys.TelaSplashScreen"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

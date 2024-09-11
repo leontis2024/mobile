@@ -12,4 +12,5 @@
     <color name="preto">#282525</color>
     <color name="cinza">#5C5C5C</color>
     <color name="hint">#888888</color>
+    <color name="azul_carregando">#1B5EC3</color>
 </resources>

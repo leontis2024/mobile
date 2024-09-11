@@ -7,27 +7,27 @@
 
     <fragment
         android:id="@+id/feed"
-        android:name="com.aula.leontis.fragments.Feed"
+        android:name="com.aula.leontis.fragments.FeedFragment"
         android:label="fragment_feed"
         tools:layout="@layout/fragment_feed" />
     <fragment
         android:id="@+id/generos"
-        android:name="com.aula.leontis.fragments.Generos"
+        android:name="com.aula.leontis.fragments.GenerosFragment"
         android:label="fragment_generos"
         tools:layout="@layout/fragment_generos" />
     <fragment
         android:id="@+id/noticias"
-        android:name="com.aula.leontis.fragments.Noticias"
+        android:name="com.aula.leontis.fragments.NoticiasFragment"
         android:label="fragment_noticias"
         tools:layout="@layout/fragment_noticias" />
     <fragment
         android:id="@+id/museus"
-        android:name="com.aula.leontis.fragments.Museus"
+        android:name="com.aula.leontis.fragments.MuseusFragment"
         android:label="fragment_museus"
         tools:layout="@layout/fragment_museus" />
     <fragment
         android:id="@+id/perfil"
-        android:name="com.aula.leontis.fragments.Perfil"
+        android:name="com.aula.leontis.fragments.PerfilFragment"
         android:label="fragment_perfil"
         tools:layout="@layout/fragment_perfil" />
 </navigation>
