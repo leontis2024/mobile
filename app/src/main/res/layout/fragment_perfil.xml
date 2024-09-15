@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.PerfilFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-<!--    <ImageButton-->
-<!--        android:id="@+id/btnVoltar"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="start"-->
-<!--        android:src="@drawable/setaVoltarPreta"-->
-<!--        android:backgroundTint="#00FFFFFF"-->
-<!--        android:clickable="true" />-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -55,7 +46,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/nomeUsuario"
+            android:id="@+id/apelido"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -80,7 +71,7 @@
             android:textSize="17dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nomeUsuario" />
+            app:layout_constraintTop_toBottomOf="@+id/apelido" />
 
         <TextView
             android:id="@+id/biografia"
@@ -107,6 +98,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/biografia" />
+
+        <TextView
+            android:id="@+id/erroUsuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/vermelho_erro"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnEditarPerfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="80dp"
+            android:background="#00FFFFFF"
+            android:src="@drawable/icon_editar_perfil"
+            app:layout_constraintBottom_toTopOf="@+id/biografia"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.737"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

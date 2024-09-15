@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Leontis"
         tools:targetApi="31">
         <activity
+            android:name=".activitys.TelaEditarPerfil"
+            android:exported="false" />
+        <activity
             android:name=".activitys.TelaInfoGenero"
             android:exported="false" />
         <activity

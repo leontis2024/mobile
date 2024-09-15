@@ -13,11 +13,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aula.leontis.activitys.TelaEditarPerfil;
+import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaLogin;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
@@ -31,9 +32,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class PerfilFragment extends Fragment {
+    UsuarioService usuarioService = new UsuarioService();
     MetodosAux aux = new MetodosAux();
-    ImageButton btnAreaRestrita, btnLogout, btnDeletarConta;
-    TextView nome,biografia;
+    ImageButton btnAreaRestrita, btnLogout, btnDeletarConta,btnEditarPerfil;
+    TextView nome,biografia,erro;
     ImageView foto;
     String id;
 
@@ -60,25 +62,35 @@ public class PerfilFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
         btnAreaRestrita = view.findViewById(R.id.btnAreaRestrita);
+        btnEditarPerfil = view.findViewById(R.id.btnEditarPerfil);
         btnLogout = view.findViewById(R.id.btnLogout);
         btnDeletarConta = view.findViewById(R.id.btnDeletarConta);
 
-        nome = view.findViewById(R.id.nomeUsuario);
+        nome = view.findViewById(R.id.apelido);
         biografia = view.findViewById(R.id.biografia);
         foto = view.findViewById(R.id.fotoPerfil);
+        erro = view.findViewById(R.id.erroUsuario);
 
         btnDeletarConta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                aux.abrirDialogConfirmacao(getContext(),"Deletar Conta?","Deseja realmente deletar sua conta? Você não poderá recupera-la depois");
+                aux.abrirDialogConfirmacao(getContext(),"Deletar Conta?","Deseja realmente deletar sua conta? Você não poderá recupera-la depois",true,id);
+            }
+        });
+        btnEditarPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle info = new Bundle();
+                info.putString("id", id);
+                Intent editarPerfil = new Intent(getContext(), TelaEditarPerfil.class);
+                editarPerfil.putExtras(info);
+                startActivity(editarPerfil);
             }
         });
 
-        if (getArguments() != null) {
-            String id = getArguments().getString("id");
-            Log.d("PerfilFragment", "ID recebido: " + id);
-            buscarUsuarioPorId(id);
-        }
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        selecionarIdUsuarioPorEmail(email);
+        usuarioService.selecionarUsuarioPorEmail(email,getContext(),nome,biografia,foto,erro);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +113,7 @@ public class PerfilFragment extends Fragment {
             getActivity().finish();
         }
     }
-    public void buscarUsuarioPorId(String id) {
+    public void selecionarIdUsuarioPorEmail(String email) {
         String urlAPI = "https://dev2-tfqz.onrender.com/";
 
         // Configurar acesso à API
@@ -112,7 +124,7 @@ public class PerfilFragment extends Fragment {
 
         UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
 
-        Call<ResponseBody> call = usuarioInterface.buscarUsuarioPorID(id);
+        Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
 
         //executar chamada
         call.enqueue(new Callback<ResponseBody>() {
@@ -126,45 +138,25 @@ public class PerfilFragment extends Fragment {
                         // Cria um JSONObject a partir da string
                         JSONObject jsonObject = new JSONObject(jsonResponse);
 
-                        // Obtém os valores de "apelido" e "biografia"
-                        String apelidoApi = jsonObject.getString("apelido");
-                        String nomeApi = jsonObject.getString("nome");
-                        String biografiaApi = jsonObject.getString("biografia");
-                        String urlFotoApi = jsonObject.getString("urlImagem");
-                        if(urlFotoApi.equals("")||urlFotoApi == null){
-                            urlFotoApi =  "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
-                        }
-
-                        if(apelidoApi.equals("")){
-                            nome.setText(nomeApi);
-                        }else{
-                            nome.setText(apelidoApi);
-                        }
-
-                        if(biografia.equals("")){
-                            biografia.setHint("Nada por aqui...");
-                        }else{
-                            biografia.setText(biografiaApi);
-                        }
-
-                        Glide.with(getContext()).load(urlFotoApi).circleCrop().into(foto);
+                        String idApi = jsonObject.getString("id");
+                        id=idApi;
 
                         // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GETID", "Campos obtidos: apelido: " + apelidoApi+" nome: "+nomeApi+" biografia: "+biografiaApi);
+                        Log.d("API_RESPONSE_GET_EMAIL", "Campo obtido: id: "+idApi);
 
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                        Log.e("API_RESPONSE_GET_EMAIL", "Erro ao processar resposta: " + e.getMessage());
+
                     }
                 } else {
-                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code());
+                    Log.e("API_ERROR_GET_EMAIL", "Erro na resposta da API: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(getContext(),"Erro inesperado","Erro ao obter dados do perfil\nMensagem: "+throwable.getMessage());
+                Log.e("API_ERROR_GET_EMAIL", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(getContext(),"Erro inesperado","Erro ao obter idl\nMensagem: "+throwable.getMessage());
             }
         });
     }

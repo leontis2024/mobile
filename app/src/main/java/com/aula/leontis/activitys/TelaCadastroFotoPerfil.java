@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -24,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.DataBaseFotos;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
@@ -43,6 +45,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.ResponseBody;
@@ -53,6 +57,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaCadastroFotoPerfil extends AppCompatActivity {
+    UsuarioService usuarioService = new UsuarioService();
     private final String[] id = {""};
     ProgressBar carregando;
     MetodosAux aux = new MetodosAux();
@@ -119,9 +124,12 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                                     // acessar o Drawable e convertê-lo em Bitmap
                                     Bitmap bitmap = drawableToBitmap(resource);
+
+                                    //inserindo usuario via api
                                    Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,null);
-                                   cadastrarUsuarioApi(usuario);
-                               //    cadastrarUsuarioGenero();
+                                   usuarioService.inserirUsuario(usuario,TelaCadastroFotoPerfil.this,id);
+                                   //falta cadastrar usuario genero
+
                                    Toast.makeText(TelaCadastroFotoPerfil.this, "Aguarde enquanto cadastramos seu usuário...", Toast.LENGTH_SHORT).show();
                                    carregando.setVisibility(View.VISIBLE);
 
@@ -179,7 +187,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                     Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
                                     telBemVindo.putExtras(info);
                                     startActivity(telBemVindo);
-                                    cadastrarUsuario(email, senha, nome);
+                                    cadastrarUsuarioFirebase(email, senha, nome);
                                     finish();
                                 }
                             });
@@ -201,7 +209,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
         drawable.draw(canvas);
         return bitmap;
     }
-    public void cadastrarUsuario(String email, String senha, String nome){
+    public void cadastrarUsuarioFirebase(String email, String senha, String nome){
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -226,7 +234,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
             }
         });
     }
-    public String cadastrarUsuarioApi(Usuario usuario){
+    public void selecionarIdUsuarioPorEmail(String email, Context context) {
         String urlAPI = "https://dev2-tfqz.onrender.com/";
 
         // Configurar acesso à API
@@ -237,87 +245,40 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
 
         UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
 
-        Call<ResponseBody> call = usuarioInterface.salvarUsuario(usuario);
+        Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
 
+        //executar chamada
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String[] idUsuario = {""};
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     try {
-                        idUsuario[0] = response.body().string();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        // Converte o corpo da resposta para string
+                        String jsonResponse = response.body().string();
+
+                        // Cria um JSONObject a partir da string
+                        JSONObject jsonObject = new JSONObject(jsonResponse);
+
+                        String idApi = jsonObject.getString("id");
+
+                        // Faça algo com os valores obtidos
+                        Log.d("API_RESPONSE_GET_EMAIL", "Campo obtido: id: "+idApi);
+
+                    } catch (Exception e) {
+                        Log.e("API_RESPONSE_GET_EMAIL", "Erro ao processar resposta: " + e.getMessage());
+
                     }
-                    Log.d("API_RESPONSE_POST", "ID do usuário inserido via API: " + idUsuario[0]);
                 } else {
-                    try {
-                        // Obter e exibir o corpo da resposta de erro
-                        String errorBody = response.errorBody().string();
-                        Log.e("API_ERROR_POST", "Erro ao inserir o usuário: " + response.code() + " - " + errorBody + " - " + response.message());
-                        aux.abrirDialogErro(TelaCadastroFotoPerfil.this, "Erro ao cadastrar usuário","Não foi possível realizar seu cadastro. Erro: " + errorBody);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Log.e("API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
-                    }
+                    Log.e("API_ERROR_GET_EMAIL", "Erro na resposta da API: " + response.code());
                 }
-                id[0] = idUsuario[0];
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_POST", "Erro ao inserir o usuário: " + throwable.getMessage());
-                aux.abrirDialogErro(TelaCadastroFotoPerfil.this, "Erro ao cadastrar usuário","Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
+                Log.e("API_ERROR_GET_EMAIL", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter idl\nMensagem: "+throwable.getMessage());
             }
-
         });
-        return id[0];
-    }
-
-    public void cadastrarUsuarioGenero(){
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioGeneroInterface usuarioGeneroInterface = retrofit.create(UsuarioGeneroInterface.class);
-
-        for(long idGenero : listaGenerosInteresse){
-            Call<ResponseBody> call = usuarioGeneroInterface.inserir(new UsuarioGenero(Long.parseLong(id[0]), idGenero));
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        try {
-                            Log.d("API_RESPONSE_POST", "Conexão usuário e genero criada: " + response.body().string());
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    } else {
-                        try {
-                            // Obter e exibir o corpo da resposta de erro
-                            String errorBody = response.errorBody().string();
-                            Log.e("API_ERROR_POST", "Erro ao fazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Log.e("API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                    Log.e("API_ERROR_POST", "Erro ao fazer conexão usuario e genero: " + throwable.getMessage());
-                    aux.abrirDialogErro(TelaCadastroFotoPerfil.this, "Erro inesperado","Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
-                }
-            });
-        }
-
-
     }
 
 

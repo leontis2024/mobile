@@ -1,6 +1,7 @@
 package com.aula.leontis.activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
+import com.aula.leontis.services.GeneroService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterGenero;
@@ -27,6 +29,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaCadastroInteresses extends AppCompatActivity {
+    GeneroService generoService = new GeneroService();
     RecyclerView rvGeneros;
     MetodosAux aux = new MetodosAux();
     List<Genero> listaGeneros = new ArrayList<>();
@@ -59,11 +62,8 @@ public class TelaCadastroInteresses extends AppCompatActivity {
             biografia = infoCadastro.getString("biografia");
             sexo = infoCadastro.getString("sexo");
         }
-        erroGenero.setText("Carregando informações dos genêros...");
-        erroGenero.setTextColor(getResources().getColor(R.color.azul_carregando));
-        erroGenero.setVisibility(View.VISIBLE);
-        buscarGeneros();
 
+        generoService.buscarGeneros(erroGenero, this, rvGeneros, listaGeneros, adapterGenero);
 
         btnContinuar.setOnClickListener(new View.OnClickListener() {
             @Override
