@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaLogin;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
-import com.aula.leontis.services.UsuarioService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

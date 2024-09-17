@@ -66,6 +66,7 @@ public class GeneroService {
             @Override
             public void onFailure(Call<List<Genero>> call, Throwable t) {
                 Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
+                erroGenero.setText("Falha ao obter dados dos gêneros");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos gêneros\nMensagem: "+t.getMessage());
             }
         });
@@ -109,6 +110,7 @@ public class GeneroService {
             @Override
             public void onFailure(Call<List<GeneroCompleto>> call, Throwable t) {
                 Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
+                erroGenero.setText("Falha ao obter dados dos gêneros");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos gêneros\nMensagem: "+t.getMessage());
             }
         });

@@ -17,8 +17,11 @@ import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -31,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UsuarioService {
     MetodosAux aux = new MetodosAux();
 
-    public void selecionarUsuarioPorId(String id, Context context, TextView nome, TextView biografia, ImageView foto) {
+    public void selecionarUsuarioPorIdParcial(String id, Context context, TextView nome, TextView biografia, ImageView foto) {
         String urlAPI = "https://dev2-tfqz.onrender.com/";
 
         // Configurar acesso à API
@@ -98,6 +101,89 @@ public class UsuarioService {
             }
         });
     }
+
+    public void selecionarUsuarioPorId(String id, Context context, TextView apelido, TextView biografia, ImageView foto, TextView nome, TextView sobrenome, TextView telefone, TextView sexo, TextView dtNasc,TextView erro) {
+        erro.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
+        erro.setText("Carregando...");
+        erro.setVisibility(View.VISIBLE);
+        String urlAPI = "https://dev2-tfqz.onrender.com/";
+
+        // Configurar acesso à API
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+
+        Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
+
+        //executar chamada
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        erro.setVisibility(View.INVISIBLE);
+                        // Converte o corpo da resposta para string
+                        String jsonResponse = response.body().string();
+
+                        // Cria um JSONObject a partir da string
+                        JSONObject jsonObject = new JSONObject(jsonResponse);
+
+                        // Obtém os valores de "apelido" e "biografia"
+                        String apelidoApi = jsonObject.getString("apelido");
+                        String nomeApi = jsonObject.getString("nome");
+                        String biografiaApi = jsonObject.getString("biografia");
+                        String urlFotoApi = jsonObject.getString("urlImagem");
+                        String sobrenomeApi = jsonObject.getString("sobrenome");
+                        String telefoneApi = jsonObject.getString("telefone");
+                        String sexoApi = jsonObject.getString("sexo");
+                        String dtNascApi = jsonObject.getString("dataNascimento");
+
+                        if(urlFotoApi.equals("")||urlFotoApi == null){
+                            urlFotoApi =  "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
+                        }
+                        apelido.setText(apelidoApi);
+                        biografia.setText(biografiaApi);
+                        nome.setText(nomeApi);
+                        sobrenome.setText(sobrenomeApi);
+                        String telefoneFormatado = telefoneApi.replaceAll("[()\\s-]", "");
+                        telefone.setText(telefoneFormatado);
+                        LocalDate data = LocalDate.parse(dtNascApi);
+                        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        String dataFormatada = data.format(formatador);
+                        dtNasc.setText(dataFormatada);
+                        if(sexoApi.equals("M")){
+                            sexo.setText("Masculino");
+                        }else if(sexoApi.equals("F")){
+                            sexo.setText("Feminino");
+                        }else if(sexoApi.equals("O")){
+                            sexo.setText("utros");
+                        }else if(sexoApi.equals("N")){
+                            sexo.setText("Não binário");
+                        }
+                        Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
+
+                        // Faça algo com os valores obtidos
+                        Log.d("API_RESPONSE_GETID", "Campos obtidos: apelido: " + apelidoApi+" nome: "+nomeApi+" biografia: "+biografiaApi+" urlFoto: "+urlFotoApi+" sobrenome: "+sobrenomeApi+" telefone: "+telefoneApi+" sexo: "+sexoApi+" dtNasc: "+dtNascApi);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                    }
+                } else {
+                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados do perfil\nMensagem: "+throwable.getMessage());
+            }
+        });
+    }
     public void selecionarUsuarioPorEmail(String email, Context context, TextView nome, TextView biografia, ImageView foto, TextView erro) {
         erro.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erro.setText("Carregando...");
@@ -120,6 +206,7 @@ public class UsuarioService {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     erro.setVisibility(View.INVISIBLE);
+                    erro.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                     try {
                         // Converte o corpo da resposta para string
                         String jsonResponse = response.body().string();
@@ -132,7 +219,7 @@ public class UsuarioService {
                         String nomeApi = jsonObject.getString("nome");
                         String biografiaApi = jsonObject.getString("biografia");
                         String urlFotoApi = jsonObject.getString("urlImagem");
-                        if(urlFotoApi == null){
+                        if(jsonObject.getString("urlImagem").equals("")||jsonObject.getString("urlImagem") == null){
                             urlFotoApi =  "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
                         }
 
