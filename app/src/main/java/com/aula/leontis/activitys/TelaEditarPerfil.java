@@ -48,6 +48,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,20 +88,53 @@ public class TelaEditarPerfil extends AppCompatActivity {
         sexo = findViewById(R.id.sexo_editar);
         erroUsuarioEditar = findViewById(R.id.erroUsuarioEdit);
 
+
+        final Boolean[] generoValido = {false};
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sexo_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sexo.setAdapter(adapter);
+
+        sexo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                //verifica se o gênero foi selecionado e não o hint
+                if(selectedItem.equals("Selecione seu gênero")){
+                    generoValido[0] = false;
+                }else{
+                    generoValido[0] = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                generoValido[0] = false;
+            }
+        });
+
+
         Bundle info = getIntent().getExtras();
         if(info!=null) {
             id = info.getString("id");
             usuarioService.selecionarUsuarioPorId(id,this,apelido,biografia,fotoPerfil,nome,sobrenome,telefone,sexoTxt,dtNasc,erroUsuarioEditar);
         }
-        if(sexoTxt.getText().toString().equals("Masculino")){
-            sexo.setSelection(2);
-        }else if(sexoTxt.getText().toString().equals("Feminino")){
-            sexo.setSelection(1);
-        }else if(sexoTxt.getText().toString().equals("Outro")){
-            sexo.setSelection(4);
-        }else {
-            sexo.setSelection(3);
-        }
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(sexoTxt.getText().toString().equals("M")){
+                    sexo.setSelection(2);
+                }else if(sexoTxt.getText().toString().equals("F")){
+                    sexo.setSelection(1);
+                }else if(sexoTxt.getText().toString().equals("O")){
+                    sexo.setSelection(4);
+                }else {
+                    sexo.setSelection(3);
+                }
+            }
+        },1500);
+
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,29 +165,6 @@ public class TelaEditarPerfil extends AppCompatActivity {
             }
         });
 
-        final Boolean[] generoValido = {false};
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.sexo_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sexo.setAdapter(adapter);
-
-        sexo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                //verifica se o gênero foi selecionado e não o hint
-                if(selectedItem.equals("Selecione seu gênero")){
-                    generoValido[0] = false;
-                }else{
-                    generoValido[0] = true;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                generoValido[0] = false;
-            }
-        });
         btnMudarFotos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,22 +217,36 @@ public class TelaEditarPerfil extends AppCompatActivity {
 
                 if(informacoesValidas()){
                     erroUsuarioEditar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(TelaEditarPerfil.this, "foiii", Toast.LENGTH_SHORT).show();
                     Map<String,Object> update = new HashMap<>();
                     update.put("apelido",apelido.getText().toString());
                     update.put("biografia",biografia.getText().toString());
                     update.put("sexo",sexo.getSelectedItem().toString().substring(0,1));
 
-                    LocalDate data = LocalDate.parse(dtNasc.getText().toString());
-                    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    String dataFormatada = data.format(formatador);
+                    String dataNascimentoTexto = dtNasc.getText().toString(); // Supondo que está no formato dd/MM/yyyy
+                    DateTimeFormatter formatadorEntrada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-                    update.put("dataNascimento",dataFormatada);
+                    try {
+                        LocalDate data = LocalDate.parse(dataNascimentoTexto, formatadorEntrada);
+                        DateTimeFormatter formatadorSaida = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        String dataFormatada = data.format(formatadorSaida);
+                        update.put("dataNascimento", dataFormatada);
+                    } catch (DateTimeParseException e) {
+                        e.printStackTrace();
+                    }
+
                     update.put("telefone",formatarNumero(telefone.getText().toString()));
                     update.put("sobrenome",sobrenome.getText().toString());
                     update.put("nome",nome.getText().toString());
                     update.put("urlImagem",urlFoto);
-                  //  usuarioService.atualizarUsuario(id,update);
+                    usuarioService.atualizarUsuario(id,update,erroUsuarioEditar,TelaEditarPerfil.this);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                           finish();
+                        }
+                    },3000);
+
                 }
             }
         });
@@ -354,7 +379,7 @@ public class TelaEditarPerfil extends AppCompatActivity {
                                                 });
                                             }
                                         }
-                                    }, 5000);
+                                    }, 3000);
                                 }
                             });
 

@@ -19,30 +19,28 @@
             android:layout_width="0dp"
             android:layout_height="170dp"
             android:scaleType="centerCrop"
-            android:src="@tools:sample/avatars"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView8"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:src="@tools:sample/avatars"
-            app:layout_constraintEnd_toStartOf="@+id/precoIgressoMuseu"
+            android:layout_marginTop="15dp"
+            app:layout_constraintEnd_toStartOf="@+id/precoIngressoMuseu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView5"
             app:srcCompat="@drawable/ic_preco" />
 
         <ImageView
             android:id="@+id/imageView5"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:src="@tools:sample/avatars"
+            android:layout_marginTop="15dp"
             app:layout_constraintEnd_toStartOf="@+id/diaFuncionamentoMuseu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView7"
@@ -50,11 +48,10 @@
 
         <ImageView
             android:id="@+id/imageView7"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
-            android:src="@tools:sample/avatars"
+            android:layout_marginTop="30dp"
             app:layout_constraintEnd_toStartOf="@+id/enderecoMuseu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nomeMuseu"
@@ -85,7 +82,7 @@
             app:layout_constraintTop_toBottomOf="@+id/enderecoMuseu" />
 
         <TextView
-            android:id="@+id/precoIgressoMuseu"
+            android:id="@+id/precoIngressoMuseu"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -100,20 +97,23 @@
             android:id="@+id/button"
             android:layout_width="160dp"
             android:layout_height="55dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="15dp"
             android:text="Saiba mais"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/precoIgressoMuseu" />
+            app:layout_constraintTop_toBottomOf="@+id/precoIngressoMuseu" />
 
         <TextView
             android:id="@+id/nomeMuseu"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="40dp"
             android:fontFamily="@font/lexend_exa_medium"
+            android:maxLines="3"
             android:text="TextView"
             android:textAlignment="center"
             android:textSize="18sp"

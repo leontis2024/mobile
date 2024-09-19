@@ -2,27 +2,27 @@ package com.aula.leontis.models.usuario;
 
 public class UsuarioGenero {
 
-    private long id_user;
-    private long id_genero;
+    private long idUsuario;
+    private long idGenero;
 
-    public UsuarioGenero(long id_user, long id_genero) {
-        this.id_user = id_user;
-        this.id_genero = id_genero;
+    public UsuarioGenero(long idUsuario, long idGenero) {
+        this.idUsuario = idUsuario;
+        this.idGenero = idGenero;
     }
 
-    public long getId_user() {
-        return id_user;
+    public long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_user(long id_user) {
-        this.id_user = id_user;
+    public void setIdUsuario(long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public long getId_genero() {
-        return id_genero;
+    public long getIdGenero() {
+        return idGenero;
     }
 
-    public void setId_genero(long id_genero) {
-        this.id_genero = id_genero;
+    public void setIdGenero(long idGenero) {
+        this.idGenero = idGenero;
     }
 }

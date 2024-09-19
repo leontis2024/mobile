@@ -43,7 +43,7 @@ public class TelaBemVindo extends AppCompatActivity {
             listaGenerosInteresse = infoCadastro.getLongArray("listaGenerosInteresse");
             Map<String, Object> updates = new HashMap<>();
             updates.put("urlImagem", url);
-            usuarioService.atualizarUsuario(id,updates);
+            usuarioService.atualizarUsuario(id,updates,null,this);
 
         }
         btnFinalizar = findViewById(R.id.btn_finalizar_bem_vindo);
