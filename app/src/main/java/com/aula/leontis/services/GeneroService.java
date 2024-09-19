@@ -58,6 +58,7 @@ public class GeneroService {
                     rvGeneros.setAdapter(adapterGenero);
 
                 } else {
+                    erroGenero.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                     erroGenero.setText("Falha ao obter dados dos gêneros");
                     erroGenero.setVisibility(View.VISIBLE);
                 }
@@ -65,6 +66,7 @@ public class GeneroService {
 
             @Override
             public void onFailure(Call<List<Genero>> call, Throwable t) {
+                erroGenero.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                 Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
                 erroGenero.setText("Falha ao obter dados dos gêneros");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos gêneros\nMensagem: "+t.getMessage());
@@ -101,6 +103,7 @@ public class GeneroService {
                     rvGeneros.setAdapter(adapterGeneroCompleto);
 
                 } else {
+                    erroGenero.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                     Log.e("API_ERROR_GET", "Não foi possivel fazer a requisição: " + response.code());
                     erroGenero.setText("Falha ao obter dados dos gêneros");
                     erroGenero.setVisibility(View.VISIBLE);
@@ -109,6 +112,7 @@ public class GeneroService {
 
             @Override
             public void onFailure(Call<List<GeneroCompleto>> call, Throwable t) {
+                erroGenero.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                 Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
                 erroGenero.setText("Falha ao obter dados dos gêneros");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos gêneros\nMensagem: "+t.getMessage());

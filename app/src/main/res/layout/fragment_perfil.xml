@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             android:backgroundTint="#00FFFFFF"
             android:clickable="true"
             android:src="@drawable/logout"
@@ -61,24 +61,25 @@
 
         <TextView
             android:id="@+id/label"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="200dp"
             android:fontFamily="@font/lexend_exa"
             android:text="Biografia"
             android:textColor="@color/preto"
             android:textSize="17dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/apelido" />
 
         <TextView
             android:id="@+id/biografia"
-            android:layout_width="300dp"
+            android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginStart="45dp"
             android:layout_marginTop="6dp"
+            android:layout_marginEnd="45dp"
             android:background="@drawable/input"
             android:fontFamily="@font/inter"
             android:text="Biografia"
@@ -101,8 +102,11 @@
 
         <TextView
             android:id="@+id/erroUsuario"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="100dp"
             android:fontFamily="@font/inter"
             android:text="TextView"
             android:textAlignment="center"

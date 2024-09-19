@@ -141,7 +141,7 @@ public class UsuarioService {
                         String sexoApi = jsonObject.getString("sexo");
                         String dtNascApi = jsonObject.getString("dataNascimento");
 
-                        if(urlFotoApi.equals("")||urlFotoApi == null){
+                        if(urlFotoApi == null){
                             urlFotoApi =  "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
                         }
                         apelido.setText(apelidoApi);
@@ -154,15 +154,7 @@ public class UsuarioService {
                         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         String dataFormatada = data.format(formatador);
                         dtNasc.setText(dataFormatada);
-                        if(sexoApi.equals("M")){
-                            sexo.setText("Masculino");
-                        }else if(sexoApi.equals("F")){
-                            sexo.setText("Feminino");
-                        }else if(sexoApi.equals("O")){
-                            sexo.setText("utros");
-                        }else if(sexoApi.equals("N")){
-                            sexo.setText("Não binário");
-                        }
+                        sexo.setText(sexoApi);
                         Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
 
                         // Faça algo com os valores obtidos
@@ -354,7 +346,7 @@ public class UsuarioService {
 
 
     }
-    public void atualizarUsuario(String id, Map<String,Object> campo){
+    public void atualizarUsuario(String id, Map<String,Object> campo,TextView erro,Context c){
         String urlAPI = "https://dev2-tfqz.onrender.com/";
 
         // Configurar acesso à API
@@ -376,6 +368,11 @@ public class UsuarioService {
                         resposta[0] = response.body().string();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
+                    }
+                    if(erro!=null){
+                        erro.setTextColor(ContextCompat.getColor(c, R.color.azul_carregando));
+                        erro.setText("Usuário atualizado com sucesso");
+                        erro.setVisibility(View.VISIBLE);
                     }
                     Log.d("API_RESPONSE_PATCH", "Usuário atualizado via API: " + resposta[0]);
                 } else {
