@@ -20,6 +20,7 @@ public class TelaPrincipal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_principal);
+
         String id = getIntent().getStringExtra("id");
         if(id==null) {
             id = "28516";
@@ -41,4 +42,5 @@ public class TelaPrincipal extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
+
 }

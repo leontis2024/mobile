@@ -35,16 +35,17 @@ public class UsuarioService {
     MetodosAux aux = new MetodosAux();
 
     public void selecionarUsuarioPorIdParcial(String id, Context context, TextView nome, TextView biografia, ImageView foto) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+        ApiService apiService = new ApiService(context);
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
 
         //executar chamada
@@ -64,26 +65,26 @@ public class UsuarioService {
                         String nomeApi = jsonObject.getString("nome");
                         String biografiaApi = jsonObject.getString("biografia");
                         String urlFotoApi = jsonObject.getString("urlImagem");
-                        if(urlFotoApi.equals("")||urlFotoApi == null){
-                            urlFotoApi =  "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
+                        if (urlFotoApi.equals("") || urlFotoApi == null) {
+                            urlFotoApi = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
                         }
 
-                        if(apelidoApi.equals("")||apelidoApi == null){
+                        if (apelidoApi.equals("") || apelidoApi == null) {
                             nome.setText(nomeApi);
-                        }else{
+                        } else {
                             nome.setText(apelidoApi);
                         }
 
-                        if(biografia.equals("")||biografia== null){
+                        if (biografia.equals("") || biografia == null) {
                             biografia.setHint("Nada por aqui...");
-                        }else{
+                        } else {
                             biografia.setText(biografiaApi);
                         }
 
                         Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
 
                         // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GETID", "Campos obtidos: apelido: " + apelidoApi+" nome: "+nomeApi+" biografia: "+biografiaApi);
+                        Log.d("API_RESPONSE_GETID", "Campos obtidos: apelido: " + apelidoApi + " nome: " + nomeApi + " biografia: " + biografiaApi);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -97,25 +98,27 @@ public class UsuarioService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados do perfil\nMensagem: "+throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados do perfil\nMensagem: " + throwable.getMessage());
             }
         });
     }
 
-    public void selecionarUsuarioPorId(String id, Context context, TextView apelido, TextView biografia, ImageView foto, TextView nome, TextView sobrenome, TextView telefone, TextView sexo, TextView dtNasc,TextView erro) {
+    public void selecionarUsuarioPorId(String id, Context context, TextView apelido, TextView biografia, ImageView foto, TextView nome, TextView sobrenome, TextView telefone, TextView sexo, TextView dtNasc, TextView erro) {
         erro.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erro.setText("Carregando...");
         erro.setVisibility(View.VISIBLE);
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
 
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
+        ApiService apiService = new ApiService(context);
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
 
         //executar chamada
@@ -141,8 +144,8 @@ public class UsuarioService {
                         String sexoApi = jsonObject.getString("sexo");
                         String dtNascApi = jsonObject.getString("dataNascimento");
 
-                        if(urlFotoApi == null){
-                            urlFotoApi =  "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
+                        if (urlFotoApi == null) {
+                            urlFotoApi = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
                         }
                         apelido.setText(apelidoApi);
                         biografia.setText(biografiaApi);
@@ -158,7 +161,7 @@ public class UsuarioService {
                         Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
 
                         // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GETID", "Campos obtidos: apelido: " + apelidoApi+" nome: "+nomeApi+" biografia: "+biografiaApi+" urlFoto: "+urlFotoApi+" sobrenome: "+sobrenomeApi+" telefone: "+telefoneApi+" sexo: "+sexoApi+" dtNasc: "+dtNascApi);
+                        Log.d("API_RESPONSE_GETID", "Campos obtidos: apelido: " + apelidoApi + " nome: " + nomeApi + " biografia: " + biografiaApi + " urlFoto: " + urlFotoApi + " sobrenome: " + sobrenomeApi + " telefone: " + telefoneApi + " sexo: " + sexoApi + " dtNasc: " + dtNascApi);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -172,24 +175,26 @@ public class UsuarioService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados do perfil\nMensagem: "+throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados do perfil\nMensagem: " + throwable.getMessage());
             }
         });
     }
+
     public void selecionarUsuarioPorEmail(String email, Context context, TextView nome, TextView biografia, ImageView foto, TextView erro) {
         erro.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erro.setText("Carregando...");
         erro.setVisibility(View.VISIBLE);
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+        ApiService apiService = new ApiService(context);
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
 
         //executar chamada
@@ -211,26 +216,26 @@ public class UsuarioService {
                         String nomeApi = jsonObject.getString("nome");
                         String biografiaApi = jsonObject.getString("biografia");
                         String urlFotoApi = jsonObject.getString("urlImagem");
-                        if(jsonObject.getString("urlImagem").equals("")||jsonObject.getString("urlImagem") == null){
-                            urlFotoApi =  "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
+                        if (jsonObject.getString("urlImagem").equals("") || jsonObject.getString("urlImagem") == null) {
+                            urlFotoApi = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
                         }
 
-                        if(apelidoApi.equals("")||apelidoApi == null){
+                        if (apelidoApi.equals("") || apelidoApi == null) {
                             nome.setText(nomeApi);
-                        }else{
+                        } else {
                             nome.setText(apelidoApi);
                         }
 
-                        if(biografia.equals("")||biografia== null){
+                        if (biografia.equals("") || biografia == null) {
                             biografia.setHint("Nada por aqui...");
-                        }else{
+                        } else {
                             biografia.setText(biografiaApi);
                         }
 
                         Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
 
                         // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GET_EMAIL", "Campos obtidos: apelido: " + apelidoApi+" nome: "+nomeApi+" biografia: "+biografiaApi);
+                        Log.d("API_RESPONSE_GET_EMAIL", "Campos obtidos: apelido: " + apelidoApi + " nome: " + nomeApi + " biografia: " + biografiaApi);
 
                     } catch (Exception e) {
                         Log.e("API_RESPONSE_GET_EMAIL", "Erro ao processar resposta: " + e.getMessage());
@@ -249,22 +254,23 @@ public class UsuarioService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR_GET_EMAIL", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados do perfil\nMensagem: "+throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados do perfil\nMensagem: " + throwable.getMessage());
             }
         });
     }
 
     public String inserirUsuario(Usuario usuario, Context context, String[] id) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+        ApiService apiService = new ApiService(context);
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.inserirUsuario(usuario);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -301,62 +307,19 @@ public class UsuarioService {
         });
         return id[0];
     }
-    public void inserirUsuarioGenero(Context context, String[] id, long[] listaGenerosInteresse) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioGeneroInterface usuarioGeneroInterface = retrofit.create(UsuarioGeneroInterface.class);
-
-        for (long idGenero : listaGenerosInteresse) {
-            Call<ResponseBody> call = usuarioGeneroInterface.inserir(new UsuarioGenero(Long.parseLong(id[0]), idGenero));
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        try {
-                            Log.d("API_RESPONSE_POST", "Conexão usuário e genero criada: " + response.body().string());
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    } else {
-                        try {
-                            // Obter e exibir o corpo da resposta de erro
-                            String errorBody = response.errorBody().string();
-                            Log.e("API_ERROR_POST", "Erro ao fazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Log.e("API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                    Log.e("API_ERROR_POST", "Erro ao fazer conexão usuario e genero: " + throwable.getMessage());
-                    aux.abrirDialogErro(context, "Erro inesperado", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
-                }
-            });
-        }
-
-
-    }
-    public void atualizarUsuario(String id, Map<String,Object> campo,TextView erro,Context c){
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-        Call<ResponseBody> call = usuarioInterface.atualizarUsuario(id,campo);
+    public void atualizarUsuario(String id, Map<String, Object> campo, TextView erro, Context c) {
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+        ApiService apiService = new ApiService(c);
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
+        Call<ResponseBody> call = usuarioInterface.atualizarUsuario(id, campo);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -369,7 +332,7 @@ public class UsuarioService {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    if(erro!=null){
+                    if (erro != null) {
                         erro.setTextColor(ContextCompat.getColor(c, R.color.azul_carregando));
                         erro.setText("Usuário atualizado com sucesso");
                         erro.setVisibility(View.VISIBLE);
@@ -392,41 +355,6 @@ public class UsuarioService {
                 Log.e("API_ERROR_PATCH", "Erro ao atualizar o usuário: " + throwable.getMessage());
             }
 
-        });
-    }
-    public void deletarUsuarioPorId(String id, Context context) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
-        Call<ResponseBody> call = usuarioInterface.deletarUsuario(id);
-
-        //executar chamada
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        Log.d("API_RESPONSE_DELETE", "Usuário deletado: " + response.body().string());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                } else {
-                    Log.e("API_RESPONSE_DELETE", "Erro na resposta da API: " + response.code());
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_DELETE", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context,"Erro ao deletar usário","Houve um erro ao deletar o usuário\nMensagem: "+throwable.getMessage());
-            }
         });
     }
 }

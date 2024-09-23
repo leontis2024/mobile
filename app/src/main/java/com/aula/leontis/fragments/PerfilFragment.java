@@ -13,7 +13,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aula.leontis.TokenManager;
 import com.aula.leontis.activitys.TelaEditarPerfil;
+import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
@@ -27,8 +29,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class PerfilFragment extends Fragment {
@@ -102,6 +102,9 @@ public class PerfilFragment extends Fragment {
         return view;
     }
     public void logout(){
+        TokenManager tokenManager = new TokenManager(getContext());
+        tokenManager.clearToken(); // Método que deve remover o token armazenado
+
         FirebaseAuth.getInstance().signOut();
         verificarUsuarioLogado();
     }
@@ -114,16 +117,17 @@ public class PerfilFragment extends Fragment {
         }
     }
     public void selecionarIdUsuarioPorEmail(String email) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+        ApiService apiService = new ApiService(getContext());
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
 
         //executar chamada

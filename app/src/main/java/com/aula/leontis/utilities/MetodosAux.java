@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaLogin;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
+import com.aula.leontis.services.ApiService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -147,16 +148,17 @@ public class MetodosAux {
         dialog.show();
     }
     public void deletarUsuarioPorId(String id, Context context) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+        ApiService apiService = new ApiService(context);
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.deletarUsuario(id);
 
         //executar chamada

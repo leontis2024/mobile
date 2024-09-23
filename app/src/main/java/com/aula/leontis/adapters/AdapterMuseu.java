@@ -1,5 +1,7 @@
 package com.aula.leontis.adapters;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
+import com.aula.leontis.activitys.TelaInfoGenero;
+import com.aula.leontis.activitys.TelaInfoMuseu;
 import com.aula.leontis.models.museu.Museu;
 import com.bumptech.glide.Glide;
 
@@ -40,6 +44,16 @@ public class AdapterMuseu extends RecyclerView.Adapter<AdapterMuseu.viewHolderMu
         }
         Glide.with(holder.imagemMuseu.getContext()).asBitmap().load(url).into(holder.imagemMuseu);
 
+        holder.itemView.findViewById(R.id.btnSaibaMais).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                Intent infoMuseu = new Intent(holder.itemView.getContext(), TelaInfoMuseu.class);
+                bundle.putString("id", listaMuseus.get(holder.getAdapterPosition()).getId());
+                infoMuseu.putExtras(bundle);
+                holder.itemView.getContext().startActivity(infoMuseu);
+            }
+        });
     }
 
     @Override

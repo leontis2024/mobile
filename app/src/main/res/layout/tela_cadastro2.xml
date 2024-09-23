@@ -66,16 +66,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <TextView
-        android:id="@+id/info_apelido"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:text="O apelido é para o caso de você preferir ser chamado de um jeito diferente de seu nome"
-        android:textAlignment="textStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/apelido_cadastro" />
+        <TextView
+            android:id="@+id/info_apelido"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="45dp"
+            android:text="O apelido é para o caso de você preferir ser chamado de um jeito diferente de seu nome"
+            android:textAlignment="textStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/apelido_cadastro" />
 
         <EditText
             android:id="@+id/biografia_cadastro"

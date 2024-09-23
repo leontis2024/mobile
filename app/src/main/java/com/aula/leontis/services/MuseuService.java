@@ -3,19 +3,18 @@ package com.aula.leontis.services;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
-import com.aula.leontis.adapters.AdapterGeneroCompleto;
 import com.aula.leontis.adapters.AdapterMuseu;
-import com.aula.leontis.interfaces.genero.GeneroInterface;
 import com.aula.leontis.interfaces.museu.MuseuInterface;
-import com.aula.leontis.models.genero.GeneroCompleto;
 import com.aula.leontis.models.museu.Museu;
 import com.aula.leontis.utilities.MetodosAux;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -32,16 +31,17 @@ public class MuseuService {
         erroMuseu.setText("Carregando...");
         erroMuseu.setVisibility(View.VISIBLE);
         // Configurar Retrofit
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        MuseuInterface museuInterface = retrofit.create(MuseuInterface.class);
-
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        MuseuInterface museuInterface = retrofit.create(MuseuInterface.class);
+        ApiService apiService = new ApiService(context);
+        MuseuInterface museuInterface = apiService.getMuseuInterface();
         Call<List<Museu>> call = museuInterface.selecionarTodosMuseus();
 
         // Buscar todos os gêneros
@@ -69,6 +69,53 @@ public class MuseuService {
                 Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
                 erroMuseu.setText("Falha ao obter dados dos museus");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos museus\nMensagem: "+t.getMessage());
+            }
+        });
+    }
+
+    public void buscarMuseuPorId(String id, Context c, TextView erroMuseu,TextView nomeMuseu, TextView descMuseu, ImageView fotoMuseu) {
+        // Configurar Retrofit
+//        String urlAPI = "https://dev2-tfqz.onrender.com/";
+//
+//        // Configurar acesso à API
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(urlAPI)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        MuseuInterface generoInterface = retrofit.create(MuseuInterface.class);
+        ApiService apiService = new ApiService(c);
+        MuseuInterface generoInterface = apiService.getMuseuInterface();
+
+        Call<Museu> call = generoInterface.buscarMuseuPorId(id);
+
+        // Buscar todos os gêneros
+        call.enqueue(new Callback<Museu>() {
+            @Override
+            public void onResponse(Call<Museu> call, Response<Museu> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    erroMuseu.setVisibility(View.INVISIBLE);
+                    erroMuseu.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
+                    Museu museu = response.body();
+
+                    nomeMuseu.setText(museu.getNomeMuseu());
+                    descMuseu.setText(museu.getDescMuseu());
+                    String url = museu.getUrlImagem();
+                    if (url == null) {
+                        url = "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
+                    }
+                    Glide.with(c).asBitmap().load(url).into(fotoMuseu);
+
+                } else {
+                    erroMuseu.setText("Falha ao obter dados do museu");
+                    erroMuseu.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Museu> call, Throwable t) {
+                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do museu\nMensagem: " + t.getMessage());
             }
         });
     }

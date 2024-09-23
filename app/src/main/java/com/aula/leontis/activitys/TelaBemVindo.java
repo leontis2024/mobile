@@ -5,29 +5,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Button;
 
 import com.aula.leontis.R;
-import com.aula.leontis.interfaces.usuario.UsuarioInterface;
+import com.aula.leontis.TokenManager;
+import com.aula.leontis.interfaces.AuthInterface;
+import com.aula.leontis.models.auth.AuthResponse;
+import com.aula.leontis.models.auth.LoginRequest;
+import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.UsuarioService;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaBemVindo extends AppCompatActivity {
     UsuarioService usuarioService = new UsuarioService();
     Button btnFinalizar;
     String  url,id;
     long[] listaGenerosInteresse;
+ //   TokenManager tokenManager = new TokenManager(TelaBemVindo.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +56,42 @@ public class TelaBemVindo extends AppCompatActivity {
                 btnFinalizar.setBackground(getResources().getDrawable(R.drawable.botao));
                 btnFinalizar.setOnClickListener(v -> {
                     Intent feed = new Intent(TelaBemVindo.this, TelaPrincipal.class);
+                 //   pegarToken();
                     feed.putExtra("id", id);
                     startActivity(feed);
                     finish();
 
                 });
             }
-        }, 2000);
+        }, 3000);
 
 
 
     }
+//    public void pegarToken(){
+//        ApiService apiService = new ApiService(TelaBemVindo.this);
+//        AuthInterface authInterface = apiService.getAuthInterface(); // Você pode adicionar um método para obter o AuthInterface
+//
+//        LoginRequest loginRequest = new LoginRequest(tokenManager.getUsername(), tokenManager.getPassword()); // Substitua pelos dados do usuário
+//        authInterface.login(loginRequest).enqueue(new Callback<AuthResponse>() {
+//            @Override
+//            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+//                if (response.isSuccessful()) {
+//                    String token = response.body().getToken();
+//                    tokenManager.saveToken(token);
+//                    // Token salvo com sucesso
+//                } else {
+//                    // Tratar erro
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AuthResponse> call, Throwable t) {
+//                // Lidar com erro de rede
+//            }
+//        });
+//
+//    }
 
 
 

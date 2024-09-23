@@ -55,8 +55,6 @@ public class MuseusFragment extends Fragment {
         rvMuseus.setAdapter(adapterMuseu);
         rvMuseus.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //listaMuseus.add(new Museu("1","Teste","https://s2-oglobo.glbimg.com/UiPoK-OLSflpcG8JxeysJWTT4Dc=/0x0:4000x2250/924x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2022/p/p/AKvOfIQqygvStPWHRsww/100335462-sc-sao-paulo-sp-02-09-2022-museu-do-ipiranga-espaco-passou-por-obras-de-restauracao-que.jpg"));
-
         museuService.buscarMuseus(erroMuseu,getContext(), rvMuseus,listaMuseus, adapterMuseu);
 
         return view;

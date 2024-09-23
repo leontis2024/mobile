@@ -14,21 +14,32 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.aula.leontis.R;
+import com.aula.leontis.TokenManager;
+import com.aula.leontis.interfaces.AuthInterface;
+import com.aula.leontis.models.auth.AuthResponse;
+import com.aula.leontis.models.auth.LoginRequest;
+import com.aula.leontis.services.ApiService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class TelaLogin extends AppCompatActivity {
     Button entrar;
     EditText email,senha;
     TextView errorEmail, errorSenha, cadastro, erroGeral;
+  //  TokenManager tokenManager = new TokenManager(TelaLogin.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_login);
+    //    tokenManager.saveCredentials("user", "password");
 
         verificarUsuarioLogado();
 
@@ -122,6 +133,7 @@ public class TelaLogin extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             //redirecionar para a proxima tela
                             erroGeral.setVisibility(View.INVISIBLE);
+                          //  pegarToken();
                             Intent main = new Intent(TelaLogin.this, TelaPrincipal.class);
                             startActivity(main);
                             finish();
@@ -148,5 +160,29 @@ public class TelaLogin extends AppCompatActivity {
             finish();
         }
     }
+//    public void pegarToken(){
+//        ApiService apiService = new ApiService(TelaLogin.this);
+//        AuthInterface authInterface = apiService.getAuthInterface(); // Você pode adicionar um método para obter o AuthInterface
+//
+//        LoginRequest loginRequest = new LoginRequest(tokenManager.getUsername(), tokenManager.getPassword()); // Substitua pelos dados do usuário
+//        authInterface.login(loginRequest).enqueue(new Callback<AuthResponse>() {
+//            @Override
+//            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+//                if (response.isSuccessful()) {
+//                    String token = response.body().getToken();
+//                    tokenManager.saveToken(token);
+//                    // Token salvo com sucesso
+//                } else {
+//                    // Tratar erro
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AuthResponse> call, Throwable t) {
+//                // Lidar com erro de rede
+//            }
+//        });
+//
+//    }
 
 }
