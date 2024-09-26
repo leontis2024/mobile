@@ -27,6 +27,10 @@ public class AreaRestrita extends AppCompatActivity {
         carregar = findViewById(R.id.progressBar2);
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setSupportZoom(false);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
         webView.loadUrl("https://arearestrita.onrender.com/");
         webView.setWebViewClient(new WebViewClient(){
             @Override
