@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aula.leontis.TokenManager;
+import com.aula.leontis.activitys.AreaRestrita;
 import com.aula.leontis.activitys.TelaEditarPerfil;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.UsuarioService;
@@ -71,6 +72,14 @@ public class PerfilFragment extends Fragment {
         foto = view.findViewById(R.id.fotoPerfil);
         erro = view.findViewById(R.id.erroUsuario);
 
+        btnAreaRestrita.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent areaRestrita = new Intent(getContext(), AreaRestrita.class);
+                startActivity(areaRestrita);
+            }
+        });
+
         btnDeletarConta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +112,7 @@ public class PerfilFragment extends Fragment {
     }
     public void logout(){
         TokenManager tokenManager = new TokenManager(getContext());
-        tokenManager.clearToken(); // Método que deve remover o token armazenado
+        tokenManager.clearTokens(); // Método que deve remover o token armazenado
 
         FirebaseAuth.getInstance().signOut();
         verificarUsuarioLogado();

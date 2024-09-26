@@ -25,21 +25,23 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaLogin extends AppCompatActivity {
     Button entrar;
     EditText email,senha;
     TextView errorEmail, errorSenha, cadastro, erroGeral;
-  //  TokenManager tokenManager = new TokenManager(TelaLogin.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_login);
-    //    tokenManager.saveCredentials("user", "password");
 
         verificarUsuarioLogado();
 
@@ -133,10 +135,7 @@ public class TelaLogin extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             //redirecionar para a proxima tela
                             erroGeral.setVisibility(View.INVISIBLE);
-                          //  pegarToken();
-                            Intent main = new Intent(TelaLogin.this, TelaPrincipal.class);
-                            startActivity(main);
-                            finish();
+                            pegarToken();
                         }else{
                             try{
                                 throw task.getException();
@@ -160,29 +159,54 @@ public class TelaLogin extends AppCompatActivity {
             finish();
         }
     }
-//    public void pegarToken(){
-//        ApiService apiService = new ApiService(TelaLogin.this);
-//        AuthInterface authInterface = apiService.getAuthInterface(); // Você pode adicionar um método para obter o AuthInterface
-//
-//        LoginRequest loginRequest = new LoginRequest(tokenManager.getUsername(), tokenManager.getPassword()); // Substitua pelos dados do usuário
-//        authInterface.login(loginRequest).enqueue(new Callback<AuthResponse>() {
-//            @Override
-//            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-//                if (response.isSuccessful()) {
-//                    String token = response.body().getToken();
-//                    tokenManager.saveToken(token);
-//                    // Token salvo com sucesso
-//                } else {
-//                    // Tratar erro
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AuthResponse> call, Throwable t) {
-//                // Lidar com erro de rede
-//            }
-//        });
-//
-//    }
+    public void pegarToken() {
+        // Instancia ApiService para lidar com a autenticação
+        Retrofit authRetrofit = new Retrofit.Builder()
+                .baseUrl("https://dev2-tfqz.onrender.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        AuthInterface authInterface = authRetrofit.create(AuthInterface.class);// Obtém a interface de autenticação
+
+        // Cria o objeto LoginRequest com as credenciais do usuário
+        LoginRequest loginRequest = new LoginRequest(email.getText().toString(), senha.getText().toString());
+
+        // Faz a requisição para a API de login
+        authInterface.login(loginRequest).enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                // Verifica se a resposta foi bem-sucedida e contém o token
+                if (response.isSuccessful() && response.body() != null) {
+                    // Pega o token de acesso e o token de refresh da resposta
+                    Map<String, String> tokens =  response.body();
+
+                    // Obtendo os tokens do Map
+                    String accessToken = tokens.get("accessToken");
+                    String refreshToken = tokens.get("refreshToken");
+
+                    // Salva os tokens no TokenManager
+                    TokenManager tokenManager = new TokenManager(TelaLogin.this);
+                    tokenManager.saveAccessToken(accessToken);
+                    tokenManager.saveRefreshToken(refreshToken);
+
+                    Log.d("TOKEN", "Access Token: " + accessToken);
+                    Log.d("TOKEN", "Refresh Token: " + refreshToken);
+
+                    Intent main = new Intent(TelaLogin.this, TelaPrincipal.class);
+                    startActivity(main);
+                    finish();
+
+                } else {
+                    // Tratar erro de login (credenciais incorretas, por exemplo)
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                // Lida com erros de conexão ou outros tipos de falha
+                Log.e("ERRO_LOGIN", "Erro: " + t.getMessage());
+            }
+        });
+    }
+
 
 }

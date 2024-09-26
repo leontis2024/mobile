@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Leontis"
         tools:targetApi="31">
         <activity
+            android:name=".activitys.AreaRestrita"
+            android:exported="false" />
+        <activity
             android:name=".activitys.TelaInfoMuseu"
             android:exported="false" />
         <activity

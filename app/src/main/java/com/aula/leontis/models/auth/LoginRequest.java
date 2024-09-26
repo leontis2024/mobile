@@ -1,6 +1,5 @@
 package com.aula.leontis.models.auth;
 
-// LoginRequest.java
 public class LoginRequest {
     private String username;
     private String password;

@@ -23,6 +23,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GeneroService {
     MetodosAux aux =new MetodosAux();
@@ -77,17 +79,15 @@ public class GeneroService {
         erroGenero.setText("Carregando...");
         erroGenero.setVisibility(View.VISIBLE);
         // Configurar Retrofit
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        GeneroInterface generoInterface = retrofit.create(GeneroInterface.class);
-        ApiService apiService = new ApiService(context);
-        GeneroInterface generoInterface = apiService.getGeneroInterface();
+        String urlAPI = "https://dev2-tfqz.onrender.com/";
+
+        // Configurar acesso à API
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        GeneroInterface generoInterface = retrofit.create(GeneroInterface.class);
         Call<List<Genero>> call = generoInterface.buscarTodosGenerosParciais();
 
         // Buscar todos os gêneros

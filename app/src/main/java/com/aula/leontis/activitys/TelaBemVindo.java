@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.aula.leontis.R;
@@ -21,11 +23,13 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaBemVindo extends AppCompatActivity {
     UsuarioService usuarioService = new UsuarioService();
     Button btnFinalizar;
-    String  url,id;
+    String  url,id,senha,email;
     long[] listaGenerosInteresse;
  //   TokenManager tokenManager = new TokenManager(TelaBemVindo.this);
 
@@ -37,9 +41,10 @@ public class TelaBemVindo extends AppCompatActivity {
         Intent info = getIntent();
         Bundle infoCadastro = info.getExtras();
         if(infoCadastro != null) {
-
             id=infoCadastro.getString("id");
             url=infoCadastro.getString("urlFoto");
+            email=infoCadastro.getString("email");
+            senha=infoCadastro.getString("senha");
             listaGenerosInteresse = infoCadastro.getLongArray("listaGenerosInteresse");
             Map<String, Object> updates = new HashMap<>();
             updates.put("urlImagem", url);
@@ -55,8 +60,8 @@ public class TelaBemVindo extends AppCompatActivity {
             public void run() {
                 btnFinalizar.setBackground(getResources().getDrawable(R.drawable.botao));
                 btnFinalizar.setOnClickListener(v -> {
+                    pegarToken();
                     Intent feed = new Intent(TelaBemVindo.this, TelaPrincipal.class);
-                 //   pegarToken();
                     feed.putExtra("id", id);
                     startActivity(feed);
                     finish();
@@ -68,30 +73,50 @@ public class TelaBemVindo extends AppCompatActivity {
 
 
     }
-//    public void pegarToken(){
-//        ApiService apiService = new ApiService(TelaBemVindo.this);
-//        AuthInterface authInterface = apiService.getAuthInterface(); // Você pode adicionar um método para obter o AuthInterface
-//
-//        LoginRequest loginRequest = new LoginRequest(tokenManager.getUsername(), tokenManager.getPassword()); // Substitua pelos dados do usuário
-//        authInterface.login(loginRequest).enqueue(new Callback<AuthResponse>() {
-//            @Override
-//            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-//                if (response.isSuccessful()) {
-//                    String token = response.body().getToken();
-//                    tokenManager.saveToken(token);
-//                    // Token salvo com sucesso
-//                } else {
-//                    // Tratar erro
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AuthResponse> call, Throwable t) {
-//                // Lidar com erro de rede
-//            }
-//        });
-//
-//    }
+    public void pegarToken() {
+        // Instancia ApiService para lidar com a autenticação
+        Retrofit authRetrofit = new Retrofit.Builder()
+                .baseUrl("https://dev2-tfqz.onrender.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        AuthInterface authInterface = authRetrofit.create(AuthInterface.class);// Obtém a interface de autenticação
+
+        // Cria o objeto LoginRequest com as credenciais do usuário
+        LoginRequest loginRequest = new LoginRequest(email, senha);
+
+        // Faz a requisição para a API de login
+        authInterface.login(loginRequest).enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                // Verifica se a resposta foi bem-sucedida e contém o token
+                if (response.isSuccessful() && response.body() != null) {
+                    // Pega o token de acesso e o token de refresh da resposta
+                    Map<String, String> tokens = response.body();
+
+                    // Obtendo os tokens do Map
+                    String accessToken = tokens.get("accessToken");
+                    String refreshToken = tokens.get("refreshToken");
+
+                    // Salva os tokens no TokenManager
+                    TokenManager tokenManager = new TokenManager(TelaBemVindo.this);
+                    tokenManager.saveAccessToken(accessToken);
+                    tokenManager.saveRefreshToken(refreshToken);
+
+                    Intent main = new Intent(TelaBemVindo.this, TelaPrincipal.class);
+                    startActivity(main);
+                    finish();
+                } else {
+                    // Tratar erro de login (credenciais incorretas, por exemplo)
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                // Lida com erros de conexão ou outros tipos de falha
+                Log.e("ERRO_LOGIN", "Erro: " + t.getMessage());
+            }
+        });
+    }
 
 
 

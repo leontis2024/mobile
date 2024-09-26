@@ -184,6 +184,8 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                     info.putString("id", id[0]);
                                     info.putLongArray("listaGenerosInteresse", listaGenerosInteresse);
                                     info.putString("urlFoto", urlFoto);
+                                    info.putString("email", email);
+                                    info.putString("senha", senha);
                                     Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
                                     telBemVindo.putExtras(info);
                                     startActivity(telBemVindo);

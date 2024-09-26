@@ -52,7 +52,6 @@ public class ApiService {
             generoInterface = retrofit.create(GeneroInterface.class);
             museuInterface = retrofit.create(MuseuInterface.class);
             usuarioGeneroInterface = retrofit.create(UsuarioGeneroInterface.class);
-            authInterface = retrofit.create(AuthInterface.class);
             obraInterface = retrofit.create(ObraInterface.class);
         }
 
@@ -68,10 +67,6 @@ public class ApiService {
         public MuseuInterface getMuseuInterface() {
             return museuInterface;
         }
-        public AuthInterface getAuthInterface() {
-            return authInterface;
-        }
-
         public UsuarioGeneroInterface getUsuarioGeneroInterface() {
             return usuarioGeneroInterface;
         }

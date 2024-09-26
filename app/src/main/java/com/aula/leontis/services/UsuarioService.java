@@ -260,17 +260,15 @@ public class UsuarioService {
     }
 
     public String inserirUsuario(Usuario usuario, Context context, String[] id) {
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-        ApiService apiService = new ApiService(context);
-        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
+        String urlAPI = "https://dev2-tfqz.onrender.com/";
+
+        // Configurar acesso à API
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
         Call<ResponseBody> call = usuarioInterface.inserirUsuario(usuario);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -308,17 +306,16 @@ public class UsuarioService {
         return id[0];
     }
     public void atualizarUsuario(String id, Map<String, Object> campo, TextView erro, Context c) {
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-        ApiService apiService = new ApiService(c);
-        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
+        String urlAPI = "https://dev2-tfqz.onrender.com/";
+
+        // Configurar acesso à API
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+
         Call<ResponseBody> call = usuarioInterface.atualizarUsuario(id, campo);
 
         call.enqueue(new Callback<ResponseBody>() {
