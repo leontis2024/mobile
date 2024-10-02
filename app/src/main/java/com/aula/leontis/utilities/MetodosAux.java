@@ -112,26 +112,30 @@ public class MetodosAux {
                 dialog.dismiss();
                 if(deletar) {
                     abrirDialog(dialog.getContext(), "Tchau tchau 😭...", "É triste que você queira ir embora, espero que nos encontremos algum outro dia 🥺");
+                    FirebaseAuth.getInstance().signOut();
                     FirebaseAuth.getInstance().getCurrentUser().delete();
                     FirebaseStorage storage = FirebaseStorage.getInstance();
 
-                    // Referenciar o arquivo com o caminho completo (pode variar dependendo da sua organização de pastas)
+                    //  Referenciar o arquivo com o caminho completo (pode variar dependendo da sua organização de pastas)
                     StorageReference storageRef = storage.getReference().child("usuarios/usuario" + id+".jpg");
 
                     // Deletar o arquivo
-                    storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // Imagem deletada com sucesso
-                            Log.d("IMAGEM_DELETE", "Imagem deletada com sucesso.");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Falha ao deletar a imagem
-                            Log.e("IMAGEM_DELETE_ERROR", "Erro ao deletar a imagem: " + exception.getMessage());
-                        }
-                    });
+                    if(storageRef!=null) {
+                        storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Imagem deletada com sucesso
+                                Log.d("IMAGEM_DELETE", "Imagem deletada com sucesso.");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Falha ao deletar a imagem
+                                Log.e("IMAGEM_DELETE_ERROR", "Erro ao deletar a imagem: " + exception.getMessage());
+                            }
+                        });
+                    }
+                    deletarUsuarioPorIdMongo(id, c);
                     deletarUsuarioPorId(id, c);
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -141,7 +145,7 @@ public class MetodosAux {
                             c.startActivity(intent);
                             ((Activity) c).finish();
                         }
-                    },5000);
+                    },3000);
                 }
             }
         });
@@ -180,6 +184,41 @@ public class MetodosAux {
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR_DELETE", "Erro ao fazer a requisição: " + throwable.getMessage());
                 abrirDialogErro(context,"Erro ao deletar usário","Houve um erro ao deletar o usuário\nMensagem: "+throwable.getMessage());
+            }
+        });
+    }
+
+    public void deletarUsuarioPorIdMongo(String id, Context context) {
+                String urlAPI = "https://apimongo-r613.onrender.com/";
+
+        // Configurar acesso à API
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+        Call<ResponseBody> call = usuarioInterface.deletarUsuarioMongo(id);
+
+        //executar chamada
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        Log.d("API_RESPONSE_DELETE", "Usuário deletado no mongo: " + response.body().string());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } else {
+                    Log.e("API_RESPONSE_DELETE", "Erro na resposta da API mongo: " + response.code()+" "+response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("API_ERROR_DELETE", "Erro ao fazer a requisição mongo: " + throwable.getMessage());
+                abrirDialogErro(context,"Erro ao deletar usário","Houve um erro ao deletar o usuário mongo\nMensagem: "+throwable.getMessage());
             }
         });
     }

@@ -45,10 +45,12 @@ public class TelaBemVindo extends AppCompatActivity {
             url=infoCadastro.getString("urlFoto");
             email=infoCadastro.getString("email");
             senha=infoCadastro.getString("senha");
-            listaGenerosInteresse = infoCadastro.getLongArray("listaGenerosInteresse");
-            Map<String, Object> updates = new HashMap<>();
-            updates.put("urlImagem", url);
-            usuarioService.atualizarUsuario(id,updates,null,this);
+        //    listaGenerosInteresse = infoCadastro.getLongArray("listaGenerosInteresse");
+            if(url!=null) {
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("urlImagem", url);
+                usuarioService.atualizarUsuario(id, updates, null, this);
+            }
 
         }
         btnFinalizar = findViewById(R.id.btn_finalizar_bem_vindo);

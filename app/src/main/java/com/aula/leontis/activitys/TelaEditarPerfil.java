@@ -129,11 +129,11 @@ public class TelaEditarPerfil extends AppCompatActivity {
                     sexo.setSelection(1);
                 }else if(sexoTxt.getText().toString().equals("O")){
                     sexo.setSelection(4);
-                }else {
+                }else if(sexoTxt.getText().toString().equals("N")){
                     sexo.setSelection(3);
                 }
             }
-        },1500);
+        },2000);
 
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override

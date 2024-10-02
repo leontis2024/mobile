@@ -13,6 +13,7 @@ import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.usuario.Usuario;
 import com.aula.leontis.models.usuario.UsuarioGenero;
+import com.aula.leontis.models.usuario.UsuarioMongo;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 
@@ -259,7 +260,7 @@ public class UsuarioService {
         });
     }
 
-    public String inserirUsuario(Usuario usuario, Context context, String[] id) {
+    public String inserirUsuario(Usuario usuario, Context c, String[] id) {
         String urlAPI = "https://dev2-tfqz.onrender.com/";
 
         // Configurar acesso à API
@@ -287,7 +288,7 @@ public class UsuarioService {
                         // Obter e exibir o corpo da resposta de erro
                         String errorBody = response.errorBody().string();
                         Log.e("API_ERROR_POST", "Erro ao inserir o usuário: " + response.code() + " - " + errorBody + " - " + response.message());
-                        aux.abrirDialogErro(context, "Erro ao cadastrar usuário", "Não foi possível realizar seu cadastro. Erro: " + errorBody);
+                        aux.abrirDialogErro(c, "Erro ao cadastrar usuário", "Não foi possível realizar seu cadastro. Erro: " + errorBody);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.e("API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
@@ -299,7 +300,7 @@ public class UsuarioService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR_POST", "Erro ao inserir o usuário: " + throwable.getMessage());
-                aux.abrirDialogErro(context, "Erro ao cadastrar usuário", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
+                aux.abrirDialogErro(c, "Erro ao cadastrar usuário", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
             }
 
         });
@@ -350,6 +351,51 @@ public class UsuarioService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR_PATCH", "Erro ao atualizar o usuário: " + throwable.getMessage());
+            }
+
+        });
+    }
+
+    public void inserirUsuarioMongo(UsuarioMongo usuario, Context context) {
+        String urlAPI = "https://apimongo-r613.onrender.com/";
+
+        // Configurar acesso à API
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+        Call<ResponseBody> call = usuarioInterface.inserirUsuarioMongo(usuario);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String body = "";
+                if (response.isSuccessful()) {
+                    try {
+                        body = response.body().string();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Log.d("MONGO_API_RESPONSE_POST", "ID do usuário inserido via API mongo: " + body);
+                } else {
+                    try {
+                        // Obter e exibir o corpo da resposta de erro
+                        String errorBody = response.errorBody().string();
+                        Log.e("MONGO_API_ERROR_POST", "Erro ao inserir o usuário mongo: " + response.code() + " - " + errorBody + " - " + response.message());
+                        aux.abrirDialogErro(context, "Erro ao cadastrar usuário mongo", "Não foi possível realizar seu cadastro. Erro: " + errorBody);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("MONGO_API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("MONGO_API_ERROR_POST", "Erro ao inserir o usuário mongo: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro ao cadastrar usuário mongo", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
             }
 
         });

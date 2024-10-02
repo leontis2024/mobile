@@ -29,16 +29,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class GeneroService {
     MetodosAux aux =new MetodosAux();
     public void buscarGeneroPorId(String id, Context c, TextView erroGenero,TextView nomeGenero, TextView descGenero, ImageView fotoGenero) {
-        // Configurar Retrofit
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        GeneroInterface generoInterface = retrofit.create(GeneroInterface.class);
         ApiService apiService = new ApiService(c);
         GeneroInterface generoInterface = apiService.getGeneroInterface();
 
@@ -60,6 +50,7 @@ public class GeneroService {
                         url= "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
                     }
                     Glide.with(c).asBitmap().load(url).into(fotoGenero);
+
 
                 } else {
                     erroGenero.setText("Falha ao obter dados do gênero");

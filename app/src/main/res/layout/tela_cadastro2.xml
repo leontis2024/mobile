@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="45dp"
             android:background="@drawable/input"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +71,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="45dp"
             android:text="O apelido é para o caso de você preferir ser chamado de um jeito diferente de seu nome"
             android:textAlignment="textStart"
@@ -98,18 +98,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/erro_sexo" />
 
-    <TextView
-        android:id="@+id/erro_sexo"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:text="TextView"
-        android:textAlignment="textStart"
-        android:textColor="@color/vermelho_erro"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sexo_cadastro" />
+        <TextView
+            android:id="@+id/erro_sexo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="45dp"
+            android:text="TextView"
+            android:textAlignment="textStart"
+            android:textColor="@color/vermelho_erro"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sexo_cadastro" />
 
     <Button
         android:id="@+id/btn_continuar"

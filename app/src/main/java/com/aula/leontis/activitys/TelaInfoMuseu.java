@@ -58,8 +58,8 @@ public class TelaInfoMuseu extends AppCompatActivity {
             if(infoMuseu != null) {
                 id = infoMuseu.getString("id");
             }
-            museuService.buscarMuseuPorId(id,TelaInfoMuseu.this,erroMuseu,nomeMuseu,descMuseu,fotoMuseu);
-          //  obraService.buscarObrasPorMuseu(id,erroMuseu,TelaInfoMuseu.this,rvObras,listaObras,adapterObra);
+           // museuService.buscarMuseuPorId(id,TelaInfoMuseu.this,erroMuseu,nomeMuseu,descMuseu,fotoMuseu);
+            obraService.buscarObrasPorMuseu(id,erroMuseu,TelaInfoMuseu.this,rvObras,listaObras,adapterObra);
 
         }
 

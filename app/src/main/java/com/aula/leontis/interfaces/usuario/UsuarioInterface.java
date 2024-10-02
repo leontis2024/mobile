@@ -1,6 +1,7 @@
 package com.aula.leontis.interfaces.usuario;
 
 import com.aula.leontis.models.usuario.Usuario;
+import com.aula.leontis.models.usuario.UsuarioMongo;
 
 import java.util.Map;
 
@@ -26,5 +27,11 @@ public interface UsuarioInterface {
     Call<ResponseBody> atualizarUsuario( @Path("id") String id, @Body Map<String, Object> updates);
     @DELETE("api/usuario/excluir/{id}")
     Call<ResponseBody> deletarUsuario(@Path("id") String id);
+
+    @POST("/api/usuarios")
+    Call<ResponseBody> inserirUsuarioMongo(@Body UsuarioMongo usuarioMongo);
+
+    @DELETE("/api/usuarios/{id}")
+    Call<ResponseBody> deletarUsuarioMongo(@Path("id") String id);
 
 }

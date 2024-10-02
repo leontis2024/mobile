@@ -30,19 +30,10 @@ public class ObraService {
         erroObra.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroObra.setText("Carregando...");
         erroObra.setVisibility(View.VISIBLE);
-        // Configurar Retrofit
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        ObraInterface obraInterface = retrofit.create(ObraInterface.class);
+
         ApiService apiService = new ApiService(context);
         ObraInterface obraInterface = apiService.getObraInterface();
-        Call<List<Obra>> call = obraInterface.selecionarObrasPorMuseu(idMuseu);
+        Call<List<Obra>> call = obraInterface.selecionarObrasPorMuseu(Long.parseLong(idMuseu));
 
         // Buscar todos os gêneros
         call.enqueue(new Callback<List<Obra>>() {
@@ -57,7 +48,7 @@ public class ObraService {
 
                 } else {
                     erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                    Log.e("API_ERROR_GET", "Não foi possivel fazer a requisição: " + response.code()+" "+response.message());
+                    Log.e("API_ERROR_GET", "Não foi possivel fazer a requisição: " + response.code()+" "+response.errorBody());
                     erroObra.setText("Falha ao obter dados das obras");
                     erroObra.setVisibility(View.VISIBLE);
                 }

@@ -10,5 +10,5 @@ import retrofit2.http.Path;
 
 public interface ObraInterface {
     @GET("/api/obra/selecionarPorMuseu/{id}")
-    Call<List<Obra>> selecionarObrasPorMuseu(@Path("id") String id);
+    Call<List<Obra>> selecionarObrasPorMuseu(@Path("id") long id);
 }
