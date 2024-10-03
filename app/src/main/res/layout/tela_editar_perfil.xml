@@ -28,7 +28,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="45dp"
                     android:background="@drawable/input"
                     android:fontFamily="@font/inter"
@@ -44,7 +44,7 @@
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:layout_marginStart="45dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="45dp"
                     android:background="@drawable/input"
                     android:fontFamily="@font/inter"
@@ -54,7 +54,7 @@
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/apelido" />
+                    app:layout_constraintTop_toBottomOf="@+id/erro_apelido_editar" />
 
 
                 <EditText
@@ -62,7 +62,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="45dp"
                     android:background="@drawable/input"
                     android:ems="10"
@@ -72,14 +72,14 @@
                     android:textColorHint="@color/hint"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/biografia" />
+                    app:layout_constraintTop_toBottomOf="@+id/erro_biografia_editar" />
 
                 <EditText
                     android:id="@+id/sobrenome_editar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="45dp"
                     android:background="@drawable/input"
                     android:ems="10"
@@ -90,14 +90,14 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.505"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nome_editar" />
+                    app:layout_constraintTop_toBottomOf="@+id/erro_nome_editar" />
 
                 <EditText
                     android:id="@+id/telefone_editar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="45dp"
                     android:background="@drawable/input"
                     android:ems="10"
@@ -108,17 +108,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.505"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sobrenome_editar" />
+                    app:layout_constraintTop_toBottomOf="@+id/erro_sobrenome_editar" />
 
                 <ImageButton
                     android:id="@+id/calendario_editar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="50dp"
                     android:background="@color/bege_claro"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/telefone_editar"
+                    app:layout_constraintTop_toBottomOf="@+id/erro_telefone_editar"
                     app:srcCompat="@drawable/ic_calendario" />
 
                 <EditText
@@ -126,18 +126,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/input"
                     android:ems="10"
                     android:enabled="true"
                     android:fontFamily="@font/inter"
                     android:hint="Data de nascimento"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:textColorHint="@color/hint"
                     app:layout_constraintEnd_toStartOf="@+id/calendario_editar"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/telefone_editar" />
+                    app:layout_constraintTop_toBottomOf="@+id/erro_telefone_editar" />
 
                 <Spinner
                     android:id="@+id/sexo_editar"
@@ -145,19 +145,19 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="45dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="45dp"
                     android:background="@drawable/input"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/data_nasc_editar" />
+                    app:layout_constraintTop_toBottomOf="@+id/erro_nasc_editar" />
 
                 <TextView
                     android:id="@+id/erroUsuarioEdit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="100dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="100dp"
                     android:fontFamily="@font/inter"
                     android:maxLines="4"
@@ -226,5 +226,96 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/erroUsuarioEdit" />
+
+                <TextView
+                    android:id="@+id/erro_biografia_editar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="2dp"
+                    android:text="TextView"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/vermelho_erro"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/biografia" />
+                <TextView
+                    android:id="@+id/erro_apelido_editar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="2dp"
+                    android:text="TextView"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/vermelho_erro"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/apelido" />
+
+                <TextView
+                    android:id="@+id/erro_nome_editar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="2dp"
+                    android:text="TextView"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/vermelho_erro"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nome_editar" />
+
+                <TextView
+                    android:id="@+id/erro_sexo_editar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="2dp"
+                    android:text="TextView"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/vermelho_erro"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sexo_editar" />
+
+                <TextView
+                    android:id="@+id/erro_sobrenome_editar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="2dp"
+                    android:text="TextView"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/vermelho_erro"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sobrenome_editar" />
+
+
+                <TextView
+                    android:id="@+id/erro_telefone_editar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="2dp"
+                    android:text="TextView"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/vermelho_erro"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/telefone_editar" />
+
+                <TextView
+                    android:id="@+id/erro_nasc_editar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginTop="2dp"
+                    android:text="TextView"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/vermelho_erro"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/data_nasc_editar" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

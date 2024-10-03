@@ -131,7 +131,7 @@
             android:enabled="true"
             android:fontFamily="@font/inter"
             android:hint="Data de nascimento"
-            android:inputType="text"
+            android:inputType="number"
             android:textColorHint="@color/hint"
             app:layout_constraintEnd_toStartOf="@+id/calendario_cadastro"
             app:layout_constraintStart_toStartOf="parent"
@@ -193,89 +193,88 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="45dp"
             android:text="TextView"
             android:textAlignment="textStart"
             android:textColor="@color/vermelho_erro"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nome_cadastro" />
 
     <TextView
         android:id="@+id/erro_sobrenome_cadastro"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
         android:layout_marginTop="2dp"
         android:text="TextView"
         android:textAlignment="textStart"
         android:textColor="@color/vermelho_erro"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sobrenome_cadastro" />
 
     <TextView
         android:id="@+id/erro_email_cadastro"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
         android:layout_marginTop="2dp"
         android:text="TextView"
         android:textAlignment="textStart"
         android:textColor="@color/vermelho_erro"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_cadastro" />
 
     <TextView
         android:id="@+id/erro_telefone_cadastro"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
         android:layout_marginTop="2dp"
         android:text="TextView"
         android:textAlignment="textStart"
         android:textColor="@color/vermelho_erro"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/telefone_cadastro" />
 
     <TextView
         android:id="@+id/erro_nasc_cadastro"
-        android:layout_width="300dp"
-        android:layout_height="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
         android:layout_marginTop="2dp"
         android:text="TextView"
         android:textAlignment="textStart"
         android:textColor="@color/vermelho_erro"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/data_nasc_cadastro" />
 
     <TextView
         android:id="@+id/erro_senha_cadastro"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
         android:layout_marginTop="2dp"
         android:text="TextView"
         android:textAlignment="textStart"
         android:textColor="@color/vermelho_erro"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/senha_cadastro" />
         <TextView
             android:id="@+id/erro_senha_cadastro2"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
             android:layout_marginTop="2dp"
             android:text="TextView"
             android:textAlignment="textStart"
             android:textColor="@color/vermelho_erro"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/senha_cadastro2" />
 

@@ -17,6 +17,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -62,8 +64,8 @@ public class TelaEditarPerfil extends AppCompatActivity {
     UsuarioService usuarioService = new UsuarioService();
     String id;
     Spinner sexo;
-    TextView erroUsuarioEditar, sexoTxt;
-    String txtSexo, urlFoto;
+    TextView erroUsuarioEditar, sexoTxt, erroNome, erroSobrenome, erroApelido, erroBiografia, erroTelefone, erroDtNasc,erroSexo;
+    String  urlFoto;
 
     Uri imagemUri;
 
@@ -77,11 +79,119 @@ public class TelaEditarPerfil extends AppCompatActivity {
         nome = findViewById(R.id.nome_editar);
         sobrenome = findViewById(R.id.sobrenome_editar);
         telefone = findViewById(R.id.telefone_editar);
+
+        telefone.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) {
+                    return;
+                }
+
+                String unmasked = s.toString().replaceAll("[^\\d]", "");
+                StringBuilder formatted = new StringBuilder();
+
+                int length = unmasked.length();
+
+                if (length > 0) {
+                    formatted.append("(");
+                    formatted.append(unmasked.substring(0, Math.min(2, length)));
+                }
+
+                if (length > 2) {
+                    formatted.append(")");
+                    formatted.append(unmasked.substring(2, Math.min(7, length)));
+                }
+
+                if (length > 7) {
+                    formatted.append("-");
+                    formatted.append(unmasked.substring(7, Math.min(11, length)));
+                }
+
+                isUpdating = true;
+                telefone.setText(formatted.toString());
+                telefone.setSelection(formatted.length());
+                isUpdating = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         dtNasc = findViewById(R.id.data_nasc_editar);
+
+
+        dtNasc.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating;
+            private String previous = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Verificar se já estamos atualizando para evitar loops infinitos
+                if (isUpdating) {
+                    return;
+                }
+
+                String current = s.toString().replaceAll("[^\\d]", ""); // Remover caracteres não numéricos
+
+                // Verificar se o usuário está apagando o texto
+                if (current.equals(previous)) {
+                    return;
+                }
+
+                StringBuilder formatted = new StringBuilder();
+
+                // Inserir a barra após os dois primeiros dígitos
+                if (current.length() >= 2) {
+                    formatted.append(current.substring(0, 2)).append("/");
+                } else if (current.length() > 0) {
+                    formatted.append(current);
+                }
+
+                // Inserir a barra após os quatro dígitos
+                if (current.length() >= 4) {
+                    formatted.append(current.substring(2, 4)).append("/");
+                } else if (current.length() > 2) {
+                    formatted.append(current.substring(2));
+                }
+
+                // Adicionar o ano completo
+                if (current.length() > 4) {
+                    formatted.append(current.substring(4));
+                }
+
+                // Prevenir o loop de atualização
+                isUpdating = true;
+                dtNasc.setText(formatted.toString());
+                dtNasc.setSelection(formatted.length()); // Colocar o cursor no final
+                isUpdating = false;
+
+                previous = current;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         btCalendar = findViewById(R.id.calendario_editar);
         carregando = findViewById(R.id.progressBar);
         btnMudarFotos = findViewById(R.id.btnMudarFotos);
         sexoTxt = findViewById(R.id.sexoTxt);
+
+        erroApelido = findViewById(R.id.erro_apelido_editar);
+        erroBiografia = findViewById(R.id.erro_biografia_editar);
+        erroNome = findViewById(R.id.erro_nome_editar);
+        erroSobrenome = findViewById(R.id.erro_sobrenome_editar);
+        erroTelefone = findViewById(R.id.erro_telefone_editar);
+        erroDtNasc = findViewById(R.id.erro_nasc_editar);
+        erroSexo = findViewById(R.id.erro_sexo_editar);
         
         btnVoltar = findViewById(R.id.btnVoltarEdit);
         btnFinalizar = findViewById(R.id.btnFinalizarEdicao);
@@ -178,41 +288,42 @@ public class TelaEditarPerfil extends AppCompatActivity {
             public void onClick(View v) {
                 if(generoValido[0]==false) {
                     erroInput2(sexo);
-                    erroUsuarioEditar.setText("Selecione seu gênero");
-                    erroUsuarioEditar.setVisibility(View.VISIBLE);
+                    erroSexo.setText("Selecione seu gênero");
+                    erroSexo.setVisibility(View.VISIBLE);
 
                 }else{
+                    erroSexo.setVisibility(View.INVISIBLE);
                     semErroInput2(sexo);
                 }
 
                 if(nome.getText().toString().equals("")){
-                    erroInput("Preencha o campo nome",erroUsuarioEditar,nome);
+                    erroInput("Preencha o campo nome",erroNome,nome);
                 }else if(nome.getText().length() < 3 || nome.getText().length() > 100){
-                    erroInput("O nome deve ter mais que 3 caracteres e menos que 100",erroUsuarioEditar,nome);
+                    erroInput("O nome deve ter mais que 3 caracteres e menos que 100",erroNome,nome);
                 }else{
-                    semErroInput(null,nome);
+                    semErroInput(erroNome,nome);
                 }
 
                 if(sobrenome.getText().toString().equals("")){
-                    erroInput("Preencha o campo sobrenome",erroUsuarioEditar,sobrenome);
+                    erroInput("Preencha o campo sobrenome",erroSobrenome,sobrenome);
                 }else if(sobrenome.getText().length() < 3 || sobrenome.getText().length() > 100){
-                    erroInput("O sobrenome deve ter mais que 3 caracteres e menos que 100",erroUsuarioEditar,sobrenome);
+                    erroInput("O sobrenome deve ter mais que 3 caracteres e menos que 100",erroSobrenome,sobrenome);
                 }else{
-                    semErroInput(null,sobrenome);
+                    semErroInput(erroSobrenome,sobrenome);
                 }
 
                 if(telefone.getText().toString().equals("")){
-                    erroInput("Preencha o campo telefone",erroUsuarioEditar,telefone);
-                }else if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
-                    erroInput("Digite o telefone com o DDD sem espaços",erroUsuarioEditar,telefone);
+                    erroInput("Preencha o campo telefone",erroTelefone,telefone);
+                }else if(telefone.getText().length() < 14 || telefone.getText().length() > 14){
+                    erroInput("Digite o telefone no formato (XX)XXXXX-XXXX",erroTelefone,telefone);
                 }else{
-                    semErroInput(null,telefone);
+                    semErroInput(erroTelefone,telefone);
                 }
 
                 if(dtNasc.getText().toString().equals("")){
-                    erroInput("Preencha o campo data de nascimento",erroUsuarioEditar,dtNasc);
+                    erroInput("Preencha o campo data de nascimento",erroDtNasc,dtNasc);
                 }else{
-                    semErroInput(null,dtNasc);
+                    semErroInput(erroDtNasc,dtNasc);
                 }
 
                 if(informacoesValidas()){

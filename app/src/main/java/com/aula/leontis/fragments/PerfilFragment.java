@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aula.leontis.TokenManager;
-import com.aula.leontis.activitys.AreaRestrita;
+import com.aula.leontis.activitys.TelaAreaRestrita;
 import com.aula.leontis.activitys.TelaEditarPerfil;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.UsuarioService;
@@ -75,7 +75,7 @@ public class PerfilFragment extends Fragment {
         btnAreaRestrita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent areaRestrita = new Intent(getContext(), AreaRestrita.class);
+                Intent areaRestrita = new Intent(getContext(), TelaAreaRestrita.class);
                 startActivity(areaRestrita);
             }
         });

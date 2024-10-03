@@ -9,15 +9,15 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.aula.leontis.R;
-import com.bumptech.glide.Glide;
 
-public class AreaRestrita extends AppCompatActivity {
+public class TelaAreaRestrita extends AppCompatActivity {
     WebView webView;
     ProgressBar carregar;
+    ImageButton btVoltar;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -25,6 +25,9 @@ public class AreaRestrita extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_area_restrita);
         carregar = findViewById(R.id.progressBar2);
+        carregar.bringToFront();
+        btVoltar = findViewById(R.id.btn_voltar_area_restrita);
+        btVoltar.bringToFront();
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
@@ -32,6 +35,12 @@ public class AreaRestrita extends AppCompatActivity {
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.loadUrl("https://arearestrita.onrender.com/");
+        btVoltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TelaAreaRestrita.this.finish();
+            }
+        });
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {

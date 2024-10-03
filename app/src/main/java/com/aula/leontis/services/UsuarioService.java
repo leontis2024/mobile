@@ -108,16 +108,6 @@ public class UsuarioService {
         erro.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erro.setText("Carregando...");
         erro.setVisibility(View.VISIBLE);
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
         ApiService apiService = new ApiService(context);
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
@@ -152,8 +142,7 @@ public class UsuarioService {
                         biografia.setText(biografiaApi);
                         nome.setText(nomeApi);
                         sobrenome.setText(sobrenomeApi);
-                        String telefoneFormatado = telefoneApi.replaceAll("[()\\s-]", "");
-                        telefone.setText(telefoneFormatado);
+                        telefone.setText(telefoneApi);
                         LocalDate data = LocalDate.parse(dtNascApi);
                         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         String dataFormatada = data.format(formatador);
@@ -167,15 +156,22 @@ public class UsuarioService {
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                        erro.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
+                        erro.setText("Não possivel trazer os dados do perfil");
+                        erro.setVisibility(View.VISIBLE);
                     }
                 } else {
                     Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code());
+                    erro.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
+                    erro.setText("Não possivel trazer os dados do perfil");
+                    erro.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                erro.setText("Erro inesperado");
                 aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados do perfil\nMensagem: " + throwable.getMessage());
             }
         });

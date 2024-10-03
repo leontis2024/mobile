@@ -8,6 +8,5 @@
         <item>Não binário</item>
         <item>Outro</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="api_key">7cdbdc19ca1845cc804ac3d06d4bc11c</string>
 </resources>
