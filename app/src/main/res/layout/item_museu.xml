@@ -32,11 +32,11 @@
             android:layout_marginTop="15dp"
             app:layout_constraintEnd_toStartOf="@+id/precoIngressoMuseu"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5"
+            app:layout_constraintTop_toBottomOf="@+id/imgObra"
             app:srcCompat="@drawable/ic_preco" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/imgObra"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="40dp"
@@ -94,7 +94,7 @@
             app:layout_constraintTop_toBottomOf="@+id/diaFuncionamentoMuseu" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnSaibaMais"
             android:layout_width="160dp"
             android:layout_height="55dp"
             android:layout_marginTop="30dp"

@@ -5,10 +5,21 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.aula.leontis.R;
+import com.aula.leontis.TokenManager;
+import com.aula.leontis.interfaces.AuthInterface;
+import com.aula.leontis.models.auth.AuthResponse;
+import com.aula.leontis.models.auth.LoginRequest;
+import com.aula.leontis.services.ApiService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TelaPrincipal extends AppCompatActivity {
     private NavHostFragment navHostFragment;
@@ -20,10 +31,8 @@ public class TelaPrincipal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_principal);
+
         String id = getIntent().getStringExtra("id");
-        if(id==null) {
-            id = "28516";
-        }
 
         idBundle.putString("id", id);
 
@@ -41,4 +50,5 @@ public class TelaPrincipal extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
+
 }

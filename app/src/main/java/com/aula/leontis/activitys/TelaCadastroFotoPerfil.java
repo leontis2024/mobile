@@ -25,6 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aula.leontis.models.usuario.UsuarioMongo;
+import com.aula.leontis.services.UsuarioGeneroService;
 import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.DataBaseFotos;
 import com.aula.leontis.utilities.MetodosAux;
@@ -58,6 +60,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaCadastroFotoPerfil extends AppCompatActivity {
     UsuarioService usuarioService = new UsuarioService();
+    UsuarioGeneroService usuarioGeneroService = new UsuarioGeneroService();
     private final String[] id = {""};
     ProgressBar carregando;
     MetodosAux aux = new MetodosAux();
@@ -95,17 +98,46 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
             apelido = informacoes.getString("apelido");
             biografia = informacoes.getString("biografia");
             sexo = informacoes.getString("sexo");
-            listaGenerosInteresse = informacoes.getLongArray("listaGenerosInteresse");
+            listaGenerosInteresse = informacoes.getLongArray("generosInteressados");
         }
+        btnContinuar.setBackgroundResource(R.drawable.botao);
+        btnContinuar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,"https://cdn-icons-png.flaticon.com/512/4675/4675159.png");
+                usuarioService.inserirUsuario(usuario,TelaCadastroFotoPerfil.this,id);
+
+                Handler esperarGenero = new Handler();
+                esperarGenero.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        usuarioGeneroService.inserirUsuarioGenero(TelaCadastroFotoPerfil.this,id,listaGenerosInteresse);
+                        UsuarioMongo usuarioMongo = new UsuarioMongo(id[0],nome,email);
+                        usuarioService.inserirUsuarioMongo(usuarioMongo,TelaCadastroFotoPerfil.this);
+
+                    }
+                },4000);
+                Bundle info = new Bundle();
+                info.putString("id", id[0]);
+              //  info.putLongArray("listaGenerosInteresse", listaGenerosInteresse);
+                info.putString("email", email);
+                info.putString("senha", senha);
+                Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
+                telBemVindo.putExtras(info);
+                startActivity(telBemVindo);
+                cadastrarUsuarioFirebase(email, senha, nome);
+                finish();
+            }
+        });
 
 
         //abrindo galeria
         btnAbrirGaleria.setOnClickListener(v -> {
+            btnContinuar.setBackgroundResource(R.drawable.botao_inativo);
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             resultLauncherGaleria.launch(intent);
         });
     }
-
 
 
     //Activity result para abrir a galeria
@@ -129,6 +161,14 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                    Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,null);
                                    usuarioService.inserirUsuario(usuario,TelaCadastroFotoPerfil.this,id);
                                    //falta cadastrar usuario genero
+                                    Handler esperarGenero = new Handler();
+                                    esperarGenero.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            usuarioGeneroService.inserirUsuarioGenero(TelaCadastroFotoPerfil.this,id,listaGenerosInteresse);
+
+                                        }
+                                    },4000);
 
                                    Toast.makeText(TelaCadastroFotoPerfil.this, "Aguarde enquanto cadastramos seu usuário...", Toast.LENGTH_SHORT).show();
                                    carregando.setVisibility(View.VISIBLE);
@@ -137,6 +177,8 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                     esperar.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
+                                            UsuarioMongo usuarioMongo = new UsuarioMongo(id[0],nome,email);
+                                            usuarioService.inserirUsuarioMongo(usuarioMongo,TelaCadastroFotoPerfil.this);
                                             if(!(id[0].equals(""))) {
                                                 // upload do Bitmap para o Firebase Storage retornando a url dela
                                                 dataBase.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, id[0]).addOnSuccessListener(new OnSuccessListener<String>() {
@@ -182,8 +224,10 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Bundle info = new Bundle();
                                     info.putString("id", id[0]);
-                                    info.putLongArray("listaGenerosInteresse", listaGenerosInteresse);
+                                 //   info.putLongArray("listaGenerosInteresse", listaGenerosInteresse);
                                     info.putString("urlFoto", urlFoto);
+                                    info.putString("email", email);
+                                    info.putString("senha", senha);
                                     Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
                                     telBemVindo.putExtras(info);
                                     startActivity(telBemVindo);

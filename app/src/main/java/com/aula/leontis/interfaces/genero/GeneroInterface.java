@@ -19,7 +19,7 @@ public interface GeneroInterface {
     Call<List<GeneroCompleto>> buscarTodosGeneros();
 
     @GET("/api/genero/selecionarGeneroPorID/{id}")
-    Call<GeneroCompleto> buscarGenroPorId(@Path("id") String id);
+    Call<GeneroCompleto> buscarGeneroPorId(@Path("id") String id);
 
 
 }

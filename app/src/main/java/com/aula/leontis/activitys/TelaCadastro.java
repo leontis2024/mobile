@@ -6,6 +6,8 @@ import androidx.core.content.ContextCompat;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +22,9 @@ import java.util.Calendar;
 
 public class TelaCadastro extends AppCompatActivity {
     ImageButton btCalendar;
-    EditText nome,sobrenome,email,telefone,dtNasc,senha;
+    EditText nome,sobrenome,email,telefone,dtNasc,senha,senha2;
     Button continuar;
-    TextView erroNome,erroSobrenome,erroEmail,erroTelefone,erroDtNasc,erroSenha;
+    TextView erroNome,erroSobrenome,erroEmail,erroTelefone,erroDtNasc,erroSenha,erroSenha2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +41,119 @@ public class TelaCadastro extends AppCompatActivity {
         erroEmail = findViewById(R.id.erro_email_cadastro);
 
         telefone = findViewById(R.id.telefone_cadastro);
+
+
+        telefone.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) {
+                    return;
+                }
+
+                String unmasked = s.toString().replaceAll("[^\\d]", "");
+                StringBuilder formatted = new StringBuilder();
+
+                int length = unmasked.length();
+
+                if (length > 0) {
+                    formatted.append("(");
+                    formatted.append(unmasked.substring(0, Math.min(2, length)));
+                }
+
+                if (length > 2) {
+                    formatted.append(")");
+                    formatted.append(unmasked.substring(2, Math.min(7, length)));
+                }
+
+                if (length > 7) {
+                    formatted.append("-");
+                    formatted.append(unmasked.substring(7, Math.min(11, length)));
+                }
+
+                isUpdating = true;
+                telefone.setText(formatted.toString());
+                telefone.setSelection(formatted.length());
+                isUpdating = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+
+
         erroTelefone = findViewById(R.id.erro_telefone_cadastro);
 
         dtNasc = findViewById(R.id.data_nasc_cadastro);
+
+        dtNasc.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating;
+            private String previous = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Verificar se já estamos atualizando para evitar loops infinitos
+                if (isUpdating) {
+                    return;
+                }
+
+                String current = s.toString().replaceAll("[^\\d]", ""); // Remover caracteres não numéricos
+
+                // Verificar se o usuário está apagando o texto
+                if (current.equals(previous)) {
+                    return;
+                }
+
+                StringBuilder formatted = new StringBuilder();
+
+                // Inserir a barra após os dois primeiros dígitos
+                if (current.length() >= 2) {
+                    formatted.append(current.substring(0, 2)).append("/");
+                } else if (current.length() > 0) {
+                    formatted.append(current);
+                }
+
+                // Inserir a barra após os quatro dígitos
+                if (current.length() >= 4) {
+                    formatted.append(current.substring(2, 4)).append("/");
+                } else if (current.length() > 2) {
+                    formatted.append(current.substring(2));
+                }
+
+                // Adicionar o ano completo
+                if (current.length() > 4) {
+                    formatted.append(current.substring(4));
+                }
+
+                // Prevenir o loop de atualização
+                isUpdating = true;
+                dtNasc.setText(formatted.toString());
+                dtNasc.setSelection(formatted.length()); // Colocar o cursor no final
+                isUpdating = false;
+
+                previous = current;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+
         erroDtNasc = findViewById(R.id.erro_nasc_cadastro);
 
         senha = findViewById(R.id.senha_cadastro);
         erroSenha = findViewById(R.id.erro_senha_cadastro);
+
+        senha2 = findViewById(R.id.senha_cadastro2);
+        erroSenha2 = findViewById(R.id.erro_senha_cadastro2);
 
         continuar = findViewById(R.id.btn_continuar_cadastro);
         btCalendar = findViewById(R.id.calendario_cadastro);
@@ -81,8 +189,8 @@ public class TelaCadastro extends AppCompatActivity {
 
                 if(telefone.getText().toString()==null || telefone.getText().toString().equals("")){
                     erroInput("Digite seu telefone",erroTelefone,telefone);
-                }else if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
-                    erroInput("Digite o telefone com o DDD sem espaços",erroTelefone,telefone);
+                }else if(telefone.getText().length() < 14 || telefone.getText().length() > 14){
+                    erroInput("Digite o telefone no formato (XX)XXXXX-XXXX",erroTelefone,telefone);
                 }else{
                     semErroInput(erroTelefone,telefone);
                 }
@@ -101,6 +209,14 @@ public class TelaCadastro extends AppCompatActivity {
                     semErroInput(erroSenha,senha);
                 }
 
+                if(senha2.getText().toString()==null || senha2.getText().toString().equals("")){
+                    erroInput("Confirme sua senha",erroSenha2,senha2);
+                }else if(!senha.getText().toString().equals(senha2.getText().toString())){
+                    erroInput("As senhas devem ser iguais",erroSenha2,senha2);
+                }else{
+                    semErroInput(erroSenha2,senha2);
+                }
+
                 if(informacoesValidas()){
                     //caso não de erro, cria um bundle com as informações de login e passa para a tela de cadastro2
                     Bundle infoCadastro = new Bundle();
@@ -108,7 +224,7 @@ public class TelaCadastro extends AppCompatActivity {
                     infoCadastro.putString("sobrenome",sobrenome.getText().toString());
                     infoCadastro.putString("email",email.getText().toString());
                     infoCadastro.putString("dtNasc",dtNasc.getText().toString());
-                    infoCadastro.putString("telefone",formatarNumero(telefone.getText().toString()));
+                    infoCadastro.putString("telefone",telefone.getText().toString());
                     infoCadastro.putString("senha",senha.getText().toString());
 
                     Intent telaCadastro2 = new Intent(TelaCadastro.this, TelaCadastro2.class);
@@ -151,6 +267,7 @@ public class TelaCadastro extends AppCompatActivity {
         boolean telefoneValido = true;
         boolean dtNascValido = true;
         boolean senhaValido = true;
+        boolean senha2Valido = true;
 
         if(nome.getBackground().equals(R.drawable.input_erro)){
             nomeValido = false;
@@ -188,7 +305,7 @@ public class TelaCadastro extends AppCompatActivity {
         if(telefone.getText().toString().equals("")){
             telefoneValido = false;
         }
-        if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
+        if(telefone.getText().length() < 14 || telefone.getText().length() > 14){
             telefoneValido = false;
         }
 
@@ -209,7 +326,17 @@ public class TelaCadastro extends AppCompatActivity {
             senhaValido = false;
         }
 
-        return nomeValido && sobrenomeValido && emailValido && telefoneValido && dtNascValido && senhaValido;
+        if(senha2.getBackground().equals(R.drawable.input_erro)){
+            senha2Valido = false;
+        }
+        if(senha2.getText().toString().equals("")){
+            senha2Valido = false;
+        }
+        if(!senha.getText().toString().equals(senha2.getText().toString())){
+            senha2Valido = false;
+        }
+
+        return nomeValido && sobrenomeValido && emailValido && telefoneValido && dtNascValido && senhaValido && senha2Valido;
     }
 
     //verifica se o e-mail é válido
@@ -231,14 +358,6 @@ public class TelaCadastro extends AppCompatActivity {
         erro.setVisibility(View.INVISIBLE);
     }
 
-    public String formatarNumero(String phoneNumber) {
-        // Formata o número
-        String formato = String.format("(%s)%s-%s",
-                phoneNumber.substring(0, 2),    // DDD
-                phoneNumber.substring(2, 7),    // Parte do número antes do hífen
-                phoneNumber.substring(7));      // Parte do número depois do hífen
-        return formato;
-    }
 
 
 

@@ -10,7 +10,11 @@
         <!-- Cor do destaque (ripple effect) -->
         <item name="colorControlHighlight">@color/vinho_escuro</item>
         <item name="colorAccent">@color/vinho_escuro</item>
-        <!--        <item name="android:datePickerDialogTheme">@style/CustomDatePickerDialog</item>-->
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/bege_claro</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowLightStatusBar">true</item>
 
     </style>
 

@@ -5,6 +5,8 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,7 +24,7 @@ import java.util.Date;
 public class TelaCadastro2 extends AppCompatActivity {
     EditText apelido,biografia;
     Spinner sexo;
-    TextView infoApelido,erroSexo;
+    TextView infoApelido,erroSexo, qntCaracter;
     Boolean generoValido = true;
     Button continuar;
     String nome, sobrenome, email, telefone, dtNasc, senha;
@@ -32,6 +34,8 @@ public class TelaCadastro2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_cadastro2);
 
+        qntCaracter = findViewById(R.id.qntCaracter);
+
         apelido = findViewById(R.id.apelido_cadastro);
         infoApelido = findViewById(R.id.info_apelido);
 
@@ -39,6 +43,24 @@ public class TelaCadastro2 extends AppCompatActivity {
         erroSexo = findViewById(R.id.erro_sexo);
 
         biografia = findViewById(R.id.biografia_cadastro);
+
+        biografia.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Não precisa implementar
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int remainingChars = 100 - s.length();
+                qntCaracter.setText(String.valueOf(remainingChars));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Não precisa implementar
+            }
+        });
 
         continuar = findViewById(R.id.btn_continuar);
 

@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aula.leontis.services.GeneroService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
 import com.aula.leontis.interfaces.genero.GeneroInterface;
@@ -26,7 +27,7 @@ public class TelaInfoGenero extends AppCompatActivity {
     TextView erroGenero, nomeGenero, descGenero;
     ImageView fotoGenero;
     ImageButton btnVoltar;
-    MetodosAux aux = new MetodosAux();
+    GeneroService generoService = new GeneroService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,51 +50,8 @@ public class TelaInfoGenero extends AppCompatActivity {
         if(infoGenero != null) {
             id = infoGenero.getString("id");
         }
-        buscarGeneroPorId(id);
+        generoService.buscarGeneroPorId(id,TelaInfoGenero.this,erroGenero,nomeGenero,descGenero,fotoGenero);
 
     }
-    public void buscarGeneroPorId(String id){
-        // Configurar Retrofit
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
 
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        GeneroInterface generoInterface = retrofit.create(GeneroInterface.class);
-
-        Call<GeneroCompleto> call = generoInterface.buscarGenroPorId(id);
-
-        // Buscar todos os gêneros
-        call.enqueue(new Callback<GeneroCompleto>() {
-            @Override
-            public void onResponse(Call<GeneroCompleto>call, Response<GeneroCompleto> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    erroGenero.setVisibility(View.INVISIBLE);
-                    erroGenero.setTextColor(getResources().getColor(R.color.vermelho_erro));
-                    GeneroCompleto genero = response.body();
-
-                    nomeGenero.setText(genero.getNomeGenero());
-                    descGenero.setText(genero.getDescGenero());
-                    String url = genero.getUrlImagem();
-                    if (url == null){
-                        url= "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
-                    }
-                    Glide.with(TelaInfoGenero.this).asBitmap().load(url).into(fotoGenero);
-
-                } else {
-                    erroGenero.setText("Falha ao obter dados do gênero");
-                    erroGenero.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GeneroCompleto> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
-                aux.abrirDialogErro(TelaInfoGenero.this,"Erro inesperado","Erro ao obter dados do gênero\nMensagem: "+t.getMessage());
-            }
-        });
-    }
 }
