@@ -36,29 +36,26 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.viewHold
 
     @Override
     public void onBindViewHolder(@NonNull viewHolderNoticia holder, int position) {
-        if (headlines.get(holder.getAdapterPosition()).getTitle()==null || headlines.get(holder.getAdapterPosition()).getTitle().equals("[Removed]")){
-            headlines.remove(holder.getAdapterPosition());
-        }else {
-            holder.titulo.setText(headlines.get(holder.getAdapterPosition()).getTitle());
-            holder.desc.setText(headlines.get(holder.getAdapterPosition()).getSource().getName());
+        // Evitar remoção dentro do onBindViewHolder
+        holder.titulo.setText(headlines.get(holder.getAdapterPosition()).getTitle());
+        holder.desc.setText(headlines.get(holder.getAdapterPosition()).getSource().getName());
 
-            if (headlines.get(holder.getAdapterPosition()).getUrlToImage() != null) {
-                Picasso.get().load(headlines.get(holder.getAdapterPosition()).getUrlToImage()).into(holder.img);
-            }
+        if (headlines.get(holder.getAdapterPosition()).getUrlToImage() != null) {
+            Picasso.get().load(headlines.get(holder.getAdapterPosition()).getUrlToImage()).into(holder.img);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TelaInfoNoticia.class);
-                intent.putExtra("url",headlines.get(holder.getAdapterPosition()).getUrl());
+                intent.putExtra("url", headlines.get(holder.getAdapterPosition()).getUrl());
                 context.startActivity(intent);
             }
         });
     }
 
 
-        @Override
+    @Override
         public int getItemCount() {
             return headlines.size();
         }

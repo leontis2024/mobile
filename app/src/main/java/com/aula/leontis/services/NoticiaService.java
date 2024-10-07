@@ -22,11 +22,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NoticiaService {
-    String[] palavrasChave = {"Arte","Romero Britto","Rodolfo Amoêdo","Tarsila do Amaral","Anita Malfatti","Candido Portinari","Di Cavalcanti","Vicente do Rego Monteiro","Iberê Camargo","Georgina de Albuquerque","Almeida Júnior"};
+    String[] palavrasChave = {"Arte","Obra","Museu","Pintura artística"};
 
     public void buscarNoticias(Context context, OnFetchDataListener listener, TextView erroNoticia){
         erroNoticia.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
-        erroNoticia.setText("Carregando notícias, isso pode demorar um pouco...");
+        erroNoticia.setText("Carregando...");
         erroNoticia.setVisibility(View.VISIBLE);
         Random random = new Random();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/v2/")
@@ -42,6 +42,7 @@ public class NoticiaService {
                     if (!response.isSuccessful()){
                         Toast.makeText(context, "Erro", Toast.LENGTH_SHORT).show();
                     }
+                    erroNoticia.setVisibility(View.INVISIBLE);
                     listener.onfetchData(response.body().getArticles(),response.message());
                 }
 

@@ -3,6 +3,8 @@ package com.aula.leontis.services;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -13,9 +15,13 @@ import com.aula.leontis.adapters.AdapterGenero;
 import com.aula.leontis.interfaces.genero.GeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
+import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.models.genero.Genero;
 import com.aula.leontis.models.usuario.UsuarioGenero;
 import com.aula.leontis.utilities.MetodosAux;
+import com.bumptech.glide.Glide;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -72,6 +78,84 @@ public class UsuarioGeneroService {
                 }
             });
         }
+
+
+    }
+
+
+    public void buscarSeExiste(String usuario,String genero, Context context, ImageButton interesse) {
+
+        ApiService apiService = new ApiService(context);
+        UsuarioGeneroInterface usuarioGeneroInterface = apiService.getUsuarioGeneroInterface();
+        Call<UsuarioGenero> call = usuarioGeneroInterface.buscarSeExiste(Long.parseLong(usuario),Long.parseLong(genero));
+
+        //executar chamada
+        call.enqueue(new Callback<UsuarioGenero>() {
+            @Override
+            public void onResponse(Call<UsuarioGenero> call, Response<UsuarioGenero> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                       UsuarioGenero usuarioGenero = response.body();
+                       if(usuarioGenero != null){
+                           interesse.setImageResource(R.drawable.btn_interesse_selecionado);
+                           interesse.setContentDescription("selecionado");
+                       }else{
+                           interesse.setImageResource(R.drawable.btn_interesse);
+                           interesse.setContentDescription("vazio");
+                       }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                    }
+                } else {
+                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code()+" "+response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UsuarioGenero> call, Throwable throwable) {
+                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados\nMensagem: " + throwable.getMessage());
+            }
+        });
+    }
+    public void deletarUsuarioGenero(Context context, String[] id, String idGenero) {
+
+        ApiService apiService = new ApiService(context);
+        UsuarioGeneroInterface usuarioGeneroInterface = apiService.getUsuarioGeneroInterface();
+
+        Call<ResponseBody> call = usuarioGeneroInterface.deletarUsuarioGenero(Long.parseLong(id[0]), Long.parseLong(idGenero));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        Log.d("API_RESPONSE_DELETE", "O usuário de id: "+id[0]+" parou de ter interesse no genero de id: "+idGenero + response.body().string());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    try {
+                        // Obter e exibir o corpo da resposta de erro
+                        String errorBody = response.errorBody().string();
+                        Log.e("API_ERROR_DELETE", "Erro ao desfazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("API_ERROR_DELETE", "Erro ao processar o corpo da resposta de erro.");
+                    }
+                }
+            }
+
+
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("API_ERROR_POST", "Erro ao desfazer conexão usuario e genero: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
+            }
+        });
+
 
 
     }

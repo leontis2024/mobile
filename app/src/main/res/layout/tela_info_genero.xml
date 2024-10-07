@@ -13,10 +13,10 @@
         android:id="@+id/fotoGenero"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -53,7 +53,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/obrasRelacionadas"
-        android:layout_width="391dp"
+        android:layout_width="370dp"
         android:layout_height="200dp"
         android:layout_margin="10dp"
         android:layout_marginStart="1dp"
@@ -93,11 +93,11 @@
         android:id="@+id/btnInteresse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:background="#00FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fotoGenero"
+        app:layout_constraintBottom_toBottomOf="@+id/fotoGenero"
+        app:layout_constraintEnd_toEndOf="@+id/fotoGenero"
         app:srcCompat="@drawable/btn_interesse" />
 
     <TextView
@@ -115,6 +115,15 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/interesse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

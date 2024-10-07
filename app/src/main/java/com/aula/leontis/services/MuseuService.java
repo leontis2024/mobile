@@ -1,6 +1,7 @@
 package com.aula.leontis.services;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,28 +19,19 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MuseuService {
+    EnderecoMuseuService enderecoMuseuService = new EnderecoMuseuService();
+    DiaFuncionamentoService diaFuncionamentoService = new DiaFuncionamentoService();
     MetodosAux aux =new MetodosAux();
     public void buscarMuseus(TextView erroMuseu, Context context, RecyclerView rvMuseus, List<Museu> listaMuseus, AdapterMuseu adapterMuseu) {
         erroMuseu.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroMuseu.setText("Carregando...");
         erroMuseu.setVisibility(View.VISIBLE);
-        // Configurar Retrofit
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        MuseuInterface museuInterface = retrofit.create(MuseuInterface.class);
         ApiService apiService = new ApiService(context);
         MuseuInterface museuInterface = apiService.getMuseuInterface();
         Call<List<Museu>> call = museuInterface.selecionarTodosMuseus();
@@ -74,20 +66,10 @@ public class MuseuService {
     }
 
     public void buscarMuseuPorId(String id, Context c, TextView erroMuseu,TextView nomeMuseu, TextView descMuseu, ImageView fotoMuseu) {
-        // Configurar Retrofit
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        MuseuInterface generoInterface = retrofit.create(MuseuInterface.class);
         ApiService apiService = new ApiService(c);
-        MuseuInterface generoInterface = apiService.getMuseuInterface();
+        MuseuInterface museuInterface = apiService.getMuseuInterface();
 
-        Call<Museu> call = generoInterface.buscarMuseuPorId(id);
+        Call<Museu> call = museuInterface.buscarMuseuPorId(id);
 
         // Buscar todos os gêneros
         call.enqueue(new Callback<Museu>() {
@@ -99,7 +81,53 @@ public class MuseuService {
                     Museu museu = response.body();
 
                     nomeMuseu.setText(museu.getNomeMuseu());
-                    descMuseu.setText(museu.getDescMuseu());
+                    enderecoMuseuService.buscarEnderecoMuseuPorId(museu.getIdEndereco(), c, erroMuseu, descMuseu);
+                    diaFuncionamentoService.buscarDiaFuncionamentoPorIdDoMuseu(id, c, erroMuseu, descMuseu);
+                    Handler espera = new Handler();
+                    espera.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            descMuseu.setText(descMuseu.getText()+"\n\nTelefone: "+museu.getTelefoneMuseu()+"\n\n"+museu.getDescMuseu());
+                        }
+                    }, 2500);
+
+
+                    String url = museu.getUrlImagem();
+                    if (url == null) {
+                        url = "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
+                    }
+                    Glide.with(c).asBitmap().load(url).into(fotoMuseu);
+
+                } else {
+                    erroMuseu.setText("Falha ao obter dados do museu");
+                    erroMuseu.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Museu> call, Throwable t) {
+                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do museu\nMensagem: " + t.getMessage());
+            }
+        });
+    }
+    public void buscarMuseuPorIdParcial(String id, Context c, TextView erroMuseu, TextView descMuseu, ImageView fotoMuseu) {
+        ApiService apiService = new ApiService(c);
+        MuseuInterface museuInterface = apiService.getMuseuInterface();
+
+        Call<Museu> call = museuInterface.buscarMuseuPorId(id);
+
+        // Buscar todos os gêneros
+        call.enqueue(new Callback<Museu>() {
+            @Override
+            public void onResponse(Call<Museu> call, Response<Museu> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    erroMuseu.setVisibility(View.INVISIBLE);
+                    erroMuseu.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
+                    Museu museu = response.body();
+
+                    descMuseu.setText(museu.getNomeMuseu()+"\n"+museu.getDescMuseu());
+
                     String url = museu.getUrlImagem();
                     if (url == null) {
                         url = "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
