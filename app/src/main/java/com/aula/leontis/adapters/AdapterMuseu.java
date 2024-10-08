@@ -17,12 +17,16 @@ import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaInfoGenero;
 import com.aula.leontis.activitys.TelaInfoMuseu;
 import com.aula.leontis.models.museu.Museu;
+import com.aula.leontis.services.DiaFuncionamentoService;
+import com.aula.leontis.services.EnderecoMuseuService;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 public class AdapterMuseu extends RecyclerView.Adapter<AdapterMuseu.viewHolderMuseu>{
     private List<Museu> listaMuseus;
+    private EnderecoMuseuService enderecoMuseuService = new EnderecoMuseuService();
+    private DiaFuncionamentoService diaFuncionamentoService = new DiaFuncionamentoService();
 
     public AdapterMuseu(List<Museu> listaMuseus) {
         this.listaMuseus = listaMuseus;
@@ -43,6 +47,9 @@ public class AdapterMuseu extends RecyclerView.Adapter<AdapterMuseu.viewHolderMu
             url= "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
         }
         Glide.with(holder.imagemMuseu.getContext()).asBitmap().load(url).into(holder.imagemMuseu);
+        diaFuncionamentoService.buscarDiaFuncionamentoPorIdDoMuseuParcial( listaMuseus.get(holder.getAdapterPosition()).getId(),holder.itemView.getContext(),holder.diaFuncionamentoMuseu);
+        enderecoMuseuService.buscarEnderecoMuseuPorIdDoMuseuParcial( listaMuseus.get(holder.getAdapterPosition()).getIdEndereco(),holder.itemView.getContext(),holder.enderecoMuseu);
+        diaFuncionamentoService.buscarDiaFuncionamentoPrecoPorIdDoMuseu( listaMuseus.get(holder.getAdapterPosition()).getId(),holder.itemView.getContext(),holder.precoIngressoMuseu);
 
         holder.itemView.findViewById(R.id.btnSaibaMais).setOnClickListener(new View.OnClickListener() {
             @Override

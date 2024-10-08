@@ -18,6 +18,7 @@ import com.aula.leontis.models.noticia.NewsApiResponse;
 import com.aula.leontis.models.noticia.NewsHeadlines;
 import com.aula.leontis.services.NoticiaService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,6 +53,9 @@ public class NoticiasFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_noticias, container, false);
+        recyclerView = view.findViewById(R.id.rvNoticias);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
         erroNoticia = view.findViewById(R.id.erroNoticia);
         noticiaService.buscarNoticias(getContext(),listener,erroNoticia);
 
@@ -71,12 +75,16 @@ public class NoticiasFragment extends Fragment {
         }
     };
     private void showNews(List<NewsHeadlines> list) {
+        // Filtra os itens inválidos antes de passá-los ao adaptador
+        List<NewsHeadlines> filteredList = new ArrayList<>();
+        for (NewsHeadlines headline : list) {
+            if (headline.getTitle() != null && !headline.getTitle().equals("[Removed]")) {
+                filteredList.add(headline);
+            }
+        }
 
-        recyclerView = getView().findViewById(R.id.rvNoticias);
-        recyclerView.setHasFixedSize(true);
-        adapterNoticia = new AdapterNoticia(getContext(),list);
+        adapterNoticia = new AdapterNoticia(getContext(), filteredList);
         recyclerView.setAdapter(adapterNoticia);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),1));
-
     }
+
 }

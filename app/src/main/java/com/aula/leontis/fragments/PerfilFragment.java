@@ -126,15 +126,7 @@ public class PerfilFragment extends Fragment {
         }
     }
     public void selecionarIdUsuarioPorEmail(String email) {
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+
         ApiService apiService = new ApiService(getContext());
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);

@@ -31,7 +31,6 @@ public class TelaBemVindo extends AppCompatActivity {
     Button btnFinalizar;
     String  url,id,senha,email;
     long[] listaGenerosInteresse;
- //   TokenManager tokenManager = new TokenManager(TelaBemVindo.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

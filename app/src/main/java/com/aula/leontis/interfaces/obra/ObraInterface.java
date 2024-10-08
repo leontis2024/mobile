@@ -9,6 +9,15 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface ObraInterface {
+    @GET("/api/obra/selecionarObraPorID/{id}")
+    Call<Obra> selecionarObraPorId(@Path("id") long id);
     @GET("/api/obra/selecionarPorMuseu/{id}")
     Call<List<Obra>> selecionarObrasPorMuseu(@Path("id") long id);
+    @GET("/api/obra/selecionarPorGenero/{id}")
+    Call<List<Obra>> selecionarObrasPorGenero(@Path("id") long id);
+
+    @GET("/api/obra/selecionarPorArtista/{id}")
+    Call<List<Obra>> selecionarObrasPorArtista(@Path("id") long id);
+
+
 }

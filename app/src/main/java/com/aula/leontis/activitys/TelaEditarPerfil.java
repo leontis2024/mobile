@@ -345,7 +345,7 @@ public class TelaEditarPerfil extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    update.put("telefone",formatarNumero(telefone.getText().toString()));
+                    update.put("telefone",telefone.getText().toString());
                     update.put("sobrenome",sobrenome.getText().toString());
                     update.put("nome",nome.getText().toString());
                     update.put("urlImagem",urlFoto);
@@ -420,7 +420,7 @@ public class TelaEditarPerfil extends AppCompatActivity {
         if(telefone.getText().toString().equals("")){
             telefoneValido = false;
         }
-        if(telefone.getText().length() < 11 || telefone.getText().length() > 11){
+        if(telefone.getText().length() < 14 || telefone.getText().length() > 14){
             telefoneValido = false;
         }
 

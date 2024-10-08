@@ -82,13 +82,13 @@ public class TokenInterceptor implements Interceptor {
             // Limpar tokens e redirecionar para login
             aux.abrirDialogErro(context, "Login expirado", "Você será deslogado automaticamente");
             tokenManager.clearTokens();  // Método para limpar tokens
-            FirebaseAuth.getInstance().signOut();
+           // FirebaseAuth.getInstance().signOut();
 
             Handler handler = new Handler();
             handler.postDelayed(() -> {
                 Intent intent = new Intent(context, TelaLogin.class);
-                context.startActivity(intent);
-                ((Activity) context).finish();
+               // context.startActivity(intent);
+              //  ((Activity) context).finish();
             }, 5000);
 
             throw new IOException("Refresh token está expirado");
@@ -119,5 +119,5 @@ public class TokenInterceptor implements Interceptor {
             }
             throw new IOException("Falha ao obter novo Token de Acesso. Código: " + refreshResponse.code());
         }
-            }
+    }
 }

@@ -157,4 +157,35 @@ public class GeneroService {
             }
         });
     }
+    public void buscarGeneroPorIdParcial(String id, Context c, TextView erroGenero, TextView descGenero) {
+        ApiService apiService = new ApiService(c);
+        GeneroInterface generoInterface = apiService.getGeneroInterface();
+
+        Call<GeneroCompleto> call = generoInterface.buscarGeneroPorId(id);
+
+        // Buscar todos os gêneros
+        call.enqueue(new Callback<GeneroCompleto>() {
+            @Override
+            public void onResponse(Call<GeneroCompleto>call, Response<GeneroCompleto> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    erroGenero.setVisibility(View.INVISIBLE);
+                    erroGenero.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
+                    GeneroCompleto genero = response.body();
+
+                    descGenero.setText(descGenero.getText()+"\n\nGênero artistico: "+genero.getNomeGenero());
+
+
+                } else {
+                    erroGenero.setText("Falha ao obter dados do gênero");
+                    erroGenero.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GeneroCompleto> call, Throwable t) {
+                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c,"Erro inesperado","Erro ao obter dados do gênero\nMensagem: "+t.getMessage());
+            }
+        });
+    }
 }

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
+import com.aula.leontis.activitys.TelaInfoObra;
 import com.aula.leontis.models.obra.Obra;
 import com.bumptech.glide.Glide;
 
@@ -39,14 +40,14 @@ public class AdapterObra extends RecyclerView.Adapter<AdapterObra.viewHolderObra
         }
         Glide.with(holder.imagemObra.getContext()).asBitmap().load(url).into(holder.imagemObra);
 
-        holder.itemView.findViewById(R.id.btnSaibaMais).setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-//                Intent infoObra = new Intent(holder.itemView.getContext(), TelaInfoObra.class);
-//                bundle.putString("id", listaObras.get(holder.getAdapterPosition()).getId());
-//                infoObra.putExtras(bundle);
-//                holder.itemView.getContext().startActivity(infoObra);
+                Intent infoObra = new Intent(holder.itemView.getContext(), TelaInfoObra.class);
+                bundle.putString("id", listaObras.get(holder.getAdapterPosition()).getId());
+                infoObra.putExtras(bundle);
+                holder.itemView.getContext().startActivity(infoObra);
             }
         });
     }

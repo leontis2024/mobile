@@ -71,7 +71,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/obrasRelacionadasMuseu"
-            android:layout_width="391dp"
+            android:layout_width="370dp"
             android:layout_height="200dp"
             android:layout_margin="10dp"
             android:layout_marginStart="1dp"
@@ -97,12 +97,22 @@
             android:id="@+id/btnSeguir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="300dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
             android:background="#00FFFFFF"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nomeMuseu"
+            app:layout_constraintBottom_toBottomOf="@+id/fotoMuseu"
+            app:layout_constraintEnd_toEndOf="@+id/fotoMuseu"
             app:srcCompat="@drawable/btn_seguir" />
+        <ImageButton
+            android:id="@+id/btnGuia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="150dp"
+            android:background="@drawable/redondo_btn_scan"
+            android:src="@drawable/icon_guia"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/erroMuseuInfo"

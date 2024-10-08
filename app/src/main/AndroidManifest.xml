@@ -13,7 +13,14 @@
         android:roundIcon="@mipmap/ic_leontis_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Leontis"
+        android:screenOrientation="portrait"
         tools:targetApi="31">
+        <activity
+            android:name=".activitys.TelaInfoObra"
+            android:exported="false" />
+        <activity
+            android:name=".activitys.TelaInfoArtista"
+            android:exported="false" />
         <activity
             android:name=".activitys.TelaInfoNoticia"
             android:exported="false" />
