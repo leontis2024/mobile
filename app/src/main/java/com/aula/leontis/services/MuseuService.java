@@ -16,6 +16,8 @@ import com.aula.leontis.interfaces.museu.MuseuInterface;
 import com.aula.leontis.models.museu.Museu;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -82,14 +84,23 @@ public class MuseuService {
 
                     nomeMuseu.setText(museu.getNomeMuseu());
                     enderecoMuseuService.buscarEnderecoMuseuPorId(museu.getIdEndereco(), c, erroMuseu, descMuseu);
-                    diaFuncionamentoService.buscarDiaFuncionamentoPorIdDoMuseu(id, c, erroMuseu, descMuseu);
+
+                    Handler esperar = new Handler();
+                    esperar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            diaFuncionamentoService.buscarDiaFuncionamentoPorIdDoMuseu(id, c, erroMuseu, descMuseu);
+                        }
+                    },1000);
+
+
                     Handler espera = new Handler();
                     espera.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             descMuseu.setText(descMuseu.getText()+"\n\nTelefone: "+museu.getTelefoneMuseu()+"\n\n"+museu.getDescMuseu());
                         }
-                    }, 2500);
+                    }, 2200);
 
 
                     String url = museu.getUrlImagem();
@@ -132,7 +143,7 @@ public class MuseuService {
                     if (url == null) {
                         url = "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
                     }
-                    Glide.with(c).asBitmap().load(url).into(fotoMuseu);
+                    Glide.with(c).asBitmap().apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).load(url).into(fotoMuseu);
 
                 } else {
                     erroMuseu.setText("Falha ao obter dados do museu");

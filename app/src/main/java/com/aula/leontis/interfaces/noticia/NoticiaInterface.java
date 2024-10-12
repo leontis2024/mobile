@@ -10,7 +10,7 @@ public interface NoticiaInterface {
     @GET("everything")
     Call<NewsApiResponse> callHeadlines(
             @Query("language") String language,
-            @Query("q") String query1,
+            @Query("q") String q,
             @Query("apiKey") String api_key,
             @Query("sortBy") String sortBy
     );

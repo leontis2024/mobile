@@ -223,7 +223,6 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Bundle info = new Bundle();
                                     info.putString("id", id[0]);
-                                 //   info.putLongArray("listaGenerosInteresse", listaGenerosInteresse);
                                     info.putString("urlFoto", urlFoto);
                                     info.putString("email", email);
                                     info.putString("senha", senha);
@@ -274,52 +273,6 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                         }
                     });
                 }
-            }
-        });
-    }
-    public void selecionarIdUsuarioPorEmail(String email, Context context) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
-        Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
-
-        //executar chamada
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        // Converte o corpo da resposta para string
-                        String jsonResponse = response.body().string();
-
-                        // Cria um JSONObject a partir da string
-                        JSONObject jsonObject = new JSONObject(jsonResponse);
-
-                        String idApi = jsonObject.getString("id");
-
-                        // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GET_EMAIL", "Campo obtido: id: "+idApi);
-
-                    } catch (Exception e) {
-                        Log.e("API_RESPONSE_GET_EMAIL", "Erro ao processar resposta: " + e.getMessage());
-
-                    }
-                } else {
-                    Log.e("API_ERROR_GET_EMAIL", "Erro na resposta da API: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_GET_EMAIL", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter idl\nMensagem: "+throwable.getMessage());
             }
         });
     }

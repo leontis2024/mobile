@@ -34,7 +34,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 public class MetodosAux {
 
     public void abrirDialog(Context c, String texto, String mensagem){
@@ -222,4 +224,13 @@ public class MetodosAux {
             }
         });
     }
+
+
+        public  String dataAtualFormatada() {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return dateFormat.format(new Date());
+        }
+
+
 }

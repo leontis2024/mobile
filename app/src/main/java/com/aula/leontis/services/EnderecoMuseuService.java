@@ -36,6 +36,7 @@ public class EnderecoMuseuService {
                     endereco.setText("Endereço: "+enderecoMuseu.formatarEndereco());
 
 
+
                 } else {
                     erroEnderecoMuseu.setText("Falha ao obter dados do endereço");
                     erroEnderecoMuseu.setVisibility(View.VISIBLE);

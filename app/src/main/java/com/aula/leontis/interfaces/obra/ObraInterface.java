@@ -7,6 +7,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ObraInterface {
     @GET("/api/obra/selecionarObraPorID/{id}")
@@ -15,9 +16,10 @@ public interface ObraInterface {
     Call<List<Obra>> selecionarObrasPorMuseu(@Path("id") long id);
     @GET("/api/obra/selecionarPorGenero/{id}")
     Call<List<Obra>> selecionarObrasPorGenero(@Path("id") long id);
-
     @GET("/api/obra/selecionarPorArtista/{id}")
     Call<List<Obra>> selecionarObrasPorArtista(@Path("id") long id);
+    @GET("/api/obra/selecionarPorGeneros")
+    Call<List<Obra>> selecionarObrasPorVariosGeneros(@Query("generos") List<Long> generos);
 
 
 }

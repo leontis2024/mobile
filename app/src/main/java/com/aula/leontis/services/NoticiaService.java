@@ -22,7 +22,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NoticiaService {
-    String[] palavrasChave = {"Arte","Obra","Museu","Pintura artística"};
 
     public void buscarNoticias(Context context, OnFetchDataListener listener, TextView erroNoticia){
         erroNoticia.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
@@ -33,7 +32,7 @@ public class NoticiaService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         NoticiaInterface noticiaInterface = retrofit.create(NoticiaInterface.class);
-        Call<NewsApiResponse> call = noticiaInterface.callHeadlines("pt",palavrasChave[random.nextInt(palavrasChave.length)],context.getString(R.string.api_key),"publishedAt");
+        Call<NewsApiResponse> call = noticiaInterface.callHeadlines("pt","Arte",context.getString(R.string.api_key),"publishedAt");
 
         try {
             call.enqueue(new Callback<NewsApiResponse>() {

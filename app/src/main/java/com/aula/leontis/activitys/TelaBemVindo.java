@@ -44,7 +44,6 @@ public class TelaBemVindo extends AppCompatActivity {
             url=infoCadastro.getString("urlFoto");
             email=infoCadastro.getString("email");
             senha=infoCadastro.getString("senha");
-        //    listaGenerosInteresse = infoCadastro.getLongArray("listaGenerosInteresse");
             if(url!=null) {
                 Map<String, Object> updates = new HashMap<>();
                 updates.put("urlImagem", url);

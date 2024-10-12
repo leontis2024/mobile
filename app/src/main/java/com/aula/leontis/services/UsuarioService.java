@@ -36,15 +36,7 @@ public class UsuarioService {
     MetodosAux aux = new MetodosAux();
 
     public void selecionarUsuarioPorIdParcial(String id, Context context, TextView nome, TextView biografia, ImageView foto) {
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+
         ApiService apiService = new ApiService(context);
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
@@ -177,19 +169,59 @@ public class UsuarioService {
         });
     }
 
+
+    public void selecionarUsuarioPorIdParcial(String id, Context context, ImageView foto, TextView nome) {
+        ApiService apiService = new ApiService(context);
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
+        Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
+
+        //executar chamada
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        // Converte o corpo da resposta para string
+                        String jsonResponse = response.body().string();
+
+                        // Cria um JSONObject a partir da string
+                        JSONObject jsonObject = new JSONObject(jsonResponse);
+
+                        String nomeApi = jsonObject.getString("nome");
+                        String urlFotoApi = jsonObject.getString("urlImagem");
+                        String sobrenomeApi = jsonObject.getString("sobrenome");
+
+                        if (urlFotoApi == null) {
+                            urlFotoApi = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
+                        }
+                        nome.setText(nomeApi+" "+sobrenomeApi);
+                        Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
+
+                        // Faça algo com os valores obtidos
+                        Log.d("API_RESPONSE_GETID", "Campos obtidos: nome: " + nomeApi + " urlFoto: " + urlFotoApi + " sobrenome: " + sobrenomeApi );
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                    }
+                } else {
+                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+            }
+        });
+    }
+
+
     public void selecionarUsuarioPorEmail(String email, Context context, TextView nome, TextView biografia, ImageView foto, TextView erro) {
         erro.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erro.setText("Carregando...");
         erro.setVisibility(View.VISIBLE);
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+
         ApiService apiService = new ApiService(context);
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);

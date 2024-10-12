@@ -125,7 +125,7 @@ public class UsuarioGeneroService {
         ApiService apiService = new ApiService(context);
         UsuarioGeneroInterface usuarioGeneroInterface = apiService.getUsuarioGeneroInterface();
 
-        Call<ResponseBody> call = usuarioGeneroInterface.deletarUsuarioGenero(Long.parseLong(id[0]), Long.parseLong(idGenero));
+        Call<ResponseBody> call = usuarioGeneroInterface.deletarUsuarioGenero(Long.parseLong(idGenero),Long.parseLong(id[0]));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -160,6 +160,39 @@ public class UsuarioGeneroService {
 
     }
 
+    public void buscarGenerosDeUmUsuario(String usuario, Context context,List<Long> generosInteresse) {
+
+        ApiService apiService = new ApiService(context);
+        UsuarioGeneroInterface usuarioGeneroInterface = apiService.getUsuarioGeneroInterface();
+        Call<List<UsuarioGenero>> call = usuarioGeneroInterface.buscarGenerosPorUsuario(Long.parseLong(usuario));
+
+        //executar chamada
+        call.enqueue(new Callback<List<UsuarioGenero>>() {
+            @Override
+            public void onResponse(Call<List<UsuarioGenero>> call, Response<List<UsuarioGenero>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        List<UsuarioGenero> usuariosGeneros = response.body();
+                        for(int i=0;i<usuariosGeneros.size();i++){
+                            generosInteresse.add(usuariosGeneros.get(i).getIdGenero());
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                    }
+                } else {
+                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code()+" "+response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UsuarioGenero>> call, Throwable throwable) {
+                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados\nMensagem: " + throwable.getMessage());
+            }
+        });
+    }
 
 
 }
