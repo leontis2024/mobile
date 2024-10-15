@@ -38,7 +38,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="60dp"
             android:backgroundTint="#00FFFFFF"
             android:src="@drawable/perfil"
             app:layout_constraintEnd_toEndOf="parent"
@@ -131,6 +131,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.737"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historicodeObras"
+            android:layout_width="370dp"
+            android:layout_height="200dp"
+            android:layout_margin="10dp"
+            android:layout_marginStart="1dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnDeletarConta"
+            tools:listitem="@layout/item_obra" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

@@ -38,6 +38,14 @@ public class MonitoraApp extends Application implements Application.ActivityLife
 
     @Override
     public void onActivityStopped(Activity activity){
+        isActivityChangingConfigurations = activity.isChangingConfigurations();
+
+        if (!isActivityChangingConfigurations && activityReferences == 0) {
+            // Aqui o app foi completamente fechado (nenhuma activity restante)
+            redisService.decrementarAtividadeUsuario();
+            Log.d("AppLifecycle", "App foi fechado completamente");
+            appOpened = false;
+        }
     }
 
 
@@ -52,13 +60,7 @@ public class MonitoraApp extends Application implements Application.ActivityLife
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        isActivityChangingConfigurations = activity.isChangingConfigurations();
 
-        if (!isActivityChangingConfigurations && activityReferences == 0) {
-            // Aqui o app foi completamente fechado (nenhuma activity restante)
-            redisService.decrementarAtividadeUsuario();
-            Log.d("AppLifecycle", "App foi fechado completamente");
-            appOpened = false;
-        }
+
     }
 }

@@ -9,6 +9,7 @@ import com.aula.leontis.interfaces.artista.ArtistaInterface;
 import com.aula.leontis.interfaces.diaFuncionamento.DiaFuncionamentoInterface;
 import com.aula.leontis.interfaces.endereco.EnderecoMuseuInterface;
 import com.aula.leontis.interfaces.genero.GeneroInterface;
+import com.aula.leontis.interfaces.guia.GuiaInterface;
 import com.aula.leontis.interfaces.museu.MuseuInterface;
 import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
@@ -22,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiService {
         private EnderecoMuseuInterface enderecoMuseuInterface;
         private DiaFuncionamentoInterface diaFuncionamentoInterface;
+        private GuiaInterface guiaInterface;
         private ArtistaInterface artistaInterface;
         private UsuarioInterface usuarioInterface;
         private GeneroInterface generoInterface;
@@ -64,6 +66,8 @@ public class ApiService {
             obraInterface = retrofit.create(ObraInterface.class);
             usuarioMuseuInterface = retrofit.create(UsuarioMuseuInterface.class);
             enderecoMuseuInterface = retrofit.create(EnderecoMuseuInterface.class);
+
+            guiaInterface = retrofit.create(GuiaInterface.class);
         }
 
         // Métodos para obter os serviços
@@ -102,4 +106,11 @@ public class ApiService {
             return this.enderecoMuseuInterface;
         }
 
+        public GuiaInterface getGuiaInterface() {
+            return guiaInterface;
+        }
+
+    public void setGuiaInterface(GuiaInterface guiaInterface) {
+        this.guiaInterface = guiaInterface;
+    }
 }

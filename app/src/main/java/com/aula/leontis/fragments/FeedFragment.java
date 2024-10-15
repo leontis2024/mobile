@@ -1,18 +1,14 @@
 package com.aula.leontis.fragments;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.aula.leontis.R;
 import com.aula.leontis.fragments.feed.ForYou;
@@ -49,7 +45,7 @@ public class FeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
         btnBuscar = view.findViewById(R.id.btnBuscar);
-        btnFiltrar = view.findViewById(R.id.btnFiltrar);
+        btnFiltrar = view.findViewById(R.id.btnVoltar);
         btnForYou = view.findViewById(R.id.btnForYou);
         btnScanner = view.findViewById(R.id.btnScanner);
         btnMuseusSeguidos = view.findViewById(R.id.btnMuseusSeguidos);

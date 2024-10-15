@@ -20,6 +20,8 @@ public interface ObraInterface {
     Call<List<Obra>> selecionarObrasPorArtista(@Path("id") long id);
     @GET("/api/obra/selecionarPorGeneros")
     Call<List<Obra>> selecionarObrasPorVariosGeneros(@Query("generos") List<Long> generos);
+    @GET("/api/obra/selecionarPorMuseus")
+    Call<List<Obra>> selecionarObrasPorVariosMuseus(@Query("museus") List<Long> museus);
 
 
 }

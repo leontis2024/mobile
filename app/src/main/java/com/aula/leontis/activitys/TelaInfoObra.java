@@ -60,6 +60,8 @@ public class TelaInfoObra extends AppCompatActivity {
     ObraService obraService = new ObraService();
     MongoService mongoService = new MongoService();
     String idUsuario;
+    TextView idGenero, idArtista,idMuseu;
+    Button btnAcessarArtista,btnAcessarGenero,btnAcssarMuseu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,14 @@ public class TelaInfoObra extends AppCompatActivity {
         rvComentarios.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
         avaliacaoObra = findViewById(R.id.avaliacaoObra);
 
+        idGenero = findViewById(R.id.idGenero);
+        idArtista = findViewById(R.id.idArtista);
+        idMuseu = findViewById(R.id.idMuseu);
+
+        btnAcessarArtista = findViewById(R.id.btnAcessarArtista);
+        btnAcessarGenero = findViewById(R.id.btnAcessarGenero);
+        btnAcssarMuseu = findViewById(R.id.btnAcessarMuseu);
+
         btnVoltar = findViewById(R.id.btnVoltar);
         btnVoltar.setOnClickListener(v -> {
             finish();
@@ -92,7 +102,31 @@ public class TelaInfoObra extends AppCompatActivity {
         if(infoObra != null) {
             id = infoObra.getString("id");
         }
-        obraService.buscarObraPorId(id,TelaInfoObra.this,erroObraInfo,nomeObra,descObra,fotoObra,descMuseu,fotoMuseu,urlText);
+        btnAcessarArtista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TelaInfoObra.this, TelaInfoArtista.class);
+                intent.putExtra("id",id);
+                startActivity(intent);
+            }
+        });
+        btnAcessarGenero.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TelaInfoObra.this, TelaInfoGenero.class);
+                intent.putExtra("id",idGenero.getText());
+                startActivity(intent);
+            }
+        });
+        btnAcssarMuseu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TelaInfoObra.this, TelaInfoMuseu.class);
+                intent.putExtra("id",idMuseu.getText());
+                startActivity(intent);
+            }
+        });
+        obraService.buscarObraPorId(id,TelaInfoObra.this,erroObraInfo,nomeObra,descObra,fotoObra,descMuseu,fotoMuseu,urlText,idGenero,idArtista,idMuseu);
         mongoService.buscarComentariosPorIdObra(erroObraInfo,id,TelaInfoObra.this,rvComentarios,listaComentarios,adapterComentario);
         mongoService.selecionarMediaNotaPorIdObra(id,TelaInfoObra.this,avaliacaoObra,erroObraInfo);
         btnComentar.setOnClickListener(new View.OnClickListener() {

@@ -161,9 +161,47 @@ public class ObraService {
         });
     }
 
+    public void buscarObrasPorVariosMuseus(List<Long> museus,TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObra adapterObra) {
+        erroObra.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
+        erroObra.setText("Carregando...");
+        erroObra.setVisibility(View.VISIBLE);
 
+        ApiService apiService = new ApiService(context);
+        ObraInterface obraInterface = apiService.getObraInterface();
+        Call<List<Obra>> call = obraInterface.selecionarObrasPorVariosMuseus(museus);
 
+        call.enqueue(new Callback<List<Obra>>() {
+            @Override
+            public void onResponse(Call<List<Obra>> call, Response<List<Obra>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    erroObra.setVisibility(View.INVISIBLE);
+                    List<Obra> obras = response.body();
+                    if(obras.size()!=0){
 
+                        listaObras.addAll(response.body());
+                        adapterObra.notifyDataSetChanged();
+                        rvObras.setAdapter(adapterObra);
+                    }
+
+                } else {
+                    if(response.code()!=404) {
+                        erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
+                        Log.e("API_ERROR_GET_OBRA_GENERO", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
+                        erroObra.setText("Falha ao obter dados das obras");
+                        erroObra.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Obra>> call, Throwable t) {
+                erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
+                Log.e("API_ERROR_GET_OBRA_GENERO", "Erro ao fazer a requisição: " + t.getMessage());
+                erroObra.setText("Falha ao obter dados das obras");
+                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados das obras\nMensagem: "+t.getMessage());
+            }
+        });
+    }
 
 
     public void buscarObrasPorArtista(String idArtista,TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObra adapterObra) {
@@ -208,7 +246,7 @@ public class ObraService {
         });
     }
 
-    public void buscarObraPorId(String id, Context c, TextView erroObra, TextView nomeObra, TextView descObra, ImageView fotoObra, TextView descMuseu, ImageView imgMuseu,TextView urlText) {
+    public void buscarObraPorId(String id, Context c, TextView erroObra, TextView nomeObra, TextView descObra, ImageView fotoObra, TextView descMuseu, ImageView imgMuseu,TextView urlText,TextView idGenero,TextView idArtista,TextView idMuseu) {
         ApiService apiService = new ApiService(c);
         ObraInterface obraInterface= apiService.getObraInterface();
 
@@ -252,6 +290,9 @@ public class ObraService {
                     urlText.setText(url);
                     Glide.with(c).asBitmap().load(url).into(fotoObra);
 
+                    idGenero.setText(obra.getIdGenero());
+                    idArtista.setText(obra.getIdArtista());
+                    idMuseu.setText(obra.getIdMuseu());
                 } else {
                     erroObra.setText("Falha ao obter dados da obra");
                     erroObra.setVisibility(View.VISIBLE);

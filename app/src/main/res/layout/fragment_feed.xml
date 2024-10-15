@@ -21,7 +21,7 @@
             android:background="@color/vinho_claro">
 
             <ImageButton
-                android:id="@+id/btnFiltrar"
+                android:id="@+id/btnVoltar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"

@@ -25,6 +25,7 @@ import com.aula.leontis.services.MuseuService;
 import com.aula.leontis.services.ObraService;
 import com.aula.leontis.services.UsuarioMuseuService;
 import com.aula.leontis.utilities.MetodosAux;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
@@ -41,6 +42,7 @@ public class TelaInfoMuseu extends AppCompatActivity {
 
     TextView erroMuseu, nomeMuseu, descMuseu;
     ImageView fotoMuseu;
+    FloatingActionButton btnGuia;
     ImageButton btnVoltar,btnSeguir;
     MuseuService museuService = new MuseuService();
     List<Obra> listaObras = new ArrayList<>();
@@ -63,6 +65,7 @@ public class TelaInfoMuseu extends AppCompatActivity {
             btnVoltar = findViewById(R.id.btnVoltar);
             rvObras = findViewById(R.id.obrasRelacionadasMuseu);
             btnSeguir = findViewById(R.id.btnSeguir);
+            btnGuia = findViewById(R.id.btnGuia);
 
             rvObras.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
@@ -77,6 +80,16 @@ public class TelaInfoMuseu extends AppCompatActivity {
             if(infoMuseu != null) {
                 id = infoMuseu.getString("id");
             }
+            btnGuia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(TelaInfoMuseu.this, TelaGuias.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", id);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
         erroMuseu.setTextColor(ContextCompat.getColor(this, R.color.azul_carregando));
         erroMuseu.setText("Carregando...");
         erroMuseu.setVisibility(View.VISIBLE);
