@@ -34,7 +34,6 @@ public class GeneroService {
 
         Call<GeneroCompleto> call = generoInterface.buscarGeneroPorId(id);
 
-        // Buscar todos os gêneros
         call.enqueue(new Callback<GeneroCompleto>() {
             @Override
             public void onResponse(Call<GeneroCompleto>call, Response<GeneroCompleto> response) {
@@ -60,7 +59,7 @@ public class GeneroService {
 
             @Override
             public void onFailure(Call<GeneroCompleto> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_GENERO", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c,"Erro inesperado","Erro ao obter dados do gênero\nMensagem: "+t.getMessage());
             }
         });
@@ -69,10 +68,9 @@ public class GeneroService {
         erroGenero.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroGenero.setText("Carregando...");
         erroGenero.setVisibility(View.VISIBLE);
-        // Configurar Retrofit
+
         String urlAPI = "https://dev2-tfqz.onrender.com/";
 
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -81,7 +79,6 @@ public class GeneroService {
         GeneroInterface generoInterface = retrofit.create(GeneroInterface.class);
         Call<List<Genero>> call = generoInterface.buscarTodosGenerosParciais();
 
-        // Buscar todos os gêneros
         call.enqueue(new Callback<List<Genero>>() {
             @Override
             public void onResponse(Call<List<Genero>> call, Response<List<Genero>> response) {
@@ -103,7 +100,7 @@ public class GeneroService {
             @Override
             public void onFailure(Call<List<Genero>> call, Throwable t) {
                 erroGenero.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_GENERO_PARCIAL", "Erro ao fazer a requisição: " + t.getMessage());
                 erroGenero.setText("Falha ao obter dados dos gêneros");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos gêneros\nMensagem: "+t.getMessage());
             }
@@ -113,22 +110,11 @@ public class GeneroService {
         erroGenero.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroGenero.setText("Carregando...");
         erroGenero.setVisibility(View.VISIBLE);
-        // Configurar Retrofit
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        GeneroInterface generoInterface = retrofit.create(GeneroInterface.class);
 
         ApiService apiService = new ApiService(context);
         GeneroInterface generoInterface = apiService.getGeneroInterface();
         Call<List<GeneroCompleto>> call = generoInterface.buscarTodosGeneros();
 
-        // Buscar todos os gêneros
         call.enqueue(new Callback<List<GeneroCompleto>>() {
             @Override
             public void onResponse(Call<List<GeneroCompleto>> call, Response<List<GeneroCompleto>> response) {
@@ -142,7 +128,7 @@ public class GeneroService {
 
                 } else {
                     erroGenero.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                    Log.e("API_ERROR_GET", "Não foi possivel fazer a requisição: " + response.code());
+                    Log.e("API_ERROR_GET_GENERO_COMPLETO", "Não foi possivel fazer a requisição: " + response.code());
                     erroGenero.setText("Falha ao obter dados dos gêneros");
                     erroGenero.setVisibility(View.VISIBLE);
                 }
@@ -151,7 +137,7 @@ public class GeneroService {
             @Override
             public void onFailure(Call<List<GeneroCompleto>> call, Throwable t) {
                 erroGenero.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_GENERO_COMPLETO", "Erro ao fazer a requisição: " + t.getMessage());
                 erroGenero.setText("Falha ao obter dados dos gêneros");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos gêneros\nMensagem: "+t.getMessage());
             }
@@ -183,7 +169,7 @@ public class GeneroService {
 
             @Override
             public void onFailure(Call<GeneroCompleto> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_GENERO_PARCIAL", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c,"Erro inesperado","Erro ao obter dados do gênero\nMensagem: "+t.getMessage());
             }
         });

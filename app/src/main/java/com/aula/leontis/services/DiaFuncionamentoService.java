@@ -36,7 +36,6 @@ public class DiaFuncionamentoService {
 
         Call<List<DiaFuncionamento>> call = generoInterface.selecionarPorIdMuseu(id);
 
-
         call.enqueue(new Callback<List<DiaFuncionamento>>() {
             @Override
             public void onResponse(Call<List<DiaFuncionamento>> call, Response<List<DiaFuncionamento>> response) {
@@ -54,7 +53,7 @@ public class DiaFuncionamentoService {
 
             @Override
             public void onFailure(Call<List<DiaFuncionamento>> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_DIA_FUNC", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do dia funcionamento\nMensagem: " + t.getMessage());
             }
         });
@@ -79,7 +78,7 @@ public class DiaFuncionamentoService {
 
             @Override
             public void onFailure(Call<List<DiaFuncionamento>> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_DIA_FUNC_PARCIAL", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do dia funcionamento\nMensagem: " + t.getMessage());
             }
         });
@@ -120,8 +119,8 @@ public class DiaFuncionamentoService {
 
             @Override
             public void onFailure(Call<List<DiaFuncionamento>> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
-                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do dia funcionamento\nMensagem: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_PRECO_DIA_FUNC", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do preço do dia funcionamento\nMensagem: " + t.getMessage());
             }
         });
     }

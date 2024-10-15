@@ -27,7 +27,6 @@ public class NoticiaService {
         erroNoticia.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroNoticia.setText("Carregando...");
         erroNoticia.setVisibility(View.VISIBLE);
-        Random random = new Random();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -48,14 +47,14 @@ public class NoticiaService {
                 @Override
                 public void onFailure(Call<NewsApiResponse> call, Throwable throwable) {
                     erroNoticia.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                    Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + throwable.getMessage());
+                    Log.e("API_ERROR_GET_NOTICIAS", "Erro ao fazer a requisição: " + throwable.getMessage());
                     erroNoticia.setText("Falha ao obter dados das notícias");
                     listener.onError("Request Failed");
                 }
             });
         }catch (Exception e){
             erroNoticia.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-            Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + e.getMessage());
+            Log.e("API_ERROR_GET_NOTICIAS", "Erro ao fazer a requisição: " + e.getMessage());
             erroNoticia.setText("Falha ao obter dados das notícias");
             e.printStackTrace();
         }

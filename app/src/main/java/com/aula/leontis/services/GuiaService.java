@@ -36,7 +36,6 @@ public class GuiaService {
         GuiaInterface guiaInterface = apiService.getGuiaInterface();
         Call<List<Guia>> call = guiaInterface.selecionarGuiaPorMuseu(Long.parseLong(idMuseu));
 
-        // Buscar todos os guias
         call.enqueue(new Callback<List<Guia>>() {
             @Override
             public void onResponse(Call<List<Guia>> call, Response<List<Guia>> response) {
@@ -66,7 +65,7 @@ public class GuiaService {
             @Override
             public void onFailure(Call<List<Guia>> call, Throwable t) {
                 erroGuia.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                Log.e("API_ERROR_GET_GUIAS", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_GUIA", "Erro ao fazer a requisição: " + t.getMessage());
                 erroGuia.setText("Falha ao obter dados dos guias");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos guias\nMensagem: "+t.getMessage());
             }

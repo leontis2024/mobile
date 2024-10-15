@@ -38,7 +38,6 @@ public class MuseuService {
         MuseuInterface museuInterface = apiService.getMuseuInterface();
         Call<List<Museu>> call = museuInterface.selecionarTodosMuseus();
 
-        // Buscar todos os gêneros
         call.enqueue(new Callback<List<Museu>>() {
             @Override
             public void onResponse(Call<List<Museu>> call, Response<List<Museu>> response) {
@@ -51,7 +50,7 @@ public class MuseuService {
 
                 } else {
                     erroMuseu.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                    Log.e("API_ERROR_GET", "Não foi possivel fazer a requisição: " + response.code());
+                    Log.e("API_ERROR_GET_MUSEU", "Não foi possivel fazer a requisição: " + response.code());
                     erroMuseu.setText("Falha ao obter dados dos museus");
                     erroMuseu.setVisibility(View.VISIBLE);
                 }
@@ -60,7 +59,7 @@ public class MuseuService {
             @Override
             public void onFailure(Call<List<Museu>> call, Throwable t) {
                 erroMuseu.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_MUSEU", "Erro ao fazer a requisição: " + t.getMessage());
                 erroMuseu.setText("Falha ao obter dados dos museus");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados dos museus\nMensagem: "+t.getMessage());
             }
@@ -72,8 +71,6 @@ public class MuseuService {
         MuseuInterface museuInterface = apiService.getMuseuInterface();
 
         Call<Museu> call = museuInterface.buscarMuseuPorId(id);
-
-        // Buscar todos os gêneros
         call.enqueue(new Callback<Museu>() {
             @Override
             public void onResponse(Call<Museu> call, Response<Museu> response) {
@@ -117,7 +114,7 @@ public class MuseuService {
 
             @Override
             public void onFailure(Call<Museu> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_MUSEU", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do museu\nMensagem: " + t.getMessage());
             }
         });
@@ -127,8 +124,6 @@ public class MuseuService {
         MuseuInterface museuInterface = apiService.getMuseuInterface();
 
         Call<Museu> call = museuInterface.buscarMuseuPorId(id);
-
-        // Buscar todos os gêneros
         call.enqueue(new Callback<Museu>() {
             @Override
             public void onResponse(Call<Museu> call, Response<Museu> response) {
@@ -153,7 +148,7 @@ public class MuseuService {
 
             @Override
             public void onFailure(Call<Museu> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_MUSEU_PARCIAL", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do museu\nMensagem: " + t.getMessage());
             }
         });

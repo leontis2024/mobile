@@ -15,10 +15,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RedisService {
-    public void incrementarAtividadeUsuario() {
-        String urlAPI = "https://apiredis.onrender.com/";
+    String urlAPI = "https://apiredis.onrender.com/";
 
-        // Configurar acesso à API
+    public void incrementarAtividadeUsuario() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -59,9 +58,6 @@ public class RedisService {
     }
 
     public void decrementarAtividadeUsuario() {
-        String urlAPI = "https://apiredis.onrender.com/";
-
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())

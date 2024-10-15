@@ -36,10 +36,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UsuarioGeneroService {
     MetodosAux aux = new MetodosAux();
     public void inserirUsuarioGenero(Context context, String[] id, long[] listaGenerosInteresse) {
-
         String urlAPI = "https://dev2-tfqz.onrender.com/";
 
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -54,7 +52,7 @@ public class UsuarioGeneroService {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         try {
-                            Log.d("API_RESPONSE_POST", "Conexão usuário e genero criada: " + response.body().string());
+                            Log.d("API_RESPONSE_POST_USUARIO_GENERO", "Conexão usuário e genero criada: " + response.body().string());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -62,10 +60,10 @@ public class UsuarioGeneroService {
                         try {
                             // Obter e exibir o corpo da resposta de erro
                             String errorBody = response.errorBody().string();
-                            Log.e("API_ERROR_POST", "Erro ao fazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
+                            Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao fazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Log.e("API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
+                            Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao processar o corpo da resposta de erro.");
                         }
                     }
 
@@ -73,7 +71,7 @@ public class UsuarioGeneroService {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                    Log.e("API_ERROR_POST", "Erro ao fazer conexão usuario e genero: " + throwable.getMessage());
+                    Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao fazer conexão usuario e genero: " + throwable.getMessage());
                     aux.abrirDialogErro(context, "Erro inesperado", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
                 }
             });
@@ -84,12 +82,10 @@ public class UsuarioGeneroService {
 
 
     public void buscarSeExiste(String usuario,String genero, Context context, ImageButton interesse) {
-
         ApiService apiService = new ApiService(context);
         UsuarioGeneroInterface usuarioGeneroInterface = apiService.getUsuarioGeneroInterface();
         Call<UsuarioGenero> call = usuarioGeneroInterface.buscarSeExiste(Long.parseLong(usuario),Long.parseLong(genero));
 
-        //executar chamada
         call.enqueue(new Callback<UsuarioGenero>() {
             @Override
             public void onResponse(Call<UsuarioGenero> call, Response<UsuarioGenero> response) {
@@ -106,22 +102,21 @@ public class UsuarioGeneroService {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                        Log.e("API_ERROR_GET_ID_EXISTE_USUARIO_GENERO", "Erro ao processar resposta: " + e.getMessage());
                     }
                 } else {
-                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code()+" "+response.message());
+                    Log.e("API_ERROR_GET_ID_EXISTE_USUARIO_GENERO", "Erro na resposta da API: " + response.code()+" "+response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<UsuarioGenero> call, Throwable throwable) {
-                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                Log.e("API_ERROR_GET_ID_EXISTE_USUARIO_GENERO", "Erro ao fazer a requisição: " + throwable.getMessage());
                 aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados\nMensagem: " + throwable.getMessage());
             }
         });
     }
     public void deletarUsuarioGenero(Context context, String[] id, String idGenero) {
-
         ApiService apiService = new ApiService(context);
         UsuarioGeneroInterface usuarioGeneroInterface = apiService.getUsuarioGeneroInterface();
 
@@ -131,7 +126,7 @@ public class UsuarioGeneroService {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        Log.d("API_RESPONSE_DELETE", "O usuário de id: "+id[0]+" parou de ter interesse no genero de id: "+idGenero + response.body().string());
+                        Log.d("API_RESPONSE_DELETE_USUARIO_GENERO", "O usuário de id: "+id[0]+" parou de ter interesse no genero de id: "+idGenero + response.body().string());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -139,10 +134,10 @@ public class UsuarioGeneroService {
                     try {
                         // Obter e exibir o corpo da resposta de erro
                         String errorBody = response.errorBody().string();
-                        Log.e("API_ERROR_DELETE", "Erro ao desfazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
+                        Log.e("API_ERROR_DELETE_USUARIO_GENERO", "Erro ao desfazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_DELETE", "Erro ao processar o corpo da resposta de erro.");
+                        Log.e("API_ERROR_DELETE_USUARIO_GENERO", "Erro ao processar o corpo da resposta de erro.");
                     }
                 }
             }
@@ -151,22 +146,18 @@ public class UsuarioGeneroService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_POST", "Erro ao desfazer conexão usuario e genero: " + throwable.getMessage());
+                Log.e("API_ERROR_DELETE_USUARIO_GENERO", "Erro ao desfazer conexão usuario e genero: " + throwable.getMessage());
                 aux.abrirDialogErro(context, "Erro inesperado", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
             }
         });
 
-
-
     }
 
     public void buscarGenerosDeUmUsuario(String usuario, Context context,List<Long> generosInteresse) {
-
         ApiService apiService = new ApiService(context);
         UsuarioGeneroInterface usuarioGeneroInterface = apiService.getUsuarioGeneroInterface();
         Call<List<UsuarioGenero>> call = usuarioGeneroInterface.buscarGenerosPorUsuario(Long.parseLong(usuario));
 
-        //executar chamada
         call.enqueue(new Callback<List<UsuarioGenero>>() {
             @Override
             public void onResponse(Call<List<UsuarioGenero>> call, Response<List<UsuarioGenero>> response) {
@@ -179,16 +170,16 @@ public class UsuarioGeneroService {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                        Log.e("API_ERROR_GET_GENEROS_USUARIO", "Erro ao processar resposta: " + e.getMessage());
                     }
                 } else {
-                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code()+" "+response.message());
+                    Log.e("API_ERROR_GET_GENEROS_USUARIO", "Erro na resposta da API: " + response.code()+" "+response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<UsuarioGenero>> call, Throwable throwable) {
-                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                Log.e("API_ERROR_GET_GENEROS_USUARIO", "Erro ao fazer a requisição: " + throwable.getMessage());
                 aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados\nMensagem: " + throwable.getMessage());
             }
         });

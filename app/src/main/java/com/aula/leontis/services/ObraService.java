@@ -42,7 +42,6 @@ public class ObraService {
         ObraInterface obraInterface = apiService.getObraInterface();
         Call<List<Obra>> call = obraInterface.selecionarObrasPorMuseu(Long.parseLong(idMuseu));
 
-        // Buscar todos os gêneros
         call.enqueue(new Callback<List<Obra>>() {
             @Override
             public void onResponse(Call<List<Obra>> call, Response<List<Obra>> response) {
@@ -69,7 +68,7 @@ public class ObraService {
             @Override
             public void onFailure(Call<List<Obra>> call, Throwable t) {
                 erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
                 erroObra.setText("Falha ao obter dados das obras");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados das obras\nMensagem: "+t.getMessage());
             }
@@ -144,7 +143,7 @@ public class ObraService {
                 } else {
                     if(response.code()!=404) {
                         erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                        Log.e("API_ERROR_GET_OBRA_GENERO", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
+                        Log.e("API_ERROR_GET_OBRA_GENEROS", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
                         erroObra.setText("Falha ao obter dados das obras");
                         erroObra.setVisibility(View.VISIBLE);
                     }
@@ -154,7 +153,7 @@ public class ObraService {
             @Override
             public void onFailure(Call<List<Obra>> call, Throwable t) {
                 erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                Log.e("API_ERROR_GET_OBRA_GENERO", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_OBRA_GENEROS", "Erro ao fazer a requisição: " + t.getMessage());
                 erroObra.setText("Falha ao obter dados das obras");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados das obras\nMensagem: "+t.getMessage());
             }
@@ -186,7 +185,7 @@ public class ObraService {
                 } else {
                     if(response.code()!=404) {
                         erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                        Log.e("API_ERROR_GET_OBRA_GENERO", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
+                        Log.e("API_ERROR_GET_OBRA_MUSEUS", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
                         erroObra.setText("Falha ao obter dados das obras");
                         erroObra.setVisibility(View.VISIBLE);
                     }
@@ -196,7 +195,7 @@ public class ObraService {
             @Override
             public void onFailure(Call<List<Obra>> call, Throwable t) {
                 erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                Log.e("API_ERROR_GET_OBRA_GENERO", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_OBRA_MUSEUS", "Erro ao fazer a requisição: " + t.getMessage());
                 erroObra.setText("Falha ao obter dados das obras");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados das obras\nMensagem: "+t.getMessage());
             }
@@ -229,7 +228,7 @@ public class ObraService {
                 } else {
                     if(response.code()!=404) {
                         erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                        Log.e("API_ERROR_GET", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
+                        Log.e("API_ERROR_GET_OBRA_ARTISTA", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
                         erroObra.setText("Falha ao obter dados das obras");
                         erroObra.setVisibility(View.VISIBLE);
                     }
@@ -239,7 +238,7 @@ public class ObraService {
             @Override
             public void onFailure(Call<List<Obra>> call, Throwable t) {
                 erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_OBRA_ARTISTA", "Erro ao fazer a requisição: " + t.getMessage());
                 erroObra.setText("Falha ao obter dados das obras");
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados das obras\nMensagem: "+t.getMessage());
             }
@@ -252,7 +251,6 @@ public class ObraService {
 
         Call<Obra> call = obraInterface.selecionarObraPorId(Long.parseLong(id));
 
-        // Buscar todos os gêneros
         call.enqueue(new Callback<Obra>() {
             @Override
             public void onResponse(Call<Obra> call, Response<Obra> response) {
@@ -301,7 +299,7 @@ public class ObraService {
 
             @Override
             public void onFailure(Call<Obra> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados da obra\nMensagem: " + t.getMessage());
             }
         });

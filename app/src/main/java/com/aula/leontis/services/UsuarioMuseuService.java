@@ -24,13 +24,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UsuarioMuseuService {
     MetodosAux aux = new MetodosAux();
     public void buscarSeExiste(String usuario, String museu, Context context, ImageButton seguir) {
-
         ApiService apiService = new ApiService(context);
         UsuarioMuseuInterface usuarioMuseuInterface = apiService.getUsuarioMuseuInterface();
 
         Call<UsuarioMuseu> call = usuarioMuseuInterface.buscarSeExiste(Long.parseLong(usuario),Long.parseLong(museu));
 
-        //executar chamada
         call.enqueue(new Callback<UsuarioMuseu>() {
             @Override
             public void onResponse(Call<UsuarioMuseu> call, Response<UsuarioMuseu> response) {
@@ -47,23 +45,22 @@ public class UsuarioMuseuService {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                        Log.e("API_ERROR_GET_EXISTE_USUARIO_MUSEU", "Erro ao processar resposta: " + e.getMessage());
                     }
                 } else {
-                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code()+" "+response.message());
+                    Log.e("API_ERROR_GET_EXISTE_USUARIO_MUSEU", "Erro na resposta da API: " + response.code()+" "+response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<UsuarioMuseu> call, Throwable throwable) {
-                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                Log.e("API_ERROR_GET_EXISTE_USUARIO_MUSEU", "Erro ao fazer a requisição: " + throwable.getMessage());
                 aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados\nMensagem: " + throwable.getMessage());
             }
         });
     }
 
     public void inserirUsuarioMuseu(Context context, String[] id, String idMuseu) {
-
         ApiService apiService = new ApiService(context);
         UsuarioMuseuInterface usuarioMuseuInterface = apiService.getUsuarioMuseuInterface();
 
@@ -73,7 +70,7 @@ public class UsuarioMuseuService {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         try {
-                            Log.d("API_RESPONSE_POST", "Conexão usuário e museu criada: " + response.body().string());
+                            Log.d("API_RESPONSE_POST_USUARIO_MUSEU", "Conexão usuário e museu criada: " + response.body().string());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -81,19 +78,17 @@ public class UsuarioMuseuService {
                         try {
                             // Obter e exibir o corpo da resposta de erro
                             String errorBody = response.errorBody().string();
-                            Log.e("API_ERROR_POST", "Erro ao fazer conexão usuario e museu: " + response.code() + " - " + errorBody + " - " + response.message());
+                            Log.e("API_ERROR_POST_USUARIO_MUSEU", "Erro ao fazer conexão usuario e museu: " + response.code() + " - " + errorBody + " - " + response.message());
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Log.e("API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
+                            Log.e("API_ERROR_POST_USUARIO_MUSEU", "Erro ao processar o corpo da resposta de erro.");
                         }
                     }
                 }
 
-
-
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                    Log.e("API_ERROR_POST", "Erro ao fazer conexão museu e genero: " + throwable.getMessage());
+                    Log.e("API_ERROR_POST_USUARIO_MUSEU", "Erro ao fazer conexão museu e genero: " + throwable.getMessage());
                     aux.abrirDialogErro(context, "Erro inesperado", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
                 }
             });
@@ -103,7 +98,6 @@ public class UsuarioMuseuService {
     }
 
     public void deletarUsuarioMuseu(Context context, String[] id, String idMuseu) {
-
         ApiService apiService = new ApiService(context);
         UsuarioMuseuInterface usuarioMuseuInterface = apiService.getUsuarioMuseuInterface();
 
@@ -114,7 +108,7 @@ public class UsuarioMuseuService {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        Log.d("API_RESPONSE_DELETE", "O usuário de id: "+id[0]+" parou de seguir o museu de id: "+idMuseu + response.body().string());
+                        Log.d("API_RESPONSE_DELETE_USUARIO_MUSEU", "O usuário de id: "+id[0]+" parou de seguir o museu de id: "+idMuseu + response.body().string());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -122,10 +116,10 @@ public class UsuarioMuseuService {
                     try {
                         // Obter e exibir o corpo da resposta de erro
                         String errorBody = response.errorBody().string();
-                        Log.e("API_ERROR_DELETE", "Erro ao desfazer conexão usuario e museu: " + response.code() + " - " + errorBody + " - " + response.message());
+                        Log.e("API_ERROR_DELETE_USUARIO_MUSEU", "Erro ao desfazer conexão usuario e museu: " + response.code() + " - " + errorBody + " - " + response.message());
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_DELETE", "Erro ao processar o corpo da resposta de erro.");
+                        Log.e("API_ERROR_DELETE_USUARIO_MUSEU", "Erro ao processar o corpo da resposta de erro.");
                     }
                 }
             }
@@ -134,8 +128,8 @@ public class UsuarioMuseuService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_POST", "Erro ao desfazer conexão usuario e genero: " + throwable.getMessage());
-                aux.abrirDialogErro(context, "Erro inesperado", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
+                Log.e("API_ERROR_DELETE_USUARIO_MUSEU", "Erro ao desfazer conexão usuario e museu: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro: " + throwable.getMessage());
             }
         });
 
@@ -143,7 +137,6 @@ public class UsuarioMuseuService {
 
     }
     public void buscarMuseusDeUmUsuario(String usuario, Context context, List<Long> museusSeguidos) {
-
         ApiService apiService = new ApiService(context);
         UsuarioMuseuInterface usuarioMuseuInterface = apiService.getUsuarioMuseuInterface();
         Call<List<UsuarioMuseu>> call = usuarioMuseuInterface.buscarMuseusPorUsuario(Long.parseLong(usuario));
@@ -161,17 +154,17 @@ public class UsuarioMuseuService {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                        Log.e("API_ERROR_GET_MUSEUS_USUARIO", "Erro ao processar resposta: " + e.getMessage());
                     }
                 } else {
-                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code()+" "+response.message());
+                    Log.e("API_ERROR_GET_MUSEUS_USUARIO", "Erro na resposta da API: " + response.code()+" "+response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<UsuarioMuseu>> call, Throwable throwable) {
-                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados\nMensagem: " + throwable.getMessage());
+                Log.e("API_ERROR_GET_MUSEUS_USUARIO", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro \nMensagem: " + throwable.getMessage());
             }
         });
     }

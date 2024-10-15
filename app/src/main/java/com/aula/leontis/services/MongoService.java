@@ -38,10 +38,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MongoService {
     MetodosAux aux = new MetodosAux();
+    String urlAPI = "https://apimongo-r613.onrender.com/";
     public void inserirComentario(String idUsuario, Comentario comentario, Context context) {
-        String urlAPI = "https://apimongo-r613.onrender.com/";
-
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -65,8 +63,8 @@ public class MongoService {
                     try {
                         // Obter e exibir o corpo da resposta de erro
                         String errorBody = response.errorBody().string();
-                        Log.e("MONGO_API_ERROR_POST_COMENTARIO", "Erro ao inserir o usuário mongo: " + response.code() + " - " + errorBody + " - " + response.message());
-                        aux.abrirDialogErro(context, "Erro ao cadastrar usuário mongo", "Não foi possível realizar seu cadastro. Erro: " + errorBody);
+                        Log.e("MONGO_API_ERROR_POST_COMENTARIO", "Erro ao adicionar comentario: " + response.code() + " - " + errorBody + " - " + response.message());
+                        aux.abrirDialogErro(context, "Erro ao comentar", "Não foi possível comentar. Erro: " + errorBody);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.e("MONGO_API_ERROR_POST_COMENTARIO", "Erro ao processar o corpo da resposta de erro.");
@@ -76,8 +74,8 @@ public class MongoService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("MONGO_API_ERROR_POST", "Erro ao inserir o usuário mongo: " + throwable.getMessage());
-                aux.abrirDialogErro(context, "Erro ao cadastrar usuário mongo", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
+                Log.e("MONGO_API_ERROR_POST", "Erro ao adicionar comentario: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro ao comentar", "Não foi possível comentar. Erro: " + throwable.getMessage());
             }
 
         });
@@ -85,9 +83,6 @@ public class MongoService {
 
 
     public void inserirAvaliacao(String idUsuario, Avaliacao avaliacao, Context context) {
-        String urlAPI = "https://apimongo-r613.onrender.com/";
-
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -123,17 +118,13 @@ public class MongoService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("MONGO_API_ERROR_POST", "Erro ao inserir avaliacao usuário mong: " + throwable.getMessage());
-                aux.abrirDialogErro(context, "Erro ao inserir avaliacao", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro ao inserir avaliacao", "Não foi possível avaliar. Erro: " + throwable.getMessage());
             }
 
         });
     }
 
     public void buscarComentariosPorIdObra(TextView erroComentario, String obraId,Context context, RecyclerView rvComentarios, List<ComentarioResponse> listaComentarios, AdapterComentario adapterComentarios) {
-        // Configurar Retrofit
-        String urlAPI = "https://apimongo-r613.onrender.com/";
-
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -142,7 +133,6 @@ public class MongoService {
         MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
         Call<List<ComentarioResponse>> call = mongoInterface.buscarComentariosPorIdObra(Long.parseLong(obraId));
 
-        // Buscar todos os gêneros
         call.enqueue(new Callback<List<ComentarioResponse>>() {
             @Override
             public void onResponse(Call<List<ComentarioResponse>> call, Response<List<ComentarioResponse>> response) {
@@ -167,9 +157,6 @@ public class MongoService {
     }
 
     public void selecionarMediaNotaPorIdObra(String obraId, Context context, TextView media, TextView erro) {
-        String urlAPI = "https://apimongo-r613.onrender.com/";
-
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -178,7 +165,6 @@ public class MongoService {
         MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
         Call<ResponseBody> call = mongoInterface.buscarMediaNotaPorIdObra(Long.parseLong(obraId));
 
-        //executar chamada
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -190,7 +176,7 @@ public class MongoService {
                         media.setText(String.format("%.1f", mediaApi).replace(".",","));
 
                         // Faça algo com os valores obtidos
-                        Log.d("MONGO_RESPONSE_MEDIA", "ok media");
+                        Log.d("MONGO_RESPONSE_MEDIA", "Média obtida: " + mediaApi);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -204,7 +190,7 @@ public class MongoService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("MONGO_ERROR_API", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter medial\nMensagem: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter media\nMensagem: " + throwable.getMessage());
             }
         });
     }

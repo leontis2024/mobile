@@ -51,7 +51,7 @@ public class ArtistaService {
 
             @Override
             public void onFailure(Call<Artista> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ARTISTA_ID", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c,"Erro inesperado","Erro ao obter dados do artista\nMensagem: "+t.getMessage());
             }
         });
@@ -81,7 +81,7 @@ public class ArtistaService {
 
             @Override
             public void onFailure(Call<Artista> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ARTISTA_ID_PARCIAL", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c,"Erro inesperado","Erro ao obter dados do artista\nMensagem: "+t.getMessage());
             }
         });

@@ -25,7 +25,6 @@ public class EnderecoMuseuService {
 
         Call<EnderecoMuseu> call = enderecoMuseuInterface.selecionarEnderecoPorID(id);
 
-
         call.enqueue(new Callback<EnderecoMuseu>() {
             @Override
             public void onResponse(Call<EnderecoMuseu> call, Response<EnderecoMuseu> response) {
@@ -45,7 +44,7 @@ public class EnderecoMuseuService {
 
             @Override
             public void onFailure(Call<EnderecoMuseu> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_ENDERECO", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do endereço\nMensagem: " + t.getMessage());
             }
         });
@@ -69,7 +68,7 @@ public class EnderecoMuseuService {
 
             @Override
             public void onFailure(Call<EnderecoMuseu> call, Throwable t) {
-                Log.e("API_ERROR_GET_ID", "Erro ao fazer a requisição: " + t.getMessage());
+                Log.e("API_ERROR_GET_ID_ENDERECO_PARCIAL", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do endereço\nMensagem: " + t.getMessage());
             }
         });

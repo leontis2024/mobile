@@ -34,68 +34,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UsuarioService {
     MetodosAux aux = new MetodosAux();
-
-    public void selecionarUsuarioPorIdParcial(String id, Context context, TextView nome, TextView biografia, ImageView foto) {
-
-        ApiService apiService = new ApiService(context);
-        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
-        Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
-
-        //executar chamada
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        // Converte o corpo da resposta para string
-                        String jsonResponse = response.body().string();
-
-                        // Cria um JSONObject a partir da string
-                        JSONObject jsonObject = new JSONObject(jsonResponse);
-
-                        // Obtém os valores de "apelido" e "biografia"
-                        String apelidoApi = jsonObject.getString("apelido");
-                        String nomeApi = jsonObject.getString("nome");
-                        String biografiaApi = jsonObject.getString("biografia");
-                        String urlFotoApi = jsonObject.getString("urlImagem");
-                        if (urlFotoApi.equals("") || urlFotoApi == null) {
-                            urlFotoApi = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
-                        }
-
-                        if (apelidoApi.equals("") || apelidoApi == null) {
-                            nome.setText(nomeApi);
-                        } else {
-                            nome.setText(apelidoApi);
-                        }
-
-                        if (biografia.equals("") || biografia == null) {
-                            biografia.setHint("Nada por aqui...");
-                        } else {
-                            biografia.setText(biografiaApi);
-                        }
-
-                        Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
-
-                        // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GETID", "Campos obtidos: apelido: " + apelidoApi + " nome: " + nomeApi + " biografia: " + biografiaApi);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
-                    }
-                } else {
-                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados do perfil\nMensagem: " + throwable.getMessage());
-            }
-        });
-    }
-
     public void selecionarUsuarioPorId(String id, Context context, TextView apelido, TextView biografia, ImageView foto, TextView nome, TextView sobrenome, TextView telefone, TextView sexo, TextView dtNasc, TextView erro) {
         erro.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erro.setText("Carregando...");
@@ -104,20 +42,16 @@ public class UsuarioService {
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
 
-        //executar chamada
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         erro.setVisibility(View.INVISIBLE);
-                        // Converte o corpo da resposta para string
                         String jsonResponse = response.body().string();
 
-                        // Cria um JSONObject a partir da string
                         JSONObject jsonObject = new JSONObject(jsonResponse);
 
-                        // Obtém os valores de "apelido" e "biografia"
                         String apelidoApi = jsonObject.getString("apelido");
                         String nomeApi = jsonObject.getString("nome");
                         String biografiaApi = jsonObject.getString("biografia");
@@ -143,17 +77,17 @@ public class UsuarioService {
                         Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
 
                         // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GETID", "Campos obtidos: apelido: " + apelidoApi + " nome: " + nomeApi + " biografia: " + biografiaApi + " urlFoto: " + urlFotoApi + " sobrenome: " + sobrenomeApi + " telefone: " + telefoneApi + " sexo: " + sexoApi + " dtNasc: " + dtNascApi);
+                        Log.d("API_RESPONSE_GET_ID_USUARIO", "Campos obtidos: apelido: " + apelidoApi + " nome: " + nomeApi + " biografia: " + biografiaApi + " urlFoto: " + urlFotoApi + " sobrenome: " + sobrenomeApi + " telefone: " + telefoneApi + " sexo: " + sexoApi + " dtNasc: " + dtNascApi);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                        Log.e("API_ERROR_GET_ID_USUARIO", "Erro ao processar resposta: " + e.getMessage());
                         erro.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                         erro.setText("Não possivel trazer os dados do perfil");
                         erro.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code());
+                    Log.e("API_ERROR_GET_ID_USUARIO", "Erro na resposta da API: " + response.code());
                     erro.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                     erro.setText("Não possivel trazer os dados do perfil");
                     erro.setVisibility(View.VISIBLE);
@@ -162,7 +96,7 @@ public class UsuarioService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                Log.e("API_ERROR_GET_ID_USUARIO", "Erro ao fazer a requisição: " + throwable.getMessage());
                 erro.setText("Erro inesperado");
                 aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados do perfil\nMensagem: " + throwable.getMessage());
             }
@@ -174,17 +108,13 @@ public class UsuarioService {
         ApiService apiService = new ApiService(context);
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorID(id);
-
-        //executar chamada
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        // Converte o corpo da resposta para string
                         String jsonResponse = response.body().string();
 
-                        // Cria um JSONObject a partir da string
                         JSONObject jsonObject = new JSONObject(jsonResponse);
 
                         String nomeApi = jsonObject.getString("nome");
@@ -198,20 +128,20 @@ public class UsuarioService {
                         Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
 
                         // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GETID", "Campos obtidos: nome: " + nomeApi + " urlFoto: " + urlFotoApi + " sobrenome: " + sobrenomeApi );
+                        Log.d("API_RESPONSE_GET_ID_USUARIO_PARCIAL", "Campos obtidos: nome: " + nomeApi + " urlFoto: " + urlFotoApi + " sobrenome: " + sobrenomeApi );
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_GETID", "Erro ao processar resposta: " + e.getMessage());
+                        Log.e("API_ERROR_GET_ID_USUARIO_PARCIAL", "Erro ao processar resposta: " + e.getMessage());
                     }
                 } else {
-                    Log.e("API_ERROR_GETID", "Erro na resposta da API: " + response.code());
+                    Log.e("API_ERROR_GET_ID_USUARIO_PARCIAL", "Erro na resposta da API: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR", "Erro ao fazer a requisição: " + throwable.getMessage());
+                Log.e("API_ERROR_GET_ID_USUARIO_PARCIAL", "Erro ao fazer a requisição: " + throwable.getMessage());
             }
         });
     }
@@ -226,7 +156,6 @@ public class UsuarioService {
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
 
-        //executar chamada
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -234,13 +163,10 @@ public class UsuarioService {
                     erro.setVisibility(View.INVISIBLE);
                     erro.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                     try {
-                        // Converte o corpo da resposta para string
                         String jsonResponse = response.body().string();
 
-                        // Cria um JSONObject a partir da string
                         JSONObject jsonObject = new JSONObject(jsonResponse);
 
-                        // Obtém os valores de "apelido" e "biografia"
                         String apelidoApi = jsonObject.getString("apelido");
                         String nomeApi = jsonObject.getString("nome");
                         String biografiaApi = jsonObject.getString("biografia");
@@ -262,12 +188,10 @@ public class UsuarioService {
                         }
 
                         Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
-
-                        // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GET_EMAIL", "Campos obtidos: apelido: " + apelidoApi + " nome: " + nomeApi + " biografia: " + biografiaApi);
+                        Log.d("API_RESPONSE_GET_EMAIL_USUARIO", "Campos obtidos: apelido: " + apelidoApi + " nome: " + nomeApi + " biografia: " + biografiaApi);
 
                     } catch (Exception e) {
-                        Log.e("API_RESPONSE_GET_EMAIL", "Erro ao processar resposta: " + e.getMessage());
+                        Log.e("API_ERROR_GET_EMAIL_USUARIO", "Erro ao processar resposta: " + e.getMessage());
                         erro.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                         erro.setText("Falha ao obter dados do usuário");
                         erro.setVisibility(View.VISIBLE);
@@ -276,13 +200,13 @@ public class UsuarioService {
                     erro.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
                     erro.setText("Falha ao obter dados do usuário");
                     erro.setVisibility(View.VISIBLE);
-                    Log.e("API_ERROR_GET_EMAIL", "Erro na resposta da API: " + response.code());
+                    Log.e("API_ERROR_GET_EMAIL_USUARIO", "Erro na resposta da API: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_GET_EMAIL", "Erro ao fazer a requisição: " + throwable.getMessage());
+                Log.e("API_ERROR_GET_EMAIL_USUARIO", "Erro ao fazer a requisição: " + throwable.getMessage());
                 aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter dados do perfil\nMensagem: " + throwable.getMessage());
             }
         });
@@ -290,8 +214,6 @@ public class UsuarioService {
 
     public String inserirUsuario(Usuario usuario, Context c, String[] id) {
         String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -310,16 +232,15 @@ public class UsuarioService {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    Log.d("API_RESPONSE_POST", "ID do usuário inserido via API: " + idUsuario[0]);
+                    Log.d("API_RESPONSE_POST_USUARIO", "ID do usuário inserido via API: " + idUsuario[0]);
                 } else {
                     try {
-                        // Obter e exibir o corpo da resposta de erro
                         String errorBody = response.errorBody().string();
-                        Log.e("API_ERROR_POST", "Erro ao inserir o usuário: " + response.code() + " - " + errorBody + " - " + response.message());
+                        Log.e("API_ERROR_POST_USUARIO", "Erro ao inserir o usuário: " + response.code() + " - " + errorBody + " - " + response.message());
                         aux.abrirDialogErro(c, "Erro ao cadastrar usuário", "Não foi possível realizar seu cadastro. Erro: " + errorBody);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
+                        Log.e("API_ERROR_POST_USUARIO", "Erro ao processar o corpo da resposta de erro.");
                     }
                 }
                 id[0] = idUsuario[0];
@@ -327,7 +248,7 @@ public class UsuarioService {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_POST", "Erro ao inserir o usuário: " + throwable.getMessage());
+                Log.e("API_ERROR_POST_USUARIO", "Erro ao inserir o usuário: " + throwable.getMessage());
                 aux.abrirDialogErro(c, "Erro ao cadastrar usuário", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
             }
 
@@ -337,7 +258,6 @@ public class UsuarioService {
     public void atualizarUsuario(String id, Map<String, Object> campo, TextView erro, Context c) {
         String urlAPI = "https://dev2-tfqz.onrender.com/";
 
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -350,7 +270,6 @@ public class UsuarioService {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d("API_REQUEST_PATCH", "Campos para atualizar: " + campo.toString());
                 String[] resposta = {""};
                 if (response.isSuccessful()) {
                     try {
@@ -363,22 +282,21 @@ public class UsuarioService {
                         erro.setText("Usuário atualizado com sucesso");
                         erro.setVisibility(View.VISIBLE);
                     }
-                    Log.d("API_RESPONSE_PATCH", "Usuário atualizado via API: " + resposta[0]);
+                    Log.d("API_RESPONSE_PATCH_USUARIO", "Usuário atualizado via API: " + resposta[0]);
                 } else {
                     try {
-                        // Obter e exibir o corpo da resposta de erro
                         String errorBody = response.errorBody().string();
-                        Log.e("API_ERROR_PATCH", "Erro ao atualizar o usuário: " + response.code() + " - " + errorBody + " - " + response.message());
+                        Log.e("API_ERROR_PATCH_USUARIO", "Erro ao atualizar o usuário: " + response.code() + " - " + errorBody + " - " + response.message());
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.e("API_ERROR_PATCH", "Erro ao processar o corpo da resposta de erro.");
+                        Log.e("API_ERROR_PATCH_USUARIO", "Erro ao processar o corpo da resposta de erro.");
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_PATCH", "Erro ao atualizar o usuário: " + throwable.getMessage());
+                Log.e("API_ERROR_PATCH_USUARIO", "Erro ao atualizar o usuário: " + throwable.getMessage());
             }
 
         });
@@ -387,7 +305,6 @@ public class UsuarioService {
     public void inserirUsuarioMongo(UsuarioMongo usuario, Context context) {
         String urlAPI = "https://apimongo-r613.onrender.com/";
 
-        // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -406,23 +323,22 @@ public class UsuarioService {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    Log.d("MONGO_API_RESPONSE_POST", "ID do usuário inserido via API mongo: " + body);
+                    Log.d("MONGO_API_RESPONSE_POST_USUARIO", "ID do usuário inserido via API mongo: " + body);
                 } else {
                     try {
-                        // Obter e exibir o corpo da resposta de erro
                         String errorBody = response.errorBody().string();
-                        Log.e("MONGO_API_ERROR_POST", "Erro ao inserir o usuário mongo: " + response.code() + " - " + errorBody + " - " + response.message());
+                        Log.e("MONGO_API_ERROR_POST_USUARIO", "Erro ao inserir o usuário mongo: " + response.code() + " - " + errorBody + " - " + response.message());
                         aux.abrirDialogErro(context, "Erro ao cadastrar usuário mongo", "Não foi possível realizar seu cadastro. Erro: " + errorBody);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.e("MONGO_API_ERROR_POST", "Erro ao processar o corpo da resposta de erro.");
+                        Log.e("MONGO_API_ERROR_POST_USUARIO", "Erro ao processar o corpo da resposta de erro.");
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("MONGO_API_ERROR_POST", "Erro ao inserir o usuário mongo: " + throwable.getMessage());
+                Log.e("MONGO_API_ERROR_POST_USUARIO", "Erro ao inserir o usuário mongo: " + throwable.getMessage());
                 aux.abrirDialogErro(context, "Erro ao cadastrar usuário mongo", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
             }
 
