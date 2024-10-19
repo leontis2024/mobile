@@ -2,17 +2,17 @@ package com.aula.leontis.models.guia;
 
 public class Guia {
     private long id;
-    private String titulo_guia;
-    private String desc_guia;
-    private long id_museu;
-    private String url_imagem;
+    private String tituloGuia;
+    private String descGuia;
+    private long idMuseu;
+    private String urlImagem;
 
-    public Guia(long id, String titulo_guia, String desc_guia, long id_museu, String url_imagem) {
+    public Guia(long id, String tituloGuia, String descGuia, long idMuseu, String urlImagem) {
         this.id = id;
-        this.titulo_guia = titulo_guia;
-        this.desc_guia = desc_guia;
-        this.id_museu = id_museu;
-        this.url_imagem = url_imagem;
+        this.tituloGuia = tituloGuia;
+        this.descGuia = descGuia;
+        this.idMuseu = idMuseu;
+        this.urlImagem = urlImagem;
     }
 
     public Guia() {
@@ -26,35 +26,35 @@ public class Guia {
         this.id = id;
     }
 
-    public String getTitulo_guia() {
-        return titulo_guia;
+    public String getTituloGuia() {
+        return tituloGuia;
     }
 
-    public void setTitulo_guia(String titulo_guia) {
-        this.titulo_guia = titulo_guia;
+    public void setTituloGuia(String tituloGuia) {
+        this.tituloGuia = tituloGuia;
     }
 
-    public String getDesc_guia() {
-        return desc_guia;
+    public String getDescGuia() {
+        return descGuia;
     }
 
-    public void setDesc_guia(String desc_guia) {
-        this.desc_guia = desc_guia;
+    public void setDescGuia(String descGuia) {
+        this.descGuia = descGuia;
     }
 
-    public long getId_museu() {
-        return id_museu;
+    public long getIdMuseu() {
+        return idMuseu;
     }
 
-    public void setId_museu(long id_museu) {
-        this.id_museu = id_museu;
+    public void setIdMuseu(long idMuseu) {
+        this.idMuseu = idMuseu;
     }
 
-    public String getUrl_imagem() {
-        return url_imagem;
+    public String getUrlImagem() {
+        return urlImagem;
     }
 
-    public void setUrl_imagem(String url_imagem) {
-        this.url_imagem = url_imagem;
+    public void setUrlImagem(String urlImagem) {
+        this.urlImagem = urlImagem;
     }
 }

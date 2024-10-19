@@ -1,15 +1,19 @@
 package com.aula.leontis.services;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
+import com.aula.leontis.activitys.TelaInfoObra;
 import com.aula.leontis.adapters.AdapterComentario;
 import com.aula.leontis.adapters.AdapterGenero;
 import com.aula.leontis.interfaces.mongo.MongoInterface;
@@ -29,6 +33,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,7 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MongoService {
     MetodosAux aux = new MetodosAux();
-    String urlAPI = "https://apimongo-r613.onrender.com/";
+    String urlAPI = Geral.getInstance().getUrlApiMongo();
     public void inserirComentario(String idUsuario, Comentario comentario, Context context) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
@@ -124,7 +129,7 @@ public class MongoService {
         });
     }
 
-    public void buscarComentariosPorIdObra(TextView erroComentario, String obraId,Context context, RecyclerView rvComentarios, List<ComentarioResponse> listaComentarios, AdapterComentario adapterComentarios) {
+    public void buscarComentariosPorIdObra(TextView erroComentario, String obraId,Context context, RecyclerView rvComentarios, List<ComentarioResponse> listaComentarios, AdapterComentario adapterComentarios,ProgressBar um,ProgressBar dois,ProgressBar tres,ProgressBar quatro,ProgressBar cinco, TextView avaliacaoObra) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -144,6 +149,19 @@ public class MongoService {
                     listaComentarios.addAll(response.body());
                     adapterComentarios.notifyDataSetChanged();
                     rvComentarios.setAdapter(adapterComentarios);
+
+                    selecionarMediaNotaPorIdObra(obraId, context,avaliacaoObra,erroComentario);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            selecionarPorcentagemPorAvaliacao(obraId,context,"1","2",um,erroComentario);
+                            selecionarPorcentagemPorAvaliacao(obraId,context,"2","3",dois,erroComentario);
+                            selecionarPorcentagemPorAvaliacao(obraId,context,"3","4",tres,erroComentario);
+                            selecionarPorcentagemPorAvaliacao(obraId,context,"4","5",quatro,erroComentario);
+                            selecionarPorcentagemPorAvaliacao(obraId,context,"5","6",cinco,erroComentario);
+                        }
+                    }, 1000);
 
                 }
             }
@@ -191,6 +209,45 @@ public class MongoService {
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("MONGO_ERROR_API", "Erro ao fazer a requisição: " + throwable.getMessage());
                 aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter media\nMensagem: " + throwable.getMessage());
+            }
+        });
+    }
+
+    public void selecionarPorcentagemPorAvaliacao(String obraId, Context context, String notaMinima, String notaMaxima, ProgressBar progressBar,TextView erro) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<ResponseBody> call = mongoInterface.buscarPorcentagem(Long.parseLong(obraId),Double.parseDouble(notaMinima),Double.parseDouble(notaMaxima));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String mediaStr = response.body().string();
+
+                        double mediaApi = Double.parseDouble(mediaStr);
+                        progressBar.setProgress((int) mediaApi);
+
+                        // Faça algo com os valores obtidos
+                        Log.d("MONGO_RESPONSE_PORCENTAGEM", "Porcentagem obtida: " + mediaApi);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("MONGO_ERROR_PORCENTAGEM", "Erro ao processar resposta: " + e.getMessage());
+                    }
+                } else {
+                    Log.e("MONGO_ERROR_PORCENTAGEM", "Erro na resposta da API: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("MONGO_ERROR_PORCENTAGEM", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter porcentagem\nMensagem: " + throwable.getMessage());
             }
         });
     }

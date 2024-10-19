@@ -12,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface MongoInterface {
     @PUT("/api/usuarios/{userId}/comentarios")
@@ -24,5 +25,7 @@ public interface MongoInterface {
     Call<List<ComentarioResponse>> buscarComentariosPorIdObra(@Path("obraId") long obraId);
     @GET("/api/usuarios/media-nota/{obraId}")
     Call<ResponseBody> buscarMediaNotaPorIdObra(@Path("obraId") long obraId);
+    @GET("/api/usuarios/porcentagem")
+    Call<ResponseBody> buscarPorcentagem(@Query("obraId") long obraId, @Query("notaMinima") double notaMinima, @Query("notaMaxima") double notaMaxima);
 }
 

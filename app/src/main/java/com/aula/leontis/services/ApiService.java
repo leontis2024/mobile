@@ -2,6 +2,7 @@ package com.aula.leontis.services;
 
 import android.content.Context;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.TokenInterceptor;
 import com.aula.leontis.TokenManager;
 import com.aula.leontis.interfaces.AuthInterface;
@@ -21,6 +22,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
+    String urlApi = Geral.getInstance().getUrlApiSql();
+    ;
         private EnderecoMuseuInterface enderecoMuseuInterface;
         private DiaFuncionamentoInterface diaFuncionamentoInterface;
         private GuiaInterface guiaInterface;
@@ -39,7 +42,7 @@ public class ApiService {
 
             // Retrofit usado para login/renovação do token
             Retrofit authRetrofit = new Retrofit.Builder()
-                    .baseUrl("https://dev2-tfqz.onrender.com/")
+                    .baseUrl(urlApi)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             authInterface = authRetrofit.create(AuthInterface.class);
@@ -51,7 +54,7 @@ public class ApiService {
 
             // Retrofit principal
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://dev2-tfqz.onrender.com/")
+                    .baseUrl(urlApi)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();

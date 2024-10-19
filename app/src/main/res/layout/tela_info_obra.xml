@@ -18,7 +18,7 @@
             <ImageView
                 android:id="@+id/fotoObra"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="200dp"
                 android:clickable="true"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -32,13 +32,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="@drawable/shape_titulo"
                 android:fontFamily="@font/lexend_exa"
                 android:maxLines="3"
-                android:text="Nome do Artista"
+                android:text="Carregando..."
                 android:textAlignment="center"
                 android:textColor="@color/bege_claro"
                 android:textSize="19sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fotoObra" />
 
@@ -52,29 +54,13 @@
                 android:background="@drawable/shape_texto"
                 android:fontFamily="@font/inter"
                 android:minLines="10"
-                android:text="TextView"
+                android:text="Carregando..."
                 android:textColor="@color/preto"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nomeObra" />
 
-            <TextView
-                android:id="@+id/descMuseu"
-                android:layout_width="0dp"
-                android:layout_height="130dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/shape_titulo"
-                android:fontFamily="@font/inter"
-                android:lines="3"
-                android:maxLines="8"
-                android:text="TextView"
-                android:textColor="@color/bege_claro"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imgMuseu"
-                app:layout_constraintTop_toBottomOf="@+id/botoes" />
 
             <ImageButton
                 android:id="@+id/btnVoltar"
@@ -125,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="46dp"
-                android:layout_marginEnd="40dp"
+                android:layout_marginEnd="60dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/avaliacaoObra"
@@ -138,13 +124,14 @@
 
 
                     <ProgressBar
+                        android:id="@+id/cinco"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:indeterminate="false"
                         android:max="100"
-                        android:progress="80"
+                        android:progress="0"
                         android:progressTint="#8B0000" />
                 </LinearLayout>
 
@@ -155,13 +142,14 @@
 
 
                     <ProgressBar
+                        android:id="@+id/quatro"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:indeterminate="false"
                         android:max="100"
-                        android:progress="70"
+                        android:progress="0"
                         android:progressTint="#8B0000" />
                 </LinearLayout>
 
@@ -172,13 +160,14 @@
 
 
                     <ProgressBar
+                        android:id="@+id/tres"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:indeterminate="false"
                         android:max="100"
-                        android:progress="50"
+                        android:progress="0"
                         android:progressTint="#8B0000" />
                 </LinearLayout>
 
@@ -189,13 +178,14 @@
 
 
                     <ProgressBar
+                        android:id="@+id/dois"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:indeterminate="false"
                         android:max="100"
-                        android:progress="30"
+                        android:progress="0"
                         android:progressTint="#8B0000" />
                 </LinearLayout>
 
@@ -206,13 +196,14 @@
 
 
                     <ProgressBar
+                        android:id="@+id/um"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:indeterminate="false"
                         android:max="100"
-                        android:progress="20"
+                        android:progress="0"
                         android:progressTint="#8B0000" />
                 </LinearLayout>
 
@@ -226,8 +217,55 @@
                 android:layout_marginTop="15dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/botoes"
+                app:layout_constraintTop_toBottomOf="@+id/descArtista"
                 tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/descMuseu"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/shape_titulo"
+                android:fontFamily="@font/inter"
+                android:gravity="center_vertical"
+                android:lines="3"
+                android:maxLines="8"
+                android:text="Carregando..."
+                android:textColor="@color/bege_claro"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgMuseu"
+                app:layout_constraintTop_toBottomOf="@+id/descArtista" />
+
+            <ImageView
+                android:id="@+id/imgArtista"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descObra"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/descArtista"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/shape_titulo"
+                android:fontFamily="@font/inter"
+                android:gravity="center_vertical"
+                android:lines="3"
+                android:maxLines="8"
+                android:text="Carregando..."
+                android:textColor="@color/bege_claro"
+                app:layout_constraintEnd_toStartOf="@+id/imgArtista"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descObra" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/comentarios"
@@ -249,33 +287,34 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <Button
+                android:id="@+id/btnAcessarArtista"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1.5"
+                android:text="VER"
+                app:layout_constraintBottom_toBottomOf="@+id/imgArtista"
+                app:layout_constraintEnd_toEndOf="@+id/imgArtista" />
+
             <LinearLayout
                 android:id="@+id/botoes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="50dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/descObra">
-
-                <Button
-                    android:id="@+id/btnAcessarArtista"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1.5"
-                    android:text="Ver Artista" />
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="@+id/descObra"
+                app:layout_constraintTop_toTopOf="@+id/descObra">
 
                 <Button
                     android:id="@+id/btnAcessarGenero"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1.5"
-                    android:text="Ver Gênero" />
+                    android:text="Gênero"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <TextView

@@ -24,6 +24,6 @@ public interface UsuarioGeneroInterface {
     Call<ResponseBody> deletarUsuarioGenero(@Query("id_user") long idUsuario, @Query("id_genero") long idGenero);
 
     @GET("/api/usuarioGenero/buscarPorUsuario")
-    Call<List<UsuarioGenero>> buscarGenerosPorUsuario(@Query("id_user") Long idUsuario);
+    Call<List<UsuarioGenero>> buscarGenerosPorUsuario(@Query("usuario") Long idUsuario);
 
 }

@@ -111,7 +111,7 @@ public class DiaFuncionamentoService {
                         String precoDiaString = "Gratuito";
                         preco.setText(precoDiaString);
                     }else {
-                        preco.setText("R$ " + precoDia);
+                        preco.setText("R$ " + String.format("%.2f",precoDia).replace(".", ","));
                     }
 
                 }

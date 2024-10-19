@@ -104,7 +104,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
         btnContinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,"https://cdn-icons-png.flaticon.com/512/4675/4675159.png");
+                Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,"https://firebasestorage.googleapis.com/v0/b/leontisfotos.appspot.com/o/usuarios%2FusuarioDefault.png?alt=media&token=04ef6067-fef3-4a33-9065-8788b3b44f96");
                 usuarioService.inserirUsuario(usuario,TelaCadastroFotoPerfil.this,id);
 
                 Handler esperarGenero = new Handler();

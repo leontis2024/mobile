@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
+import com.aula.leontis.activitys.TelaInfoGuia;
 import com.aula.leontis.models.guia.Guia;
 import com.bumptech.glide.Glide;
 
@@ -33,10 +34,8 @@ public class AdapterGuia extends RecyclerView.Adapter<AdapterGuia.viewHolderGuia
 
     @Override
     public void onBindViewHolder(@NonNull AdapterGuia.viewHolderGuia holder, int position) {
-        String url = listaGuias.get(holder.getAdapterPosition()).getUrl_imagem();
-        if(url == null){
-            url= "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
-        }
+        String url = listaGuias.get(holder.getAdapterPosition()).getUrlImagem();
+        holder.tituloGuia.setText(listaGuias.get(holder.getAdapterPosition()).getTituloGuia());
         Glide.with(holder.imgGuia.getContext()).asBitmap().load(url).into(holder.imgGuia);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +62,7 @@ public class AdapterGuia extends RecyclerView.Adapter<AdapterGuia.viewHolderGuia
         public viewHolderGuia(@NonNull View itemView) {
             super(itemView);
             imgGuia = itemView.findViewById(R.id.imgGuia);
-            tituloGuia = itemView.findViewById(R.id.tituloGuia);
+            tituloGuia = itemView.findViewById(R.id.numOrdem);
 
         }
     }

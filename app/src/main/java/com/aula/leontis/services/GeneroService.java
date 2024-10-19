@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterGenero;
 import com.aula.leontis.adapters.AdapterGeneroCompleto;
@@ -28,6 +29,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GeneroService {
     MetodosAux aux =new MetodosAux();
+    String urlAPI = Geral.getInstance().getUrlApiSql();
+
     public void buscarGeneroPorId(String id, Context c, TextView erroGenero,TextView nomeGenero, TextView descGenero, ImageView fotoGenero) {
         ApiService apiService = new ApiService(c);
         GeneroInterface generoInterface = apiService.getGeneroInterface();
@@ -68,8 +71,6 @@ public class GeneroService {
         erroGenero.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroGenero.setText("Carregando...");
         erroGenero.setVisibility(View.VISIBLE);
-
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
@@ -149,7 +150,6 @@ public class GeneroService {
 
         Call<GeneroCompleto> call = generoInterface.buscarGeneroPorId(id);
 
-        // Buscar todos os gêneros
         call.enqueue(new Callback<GeneroCompleto>() {
             @Override
             public void onResponse(Call<GeneroCompleto>call, Response<GeneroCompleto> response) {

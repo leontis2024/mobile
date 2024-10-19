@@ -11,11 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterGuia;
-import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.interfaces.guia.GuiaInterface;
-import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.models.guia.Guia;
-import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 
@@ -27,7 +24,7 @@ import retrofit2.Response;
 
 public class GuiaService {
     MetodosAux aux =new MetodosAux();
-    public void selecionarGuiaPorMuseu(String idMuseu, TextView erroGuia, Context context, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque, TextView nomeGuiaDestaque) {
+    public void selecionarGuiaPorMuseu(String idMuseu, TextView erroGuia, Context context, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque, TextView nomeGuiaDestaque,TextView idGuiadestaque) {
         erroGuia.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroGuia.setText("Carregando...");
         erroGuia.setVisibility(View.VISIBLE);
@@ -43,9 +40,10 @@ public class GuiaService {
                     erroGuia.setVisibility(View.INVISIBLE);
                     List<Guia> guias = response.body();
                     if(guias.size()!=0){
-                        String url = guias.get(0).getUrl_imagem();
+                        String url = guias.get(0).getUrlImagem();
                         Glide.with(context).load(url).into(imgGuiaDestaque);
-                        nomeGuiaDestaque.setText(guias.get(0).getTitulo_guia());
+                        nomeGuiaDestaque.setText(guias.get(0).getTituloGuia());
+                        idGuiadestaque.setText(String.valueOf(guias.get(0).getId()));
                         guias.remove(0);
                         listaGuias.addAll(guias);
                         adapterGuia.notifyDataSetChanged();

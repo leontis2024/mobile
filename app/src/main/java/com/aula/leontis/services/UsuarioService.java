@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
@@ -34,6 +35,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UsuarioService {
     MetodosAux aux = new MetodosAux();
+    String urlAPI = Geral.getInstance().getUrlApiSql();
+
     public void selecionarUsuarioPorId(String id, Context context, TextView apelido, TextView biografia, ImageView foto, TextView nome, TextView sobrenome, TextView telefone, TextView sexo, TextView dtNasc, TextView erro) {
         erro.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erro.setText("Carregando...");
@@ -213,7 +216,6 @@ public class UsuarioService {
     }
 
     public String inserirUsuario(Usuario usuario, Context c, String[] id) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -256,7 +258,7 @@ public class UsuarioService {
         return id[0];
     }
     public void atualizarUsuario(String id, Map<String, Object> campo, TextView erro, Context c) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
+        String urlAPI = "http://ec2-52-22-92-75.compute-1.amazonaws.com:8080/";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)

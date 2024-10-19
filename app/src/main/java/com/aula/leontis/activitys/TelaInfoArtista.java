@@ -2,6 +2,7 @@ package com.aula.leontis.activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -41,6 +42,8 @@ public class TelaInfoArtista extends AppCompatActivity {
         descArtista = findViewById(R.id.descArtista);
         fotoArtista = findViewById(R.id.fotoArtista);
         btnVoltar = findViewById(R.id.btnVoltar);
+        rvObras = findViewById(R.id.obrasRelacionadasArtista);
+        rvObras.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -6,13 +6,16 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterObra;
+import com.aula.leontis.adapters.AdapterObraFeed;
 import com.aula.leontis.interfaces.museu.MuseuInterface;
 import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.interfaces.obra.ObraInterface;
@@ -118,11 +121,8 @@ public class ObraService {
     }
 
 
-    public void buscarObrasPorVariosGeneros(List<Long> generos,TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObra adapterObra) {
+    public void buscarObrasPorVariosGeneros(List<Long> generos,TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObraFeed adapterObra,ProgressBar progressBar) {
         erroObra.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
-        erroObra.setText("Carregando...");
-        erroObra.setVisibility(View.VISIBLE);
-
         ApiService apiService = new ApiService(context);
         ObraInterface obraInterface = apiService.getObraInterface();
         Call<List<Obra>> call = obraInterface.selecionarObrasPorVariosGeneros(generos);
@@ -130,11 +130,13 @@ public class ObraService {
         call.enqueue(new Callback<List<Obra>>() {
             @Override
             public void onResponse(Call<List<Obra>> call, Response<List<Obra>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (response.isSuccessful() ) {
                     erroObra.setVisibility(View.INVISIBLE);
                     List<Obra> obras = response.body();
                     if(obras.size()!=0){
-
+                        rvObras.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+                        listaObras.clear();
                         listaObras.addAll(response.body());
                         adapterObra.notifyDataSetChanged();
                         rvObras.setAdapter(adapterObra);
@@ -147,6 +149,10 @@ public class ObraService {
                         erroObra.setText("Falha ao obter dados das obras");
                         erroObra.setVisibility(View.VISIBLE);
                     }
+                    rvObras.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+                    listaObras.clear();
+                    adapterObra.notifyDataSetChanged();
+                    rvObras.setAdapter(adapterObra);
                 }
             }
 
@@ -160,11 +166,8 @@ public class ObraService {
         });
     }
 
-    public void buscarObrasPorVariosMuseus(List<Long> museus,TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObra adapterObra) {
+    public void buscarObrasPorVariosMuseus(List<Long> museus, TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObraFeed adapterObra, ProgressBar progressBar) {
         erroObra.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
-        erroObra.setText("Carregando...");
-        erroObra.setVisibility(View.VISIBLE);
-
         ApiService apiService = new ApiService(context);
         ObraInterface obraInterface = apiService.getObraInterface();
         Call<List<Obra>> call = obraInterface.selecionarObrasPorVariosMuseus(museus);
@@ -172,11 +175,14 @@ public class ObraService {
         call.enqueue(new Callback<List<Obra>>() {
             @Override
             public void onResponse(Call<List<Obra>> call, Response<List<Obra>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (response.isSuccessful()) {
                     erroObra.setVisibility(View.INVISIBLE);
+
                     List<Obra> obras = response.body();
                     if(obras.size()!=0){
-
+                        rvObras.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+                        listaObras.clear();
                         listaObras.addAll(response.body());
                         adapterObra.notifyDataSetChanged();
                         rvObras.setAdapter(adapterObra);
@@ -189,6 +195,10 @@ public class ObraService {
                         erroObra.setText("Falha ao obter dados das obras");
                         erroObra.setVisibility(View.VISIBLE);
                     }
+                    rvObras.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+                    listaObras.clear();
+                    adapterObra.notifyDataSetChanged();
+                    rvObras.setAdapter(adapterObra);
                 }
             }
 
@@ -245,7 +255,7 @@ public class ObraService {
         });
     }
 
-    public void buscarObraPorId(String id, Context c, TextView erroObra, TextView nomeObra, TextView descObra, ImageView fotoObra, TextView descMuseu, ImageView imgMuseu,TextView urlText,TextView idGenero,TextView idArtista,TextView idMuseu) {
+    public void buscarObraPorId(String id, Context c, TextView erroObra, TextView nomeObra, TextView descObra, ImageView fotoObra, TextView descMuseu, ImageView imgMuseu,TextView descArtista, ImageView imgArtista,TextView urlText,TextView idGenero,TextView idArtista,TextView idMuseu) {
         ApiService apiService = new ApiService(c);
         ObraInterface obraInterface= apiService.getObraInterface();
 
@@ -261,6 +271,8 @@ public class ObraService {
 
                     nomeObra.setText(obra.getNomeObra());
                     artistaService.buscarArtistaPorIdParcial(obra.getIdArtista(), c, erroObra, descObra);
+                    artistaService.buscarArtistaPorIdParcialAParte(obra.getIdArtista(), c, erroObra, descArtista, imgArtista);
+
                     Handler esperar = new Handler();
                     esperar.postDelayed(new Runnable() {
                         @Override
@@ -304,12 +316,4 @@ public class ObraService {
             }
         });
     }
-
-
-
-
-
-
-
-
 }

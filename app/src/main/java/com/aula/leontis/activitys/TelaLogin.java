@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.TokenManager;
 import com.aula.leontis.interfaces.AuthInterface;
@@ -161,8 +162,9 @@ public class TelaLogin extends AppCompatActivity {
     }
     public void pegarToken() {
         // Instancia ApiService para lidar com a autenticação
+        String urlApi = Geral.getInstance().getUrlApiSql();
         Retrofit authRetrofit = new Retrofit.Builder()
-                .baseUrl("https://dev2-tfqz.onrender.com/")
+                .baseUrl(urlApi)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         AuthInterface authInterface = authRetrofit.create(AuthInterface.class);// Obtém a interface de autenticação

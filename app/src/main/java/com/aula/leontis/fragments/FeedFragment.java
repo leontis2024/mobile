@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.aula.leontis.R;
@@ -15,9 +16,10 @@ import com.aula.leontis.fragments.feed.ForYou;
 import com.aula.leontis.fragments.feed.MuseusSeguidos;
 
 public class FeedFragment extends Fragment {
-    ImageButton btnBuscar, btnFiltrar, btnForYou, btnScanner,btnMuseusSeguidos;
+    ImageButton btnBuscar, btnFiltrar, btnForYou, btnScanner,btnMuseusSeguidos, btnFecharPesquisa;
     ForYou foryou = new ForYou();
     MuseusSeguidos museusSeguidos = new MuseusSeguidos();
+    EditText campoPesquisa;
 
 
     public FeedFragment() {
@@ -49,12 +51,32 @@ public class FeedFragment extends Fragment {
         btnForYou = view.findViewById(R.id.btnForYou);
         btnScanner = view.findViewById(R.id.btnScanner);
         btnMuseusSeguidos = view.findViewById(R.id.btnMuseusSeguidos);
+        btnFecharPesquisa = view.findViewById(R.id.btnFecharPesquisa);
+
+        campoPesquisa = view.findViewById(R.id.campoPesquisa);
 
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container_feed, foryou).commit();
         setButtonState("foryou", true);
         setButtonState("museus", false);
 
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                campoPesquisa.setVisibility(View.VISIBLE);
+                btnBuscar.setVisibility(View.INVISIBLE);
+                btnFecharPesquisa.setVisibility(View.VISIBLE);
+                campoPesquisa.setText("");
+            }
+        });
+        btnFecharPesquisa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                campoPesquisa.setVisibility(View.INVISIBLE);
+                btnBuscar.setVisibility(View.VISIBLE);
+                btnFecharPesquisa.setVisibility(View.INVISIBLE);
+            }
+        });
 
         btnMuseusSeguidos.setOnClickListener(new View.OnClickListener() {
             @Override

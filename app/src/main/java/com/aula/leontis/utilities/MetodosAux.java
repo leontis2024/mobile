@@ -114,8 +114,8 @@ public class MetodosAux {
                 dialog.dismiss();
                 if(deletar) {
                     abrirDialog(dialog.getContext(), "Tchau tchau 😭...", "É triste que você queira ir embora, espero que nos encontremos algum outro dia 🥺");
-                    FirebaseAuth.getInstance().signOut();
                     FirebaseAuth.getInstance().getCurrentUser().delete();
+                    FirebaseAuth.getInstance().signOut();
                     FirebaseStorage storage = FirebaseStorage.getInstance();
 
                     //  Referenciar o arquivo com o caminho completo (pode variar dependendo da sua organização de pastas)

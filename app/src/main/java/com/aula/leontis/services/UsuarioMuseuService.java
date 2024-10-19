@@ -2,11 +2,19 @@ package com.aula.leontis.services;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
+import com.aula.leontis.adapters.AdapterObra;
+import com.aula.leontis.adapters.AdapterObraFeed;
 import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioMuseuInterface;
+import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.models.usuario.UsuarioGenero;
 import com.aula.leontis.models.usuario.UsuarioMuseu;
 import com.aula.leontis.utilities.MetodosAux;
@@ -23,6 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UsuarioMuseuService {
     MetodosAux aux = new MetodosAux();
+    ObraService obraService = new ObraService();
     public void buscarSeExiste(String usuario, String museu, Context context, ImageButton seguir) {
         ApiService apiService = new ApiService(context);
         UsuarioMuseuInterface usuarioMuseuInterface = apiService.getUsuarioMuseuInterface();
@@ -136,10 +145,11 @@ public class UsuarioMuseuService {
 
 
     }
-    public void buscarMuseusDeUmUsuario(String usuario, Context context, List<Long> museusSeguidos) {
+    public void buscarMuseusDeUmUsuario(String usuario, Context context, List<Long> museusSeguidos, RecyclerView rvObras, AdapterObraFeed adapterObra, List<Obra> listaObras, TextView erro, ProgressBar progressBar) {
         ApiService apiService = new ApiService(context);
         UsuarioMuseuInterface usuarioMuseuInterface = apiService.getUsuarioMuseuInterface();
         Call<List<UsuarioMuseu>> call = usuarioMuseuInterface.buscarMuseusPorUsuario(Long.parseLong(usuario));
+        progressBar.setVisibility(View.VISIBLE);
 
         //executar chamada
         call.enqueue(new Callback<List<UsuarioMuseu>>() {
@@ -148,8 +158,10 @@ public class UsuarioMuseuService {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         List<UsuarioMuseu> usuariosMuseus = response.body();
+                        museusSeguidos.clear();
                         for(int i=0;i<usuariosMuseus.size();i++){
-                            museusSeguidos.add(usuariosMuseus.get(i).getIdMuseu());
+                            UsuarioMuseu museu = usuariosMuseus.get(i);
+                            museusSeguidos.add(museu.getIdMuseu());
                         }
 
                     } catch (Exception e) {
@@ -159,6 +171,7 @@ public class UsuarioMuseuService {
                 } else {
                     Log.e("API_ERROR_GET_MUSEUS_USUARIO", "Erro na resposta da API: " + response.code()+" "+response.message());
                 }
+                obraService.buscarObrasPorVariosMuseus(museusSeguidos,erro,context,rvObras,listaObras,adapterObra,progressBar);
             }
 
             @Override

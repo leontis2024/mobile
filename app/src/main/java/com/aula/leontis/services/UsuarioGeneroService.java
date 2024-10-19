@@ -5,18 +5,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterGenero;
+import com.aula.leontis.adapters.AdapterObra;
+import com.aula.leontis.adapters.AdapterObraFeed;
 import com.aula.leontis.interfaces.genero.GeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.models.genero.Genero;
+import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.models.usuario.UsuarioGenero;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
@@ -35,9 +40,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UsuarioGeneroService {
     MetodosAux aux = new MetodosAux();
-    public void inserirUsuarioGenero(Context context, String[] id, long[] listaGenerosInteresse) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
+    ObraService obraService = new ObraService();
+    String urlAPI = Geral.getInstance().getUrlApiSql();
 
+    public void inserirUsuarioGenero(Context context, String[] id, long[] listaGenerosInteresse) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -153,10 +159,11 @@ public class UsuarioGeneroService {
 
     }
 
-    public void buscarGenerosDeUmUsuario(String usuario, Context context,List<Long> generosInteresse) {
+    public void buscarGenerosDeUmUsuario(String usuario, Context context, List<Long> generosInteresse, RecyclerView rvObras, AdapterObraFeed adapterObra, List<Obra> listaObras, TextView erro, ProgressBar progressBar) {
         ApiService apiService = new ApiService(context);
         UsuarioGeneroInterface usuarioGeneroInterface = apiService.getUsuarioGeneroInterface();
         Call<List<UsuarioGenero>> call = usuarioGeneroInterface.buscarGenerosPorUsuario(Long.parseLong(usuario));
+        progressBar.setVisibility(View.VISIBLE);
 
         call.enqueue(new Callback<List<UsuarioGenero>>() {
             @Override
@@ -164,6 +171,7 @@ public class UsuarioGeneroService {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         List<UsuarioGenero> usuariosGeneros = response.body();
+                        generosInteresse.clear();
                         for(int i=0;i<usuariosGeneros.size();i++){
                             generosInteresse.add(usuariosGeneros.get(i).getIdGenero());
                         }
@@ -175,6 +183,7 @@ public class UsuarioGeneroService {
                 } else {
                     Log.e("API_ERROR_GET_GENEROS_USUARIO", "Erro na resposta da API: " + response.code()+" "+response.message());
                 }
+                obraService.buscarObrasPorVariosGeneros(generosInteresse,erro,context,rvObras,listaObras,adapterObra,progressBar);
             }
 
             @Override

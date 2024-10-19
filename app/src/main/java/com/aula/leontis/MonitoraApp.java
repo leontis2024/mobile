@@ -12,7 +12,7 @@ public class MonitoraApp extends Application implements Application.ActivityLife
 
     private int activityReferences = 0;
     private boolean isActivityChangingConfigurations = false;
-    private boolean appOpened = false; // Variável para monitorar se o app já foi aberto
+    private boolean appOpened = false;
 
     @Override
     public void onCreate() {
@@ -27,9 +27,8 @@ public class MonitoraApp extends Application implements Application.ActivityLife
     public void onActivityStarted(Activity activity) {
         if (activityReferences == 0 && !isActivityChangingConfigurations) {
             if (!appOpened) {
-                // Somente incrementa quando o app é aberto pela primeira vez (foreground)
-                redisService.incrementarAtividadeUsuario();
-                Log.d("AppLifecycle", "App foi aberto");
+             //   redisService.incrementarAtividadeUsuario();
+                Log.d("Monitoramento", "Incrementado");
                 appOpened = true;
             }
         }
@@ -41,9 +40,8 @@ public class MonitoraApp extends Application implements Application.ActivityLife
         isActivityChangingConfigurations = activity.isChangingConfigurations();
 
         if (!isActivityChangingConfigurations && activityReferences == 0) {
-            // Aqui o app foi completamente fechado (nenhuma activity restante)
-            redisService.decrementarAtividadeUsuario();
-            Log.d("AppLifecycle", "App foi fechado completamente");
+          //  redisService.decrementarAtividadeUsuario();
+            Log.d("Monitoramento", "Decrementado");
             appOpened = false;
         }
     }

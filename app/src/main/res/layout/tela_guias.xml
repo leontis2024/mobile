@@ -45,6 +45,38 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageButton
+                    android:id="@+id/btnFecharPesquisa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:background="#00FFFFFF"
+                    android:src="@drawable/ic_x"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/campoPesquisa"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/input"
+                    android:ems="10"
+                    android:gravity="start|center_horizontal"
+                    android:hint="Pesquisar..."
+                    android:inputType="text"
+                    android:textSize="15sp"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/btnFecharPesquisa"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
@@ -60,6 +92,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/fotoGuiaDestaqueTerminado"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:layout_marginTop="30dp"
+            android:scaleType="centerCrop"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            tools:srcCompat="@drawable/guia_concluido_grande" />
 
         <TextView
             android:id="@+id/tituloRecyclerGuias"
@@ -78,12 +123,14 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/outrosGuias"
-            android:layout_width="370dp"
+            android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_margin="10dp"
-            android:layout_marginStart="1dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tituloRecyclerGuias"
             tools:listitem="@layout/item_guia" />
@@ -119,5 +166,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/fotoGuiaDestaque" />
+
+        <TextView
+            android:id="@+id/idGuiadestaque"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,12 +39,13 @@ public class TelaGuias extends AppCompatActivity {
     String id,idUsuario;
     MetodosAux aux = new MetodosAux();
     ImageView fotoGuiaDestaque;
-    ImageButton btnVoltar,btnBuscar;
+    ImageButton btnVoltar,btnBuscar,btnFecharPesquisa;
+    EditText campoPesquisa;
     List<Guia> listaGuias = new ArrayList<>();
     AdapterGuia adapterGuia = new AdapterGuia(listaGuias);
     RecyclerView rvGuias;
     GuiaService guiaService = new GuiaService();
-    TextView erroGuias,tituloGuiaDestaque;
+    TextView erroGuias,tituloGuiaDestaque,idGuiadestaque;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,9 @@ public class TelaGuias extends AppCompatActivity {
         btnBuscar = findViewById(R.id.btnBuscar);
         erroGuias = findViewById(R.id.erroGuias);
         tituloGuiaDestaque = findViewById(R.id.tituloGuiaDestaque);
+        idGuiadestaque = findViewById(R.id.idGuiadestaque);
+        btnFecharPesquisa = findViewById(R.id.btnFecharPesquisa);
+        campoPesquisa = findViewById(R.id.campoPesquisa);
         btnVoltar.setOnClickListener(v -> {
             finish();
         });
@@ -68,7 +74,34 @@ public class TelaGuias extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = auth.getCurrentUser().getEmail();
    //     selecionarIdUsuarioPorEmail(email);
-        guiaService.selecionarGuiaPorMuseu(id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque);
+         guiaService.selecionarGuiaPorMuseu(id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque);
+         fotoGuiaDestaque.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                Intent infoGuia = new Intent(TelaGuias.this, TelaInfoGuia.class);
+                bundle.putString("id", idGuiadestaque.getText().toString());
+                infoGuia.putExtras(bundle);
+                startActivity(infoGuia);
+             }
+         });
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                campoPesquisa.setVisibility(View.VISIBLE);
+                btnBuscar.setVisibility(View.INVISIBLE);
+                btnFecharPesquisa.setVisibility(View.VISIBLE);
+                campoPesquisa.setText("");
+            }
+        });
+        btnFecharPesquisa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                campoPesquisa.setVisibility(View.INVISIBLE);
+                btnBuscar.setVisibility(View.VISIBLE);
+                btnFecharPesquisa.setVisibility(View.INVISIBLE);
+            }
+        });
     }
     public void selecionarIdUsuarioPorEmail(String email) {
 

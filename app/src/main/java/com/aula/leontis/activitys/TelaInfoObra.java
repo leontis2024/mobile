@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TelaInfoObra extends AppCompatActivity {
-    ImageView fotoObra,fotoMuseu;
+    ImageView fotoObra,fotoMuseu,fotoArtista;
     MetodosAux aux = new MetodosAux();
     List<ComentarioResponse> listaComentarios = new ArrayList<>();
     AdapterComentario adapterComentario = new AdapterComentario(listaComentarios);
@@ -56,12 +57,13 @@ public class TelaInfoObra extends AppCompatActivity {
     ImageButton btnVoltar;
     FloatingActionButton btnComentar;
     String id = "0";
-    TextView nomeObra,descObra,descMuseu,erroObraInfo,urlText,avaliacaoObra;
+    TextView nomeObra,descObra,descMuseu,descArtista,erroObraInfo,urlText,avaliacaoObra;
     ObraService obraService = new ObraService();
     MongoService mongoService = new MongoService();
     String idUsuario;
     TextView idGenero, idArtista,idMuseu;
-    Button btnAcessarArtista,btnAcessarGenero,btnAcssarMuseu;
+    Button btnAcessarArtista,btnAcessarGenero,btnAcessarMuseu;
+    ProgressBar um,dois,tres,quatro,cinco;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +82,23 @@ public class TelaInfoObra extends AppCompatActivity {
         rvComentarios.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
         avaliacaoObra = findViewById(R.id.avaliacaoObra);
 
+        fotoArtista = findViewById(R.id.imgArtista);
+
+        descArtista = findViewById(R.id.descArtista);
+
+        um = findViewById(R.id.um);
+        dois = findViewById(R.id.dois);
+        tres = findViewById(R.id.tres);
+        quatro = findViewById(R.id.quatro);
+        cinco = findViewById(R.id.cinco);
+
         idGenero = findViewById(R.id.idGenero);
         idArtista = findViewById(R.id.idArtista);
         idMuseu = findViewById(R.id.idMuseu);
 
         btnAcessarArtista = findViewById(R.id.btnAcessarArtista);
         btnAcessarGenero = findViewById(R.id.btnAcessarGenero);
-        btnAcssarMuseu = findViewById(R.id.btnAcessarMuseu);
+        btnAcessarMuseu = findViewById(R.id.btnAcessarMuseu);
 
         btnVoltar = findViewById(R.id.btnVoltar);
         btnVoltar.setOnClickListener(v -> {
@@ -106,7 +118,7 @@ public class TelaInfoObra extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TelaInfoObra.this, TelaInfoArtista.class);
-                intent.putExtra("id",id);
+                intent.putExtra("id",idArtista.getText());
                 startActivity(intent);
             }
         });
@@ -118,7 +130,7 @@ public class TelaInfoObra extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btnAcssarMuseu.setOnClickListener(new View.OnClickListener() {
+        btnAcessarMuseu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TelaInfoObra.this, TelaInfoMuseu.class);
@@ -126,9 +138,8 @@ public class TelaInfoObra extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        obraService.buscarObraPorId(id,TelaInfoObra.this,erroObraInfo,nomeObra,descObra,fotoObra,descMuseu,fotoMuseu,urlText,idGenero,idArtista,idMuseu);
-        mongoService.buscarComentariosPorIdObra(erroObraInfo,id,TelaInfoObra.this,rvComentarios,listaComentarios,adapterComentario);
-        mongoService.selecionarMediaNotaPorIdObra(id,TelaInfoObra.this,avaliacaoObra,erroObraInfo);
+        obraService.buscarObraPorId(id,TelaInfoObra.this,erroObraInfo,nomeObra,descObra,fotoObra,descMuseu,fotoMuseu,descArtista,fotoArtista,urlText,idGenero,idArtista,idMuseu);
+        mongoService.buscarComentariosPorIdObra(erroObraInfo,id,TelaInfoObra.this,rvComentarios,listaComentarios,adapterComentario,um,dois,tres,quatro,cinco,avaliacaoObra);
         btnComentar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,19 +193,28 @@ public class TelaInfoObra extends AppCompatActivity {
                             if(!(comentario.getText().toString().equals(""))&&comentario.getText()!=null){
                                 mongoService.inserirComentario(idUsuario,new Comentario(Long.parseLong(id),comentario.getText().toString(),aux.dataAtualFormatada()),TelaInfoObra.this);
                             }
-                            if(avaliacao.getRating()>0){
-                                mongoService.inserirAvaliacao(idUsuario,new Avaliacao(Long.parseLong(id),avaliacao.getRating(),aux.dataAtualFormatada()),TelaInfoObra.this);
-                            }
+                            Handler handler1 = new Handler();
+                            handler1.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(avaliacao.getRating()>0){
+                                        mongoService.inserirAvaliacao(idUsuario,new Avaliacao(Long.parseLong(id),avaliacao.getRating(),aux.dataAtualFormatada()),TelaInfoObra.this);
+
+                                    }
+                                }
+                            }, 1000);
+
 
                             dialog.dismiss();
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mongoService.buscarComentariosPorIdObra(erroObraInfo,id,TelaInfoObra.this,rvComentarios,listaComentarios,adapterComentario);
-                                    mongoService.selecionarMediaNotaPorIdObra(id,TelaInfoObra.this,avaliacaoObra,erroObraInfo);
+                                    mongoService.buscarComentariosPorIdObra(erroObraInfo,id,TelaInfoObra.this,rvComentarios,listaComentarios,adapterComentario,um,dois,tres,quatro,cinco,avaliacaoObra);
+
                                 }
-                            }, 1500);
+                            }, 1000);
+
                         }
                     }
                 });

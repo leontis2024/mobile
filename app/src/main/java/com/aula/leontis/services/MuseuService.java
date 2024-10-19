@@ -138,7 +138,7 @@ public class MuseuService {
                     if (url == null) {
                         url = "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
                     }
-                    Glide.with(c).asBitmap().apply(RequestOptions.bitmapTransform(new RoundedCorners(30))).load(url).into(fotoMuseu);
+                    Glide.with(c).asBitmap().apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).load(url).into(fotoMuseu);
 
                 } else {
                     erroMuseu.setText("Falha ao obter dados do museu");

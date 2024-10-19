@@ -21,5 +21,5 @@ public interface UsuarioMuseuInterface {
     @DELETE("/api/usuarioMuseu/deletar")
     Call<ResponseBody> deletarUsuarioMuseu(@Query("id_user") long idUsuario, @Query("id_museu") long idMuseu);
     @GET("/api/usuarioMuseu/buscarPorUsuario")
-    Call<List<UsuarioMuseu>> buscarMuseusPorUsuario(@Query("id_user") long idUsuario);
+    Call<List<UsuarioMuseu>> buscarMuseusPorUsuario(@Query("usuario") long idUsuario);
 }
