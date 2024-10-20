@@ -76,7 +76,7 @@ public class ArtistaService {
                             ? dtFalecimento.substring(0, 4)
                             : "Presente";
 
-                    descArtista.setText("Autor: "+artista.getNomeArtista() + " ( " + dtNascArtista + " - " + falecimentoFormatted + " )");
+                    descArtista.setText(descArtista.getText()+"\n\nAutor: "+artista.getNomeArtista() + " ( " + dtNascArtista + " - " + falecimentoFormatted + " )");
 
 
 

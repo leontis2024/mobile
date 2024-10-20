@@ -16,6 +16,8 @@ import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaInfoObra;
 import com.aula.leontis.adapters.AdapterComentario;
 import com.aula.leontis.adapters.AdapterGenero;
+import com.aula.leontis.adapters.AdapterHistorico;
+import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.interfaces.mongo.MongoInterface;
 import com.aula.leontis.interfaces.mongo.MongoInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
@@ -23,6 +25,8 @@ import com.aula.leontis.models.avaliacao.Avaliacao;
 import com.aula.leontis.models.comentario.Comentario;
 import com.aula.leontis.models.comentario.ComentarioResponse;
 import com.aula.leontis.models.genero.Genero;
+import com.aula.leontis.models.historico.Historico;
+import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 
@@ -81,6 +85,47 @@ public class MongoService {
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("MONGO_API_ERROR_POST", "Erro ao adicionar comentario: " + throwable.getMessage());
                 aux.abrirDialogErro(context, "Erro ao comentar", "Não foi possível comentar. Erro: " + throwable.getMessage());
+            }
+
+        });
+    }
+    public void inserirHistorico(String idUsuario, Historico historico, Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<ResponseBody> call = mongoInterface.inserirHistorico(Long.parseLong(idUsuario),historico);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String body = "";
+                if (response.isSuccessful()) {
+                    try {
+                        body = response.body().string();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Log.d("MONGO_API_RESPONSE_POST_HISTORICO", "Historico do usuário inserido via API mongo: " + body);
+                } else {
+                    try {
+                        // Obter e exibir o corpo da resposta de erro
+                        String errorBody = response.errorBody().string();
+                        Log.e("MONGO_API_ERROR_POST_HISTORICO", "Erro ao adicionar historico: " + response.code() + " - " + errorBody + " - " + response.message());
+                        aux.abrirDialogErro(context, "Erro ao adicionar historico", "Não foi possível adicionar historico. Erro: " + errorBody);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("MONGO_API_ERROR_POST_HISTORICO", "Erro ao processar o corpo da resposta de erro.");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("MONGO_API_ERROR_POST_HISTORICO   ", "Erro ao adicionar historico: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro ao adicionar historico", "Não foi possível adicionar historico. Erro: " + throwable.getMessage());
             }
 
         });
@@ -251,5 +296,39 @@ public class MongoService {
             }
         });
     }
+
+
+    public void buscarHistoricoObraPorIdUsuario(TextView erroHistorico, String id, Context context, RecyclerView rvHistorico, List<Historico> listaHistorico, AdapterHistorico adapterHistorico) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<List<Historico>> call = mongoInterface.buscarHistoricoPorId(Long.parseLong(id));
+
+        call.enqueue(new Callback<List<Historico>>() {
+            @Override
+            public void onResponse(Call<List<Historico>> call, Response<List<Historico>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    erroHistorico.setVisibility(View.INVISIBLE);
+                    erroHistorico.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
+
+                    listaHistorico.clear();
+                    listaHistorico.addAll(response.body());
+                    adapterHistorico.notifyDataSetChanged();
+                    rvHistorico.setAdapter(adapterHistorico);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Historico>> call, Throwable t) {
+                Log.e("MONGO_API_ERROR_GET_HISTORICO", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter o historico\nMensagem: "+t.getMessage());
+            }
+        });
+    }
+
 
 }

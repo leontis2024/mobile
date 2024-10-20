@@ -2,10 +2,8 @@ package com.aula.leontis.utilities;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +19,17 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 //Classe para manipulação de imagem do firebase storage
 public class DataBaseFotos {
-       public Task<String> subirFotoUsuario(Context c, Bitmap foto, String idUser) {
+       public Task<String> subirFoto(Context c, Bitmap foto, String idUser,String path, String nome) {
+           if(path.equals("scanner")){
+               Bitmap foto2 = foto;
+               int x = (foto2.getWidth() - 1300) / 2;
+               int y = (foto2.getHeight() - 1500) / 2;
+               int width = 1300;
+               int height = 1600;
+               Bitmap teste = Bitmap.createBitmap(foto2, x, y, width, height);
+               foto = teste;
+
+           }
         // Criação do TaskCompletionSource para retornar a URL
         TaskCompletionSource<String> tcs = new TaskCompletionSource<>();
 
@@ -39,7 +47,7 @@ public class DataBaseFotos {
 
         // Referência ao Firebase Storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference("usuarios").child("usuario" + idUser + ".jpg");
+        StorageReference storageRef = storage.getReference(path).child(nome+ idUser + ".jpg");
 
         // Faça o upload da imagem
         storageRef.putBytes(databyte)

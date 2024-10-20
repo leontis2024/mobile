@@ -89,6 +89,7 @@ public class ForYou extends Fragment {
         rvForYou.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
 
 
+
         return view;
     }
     public void selecionarIdUsuarioPorEmail(String email, String id) {
@@ -130,5 +131,9 @@ public class ForYou extends Fragment {
                 aux.abrirDialogErro(getContext(),"Erro inesperado","Erro ao obter id\nMensagem: "+throwable.getMessage());
             }
         });
+    }
+    public void buscar(String nome){
+        progressBar4.setVisibility(View.VISIBLE);
+        obraService.buscarObraPorNomePesquisa(nome,getContext(),erroForYou,rvForYou,adapterObraFeed,listaObras,progressBar4);
     }
 }

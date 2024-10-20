@@ -1,30 +1,40 @@
 package com.aula.leontis.services;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.aula.leontis.R;
+import com.aula.leontis.activitys.TelaInfoObra;
 import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.adapters.AdapterObraFeed;
 import com.aula.leontis.interfaces.museu.MuseuInterface;
 import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.interfaces.obra.ObraInterface;
+import com.aula.leontis.models.historico.Historico;
 import com.aula.leontis.models.museu.Museu;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 
+import org.w3c.dom.Text;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,6 +46,7 @@ public class ObraService {
     ArtistaService artistaService = new ArtistaService();
     GeneroService generoService = new GeneroService();
     MuseuService museuService = new MuseuService();
+    MongoService mongoService = new MongoService();
     public void buscarObrasPorMuseu(String idMuseu,TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObra adapterObra) {
         erroObra.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroObra.setText("Carregando...");
@@ -270,16 +281,17 @@ public class ObraService {
                     Obra obra = response.body();
 
                     nomeObra.setText(obra.getNomeObra());
-                    artistaService.buscarArtistaPorIdParcial(obra.getIdArtista(), c, erroObra, descObra);
-                    artistaService.buscarArtistaPorIdParcialAParte(obra.getIdArtista(), c, erroObra, descArtista, imgArtista);
+                    generoService.buscarGeneroPorIdParcial(obra.getIdGenero(), c, erroObra, descObra);
+
 
                     Handler esperar = new Handler();
                     esperar.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            generoService.buscarGeneroPorIdParcial(obra.getIdGenero(), c, erroObra, descObra);
+                            artistaService.buscarArtistaPorIdParcial(obra.getIdArtista(), c, erroObra, descObra);
+                            artistaService.buscarArtistaPorIdParcialAParte(obra.getIdArtista(), c, erroObra, descArtista, imgArtista);
                         }
-                    }, 1000);
+                    }, 1100);
 
                     Handler espera = new Handler();
                     espera.postDelayed(new Runnable() {
@@ -313,6 +325,171 @@ public class ObraService {
             public void onFailure(Call<Obra> call, Throwable t) {
                 Log.e("API_ERROR_GET_ID_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados da obra\nMensagem: " + t.getMessage());
+            }
+        });
+    }
+
+
+
+    public void buscarObraPorIdParcial(String id, Context c,  ImageView fotoObra) {
+        ApiService apiService = new ApiService(c);
+        ObraInterface obraInterface= apiService.getObraInterface();
+
+        Call<Obra> call = obraInterface.selecionarObraPorId(Long.parseLong(id));
+
+        call.enqueue(new Callback<Obra>() {
+            @Override
+            public void onResponse(Call<Obra> call, Response<Obra> response) {
+                if (response.isSuccessful() && response.body() != null) {
+
+                    Obra obra = response.body();
+
+                    String url = obra.getUrlImagem();
+                    if (url == null) {
+                        url = "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
+                    }
+                    Glide.with(c).asBitmap().load(url).into(fotoObra);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Obra> call, Throwable t) {
+                Log.e("API_ERROR_GET_ID_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados da obra\nMensagem: " + t.getMessage());
+            }
+        });
+    }
+
+
+
+    public void buscarObraPorNome(String idUsuario,String nome, TextView idObra,Context c,TextView erro,ImageView borda) {
+        erro.setVisibility(View.INVISIBLE);
+        ApiService apiService = new ApiService(c);
+        ObraInterface obraInterface= apiService.getObraInterface();
+
+        Call<Obra> call = obraInterface.selecionarObraPorNome(nome);
+
+        call.enqueue(new Callback<Obra>() {
+            @Override
+            public void onResponse(Call<Obra> call, Response<Obra> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    borda.setImageResource(R.drawable.borda_escaner);
+                    erro.setVisibility(View.INVISIBLE);
+                    Obra obra = response.body();
+                    idObra.setText(obra.getId().toString());
+                    mongoService.inserirHistorico(idUsuario,new Historico(Long.parseLong(obra.getId()),aux.dataAtualFormatada()),c);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id",obra.getId().toString());
+                    Intent i = new Intent(c, TelaInfoObra.class);
+                    i.putExtras(bundle);
+                    c.startActivity(i);
+
+                }else{
+                    borda.setImageResource(R.drawable.borda_scan_erro);
+                    erro.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
+                    erro.setText("Não foi possível escanear esta obra");
+                    erro.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Obra> call, Throwable t) {
+                Log.e("API_ERROR_GET_ID_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados da obra\nMensagem: " + t.getMessage());
+            }
+        });
+    }
+
+
+    public void buscarObraPorNomePesquisa(String nome, Context c, TextView erro, RecyclerView rvObras, AdapterObraFeed adapterObra, List<Obra> listaObras, ProgressBar progressBar) {
+        erro.setVisibility(View.INVISIBLE);
+        ApiService apiService = new ApiService(c);
+        ObraInterface obraInterface = apiService.getObraInterface();
+
+        Call<List<Obra>> call = obraInterface.selecionarObrasPorNome(nome);
+        call.enqueue(new Callback<List<Obra>>() {
+            @Override
+            public void onResponse(Call<List<Obra>> call, Response<List<Obra>> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Obra> obras = response.body();
+                    rvObras.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+                    if (obras.size() > 0) {
+                        if(obras.size()==1){
+                            listaObras.clear();
+                            listaObras.addAll(Collections.singletonList(obras.get(0)));
+                            adapterObra.notifyDataSetChanged();
+                            rvObras.setAdapter(adapterObra);
+                        }else {
+                            listaObras.clear();
+                            listaObras.addAll(obras);
+                            adapterObra.notifyDataSetChanged();
+                            rvObras.setAdapter(adapterObra);
+                        }
+                        erro.setVisibility(View.INVISIBLE); // Esconda a mensagem de erro
+                    } else {
+                        erro.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
+                        erro.setText("Nenhuma obra encontrada");
+                        erro.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    // Tente ler o corpo de erro
+
+                    Log.e("API_ERROR_GET_ID_OBRA", "Erro ao fazer a requisição: " + response.errorBody());
+                    erro.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
+                    erro.setText("Nenhuma obra encontrada");
+                    erro.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Obra>> call, Throwable t) {
+                Log.e("API_ERROR_GET_ID_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados da obra\nMensagem: " + t.getMessage());
+                progressBar.setVisibility(View.INVISIBLE); // Esconda a barra de progresso em caso de falha
+            }
+        });
+    }
+
+
+    public void buscarTodasobras(TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObraFeed adapterObra,ProgressBar progressBar) {
+
+        ApiService apiService = new ApiService(context);
+        ObraInterface obraInterface = apiService.getObraInterface();
+        Call<List<Obra>> call = obraInterface.selecionarTudasObras();
+
+        call.enqueue(new Callback<List<Obra>>() {
+            @Override
+            public void onResponse(Call<List<Obra>> call, Response<List<Obra>> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (response.isSuccessful() && response.body() != null) {
+                    erroObra.setVisibility(View.INVISIBLE);
+                    List<Obra> obras = response.body();
+                    if(obras.size()!=0){
+                        listaObras.clear();
+                        listaObras.addAll(response.body());
+                        adapterObra.notifyDataSetChanged();
+                        rvObras.setAdapter(adapterObra);
+                    }
+
+                } else {
+                    if(response.code()!=404) {
+                        erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
+                        Log.e("API_ERROR_GET_OBRA", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
+                        erroObra.setText("Falha ao obter dados das obras");
+                        erroObra.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Obra>> call, Throwable t) {
+                erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
+                Log.e("API_ERROR_GET_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
+                erroObra.setText("Falha ao obter dados das obras");
+                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados das obras\nMensagem: "+t.getMessage());
             }
         });
     }

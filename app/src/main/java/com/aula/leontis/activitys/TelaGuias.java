@@ -6,11 +6,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aula.leontis.R;
@@ -40,6 +43,7 @@ public class TelaGuias extends AppCompatActivity {
     MetodosAux aux = new MetodosAux();
     ImageView fotoGuiaDestaque;
     ImageButton btnVoltar,btnBuscar,btnFecharPesquisa;
+    ProgressBar progressBar;
     EditText campoPesquisa;
     List<Guia> listaGuias = new ArrayList<>();
     AdapterGuia adapterGuia = new AdapterGuia(listaGuias);
@@ -59,9 +63,28 @@ public class TelaGuias extends AppCompatActivity {
         tituloGuiaDestaque = findViewById(R.id.tituloGuiaDestaque);
         idGuiadestaque = findViewById(R.id.idGuiadestaque);
         btnFecharPesquisa = findViewById(R.id.btnFecharPesquisa);
+        progressBar = findViewById(R.id.progressBar6);
         campoPesquisa = findViewById(R.id.campoPesquisa);
         btnVoltar.setOnClickListener(v -> {
             finish();
+        });
+        campoPesquisa.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    filtrar(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
 
         rvGuias.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -74,7 +97,8 @@ public class TelaGuias extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = auth.getCurrentUser().getEmail();
    //     selecionarIdUsuarioPorEmail(email);
-         guiaService.selecionarGuiaPorMuseu(id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque);
+         progressBar.setVisibility(View.VISIBLE);
+         guiaService.selecionarGuiaPorMuseu(id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque,progressBar);
          fotoGuiaDestaque.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -92,6 +116,7 @@ public class TelaGuias extends AppCompatActivity {
                 btnBuscar.setVisibility(View.INVISIBLE);
                 btnFecharPesquisa.setVisibility(View.VISIBLE);
                 campoPesquisa.setText("");
+
             }
         });
         btnFecharPesquisa.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +125,7 @@ public class TelaGuias extends AppCompatActivity {
                 campoPesquisa.setVisibility(View.INVISIBLE);
                 btnBuscar.setVisibility(View.VISIBLE);
                 btnFecharPesquisa.setVisibility(View.INVISIBLE);
+                guiaService.selecionarGuiaPorMuseu(id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque,progressBar);
             }
         });
     }
@@ -141,5 +167,9 @@ public class TelaGuias extends AppCompatActivity {
                 aux.abrirDialogErro(TelaGuias.this, "Erro inesperado", "Erro ao obter id\nMensagem: " + throwable.getMessage());
             }
         });
+    }
+    public void filtrar(String nome){
+        progressBar.setVisibility(View.VISIBLE);
+        guiaService.buscarGuiaPorNomePesquisa(nome,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque,progressBar);
     }
 }

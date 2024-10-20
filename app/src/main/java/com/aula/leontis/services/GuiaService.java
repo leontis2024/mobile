@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -11,11 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterGuia;
+import com.aula.leontis.adapters.AdapterObraFeed;
 import com.aula.leontis.interfaces.guia.GuiaInterface;
+import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.models.guia.Guia;
+import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,7 +29,7 @@ import retrofit2.Response;
 
 public class GuiaService {
     MetodosAux aux =new MetodosAux();
-    public void selecionarGuiaPorMuseu(String idMuseu, TextView erroGuia, Context context, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque, TextView nomeGuiaDestaque,TextView idGuiadestaque) {
+    public void selecionarGuiaPorMuseu(String idMuseu, TextView erroGuia, Context context, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque, TextView nomeGuiaDestaque,TextView idGuiadestaque,ProgressBar progressBar) {
         erroGuia.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroGuia.setText("Carregando...");
         erroGuia.setVisibility(View.VISIBLE);
@@ -36,18 +41,24 @@ public class GuiaService {
         call.enqueue(new Callback<List<Guia>>() {
             @Override
             public void onResponse(Call<List<Guia>> call, Response<List<Guia>> response) {
+                progressBar.setVisibility(View.INVISIBLE);
                 if (response.isSuccessful() && response.body() != null) {
                     erroGuia.setVisibility(View.INVISIBLE);
                     List<Guia> guias = response.body();
-                    if(guias.size()!=0){
+                    if(guias.size()>0){
                         String url = guias.get(0).getUrlImagem();
                         Glide.with(context).load(url).into(imgGuiaDestaque);
                         nomeGuiaDestaque.setText(guias.get(0).getTituloGuia());
                         idGuiadestaque.setText(String.valueOf(guias.get(0).getId()));
                         guias.remove(0);
-                        listaGuias.addAll(guias);
-                        adapterGuia.notifyDataSetChanged();
-                        rvGuias.setAdapter(adapterGuia);
+                        if(guias.size()>0) {
+                            listaGuias.addAll(guias);
+                            adapterGuia.notifyDataSetChanged();
+                            rvGuias.setAdapter(adapterGuia);
+                        }
+
+                    }else{
+                        nomeGuiaDestaque.setText("Nenhuma guia encontrada");
                     }
 
                 } else {
@@ -69,5 +80,45 @@ public class GuiaService {
             }
         });
     }
+    public void buscarGuiaPorNomePesquisa(String nome, TextView erro, Context c, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque, TextView nomeGuiaDestaque,TextView idGuiadestaque,ProgressBar progressBar) {
+        erro.setVisibility(View.INVISIBLE);
+        ApiService apiService = new ApiService(c);
+        GuiaInterface guiaInterface= apiService.getGuiaInterface();
+
+        Call<List<Guia>> call = guiaInterface.selecionarGuiaPorNome(nome);
+
+        call.enqueue(new Callback<List<Guia>> () {
+            @Override
+            public void onResponse(Call<List<Guia>>  call, Response<List<Guia>>  response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Guia> guias = response.body();
+                    if(guias.size()>0){
+                        String url = guias.get(0).getUrlImagem();
+                        Glide.with(c).load(url).into(imgGuiaDestaque);
+                        nomeGuiaDestaque.setText(guias.get(0).getTituloGuia());
+                        idGuiadestaque.setText(String.valueOf(guias.get(0).getId()));
+                        guias.remove(0);
+                        if(guias.size()>0) {
+                            listaGuias.clear();
+                            listaGuias.addAll(guias);
+                            adapterGuia.notifyDataSetChanged();
+                            rvGuias.setAdapter(adapterGuia);
+                        }
+                    }
+
+                }else{
+                    nomeGuiaDestaque.setText("Nenhuma guia encontrada");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Guia>>  call, Throwable t) {
+                Log.e("API_ERROR_GET_NOME_GUIA", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados do guia\nMensagem: " + t.getMessage());
+            }
+        });
+    }
+
 
 }

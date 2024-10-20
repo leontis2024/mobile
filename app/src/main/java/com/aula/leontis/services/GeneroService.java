@@ -158,7 +158,7 @@ public class GeneroService {
                     erroGenero.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
                     GeneroCompleto genero = response.body();
 
-                    descGenero.setText(descGenero.getText()+"\n\nGênero artistico: "+genero.getNomeGenero());
+                    descGenero.setText("Gênero artistico: "+genero.getNomeGenero());
 
 
                 } else {

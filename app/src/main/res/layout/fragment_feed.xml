@@ -80,7 +80,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:background="@color/bege_claro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +94,7 @@
             <ImageButton
                 android:id="@+id/btnForYou"
                 android:layout_width="100dp"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="5dp"
                 android:background="#00FFFFFF"
@@ -104,8 +104,8 @@
 
             <ImageButton
                 android:id="@+id/btnMuseusSeguidos"
-                android:layout_width="150dp"
-                android:layout_height="20dp"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="30dp"
                 android:background="#00FFFFFF"

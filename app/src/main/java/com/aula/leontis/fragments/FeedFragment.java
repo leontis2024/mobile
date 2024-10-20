@@ -1,10 +1,14 @@
 package com.aula.leontis.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +16,28 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.aula.leontis.R;
+import com.aula.leontis.activitys.TelaScanner;
 import com.aula.leontis.fragments.feed.ForYou;
 import com.aula.leontis.fragments.feed.MuseusSeguidos;
+import com.aula.leontis.interfaces.usuario.UsuarioInterface;
+import com.aula.leontis.services.ApiService;
+import com.aula.leontis.utilities.MetodosAux;
+import com.google.firebase.auth.FirebaseAuth;
+
+import org.json.JSONObject;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FeedFragment extends Fragment {
     ImageButton btnBuscar, btnFiltrar, btnForYou, btnScanner,btnMuseusSeguidos, btnFecharPesquisa;
     ForYou foryou = new ForYou();
     MuseusSeguidos museusSeguidos = new MuseusSeguidos();
+    MetodosAux aux = new MetodosAux();
     EditText campoPesquisa;
+    String idUsuario;
 
 
     public FeedFragment() {
@@ -54,11 +72,42 @@ public class FeedFragment extends Fragment {
         btnFecharPesquisa = view.findViewById(R.id.btnFecharPesquisa);
 
         campoPesquisa = view.findViewById(R.id.campoPesquisa);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String email = auth.getCurrentUser().getEmail();
+        selecionarIdUsuarioPorEmail(email);
 
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container_feed, foryou).commit();
         setButtonState("foryou", true);
         setButtonState("museus", false);
+
+        campoPesquisa.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(btnForYou.getContentDescription().equals("selecionado")) {
+                    if (s.length() > 0) {
+                        foryou.buscar(s.toString());
+                    }
+                }else{
+                    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.container_feed, foryou).commit();
+                    setButtonState("foryou", true);
+                    setButtonState("museus", false);
+                }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,9 +121,11 @@ public class FeedFragment extends Fragment {
         btnFecharPesquisa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 campoPesquisa.setVisibility(View.INVISIBLE);
                 btnBuscar.setVisibility(View.VISIBLE);
                 btnFecharPesquisa.setVisibility(View.INVISIBLE);
+                foryou.onCreateView(inflater, container, savedInstanceState);
             }
         });
 
@@ -85,7 +136,7 @@ public class FeedFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.container_feed, museusSeguidos).commit();
                 setButtonState("museus", true);
-                 setButtonState("foryou", false);
+                setButtonState("foryou", false);
             }
         });
 
@@ -99,6 +150,16 @@ public class FeedFragment extends Fragment {
                 setButtonState("museus", false);
             }
         });
+        btnScanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent escaner = new Intent(getContext(), TelaScanner.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("id", idUsuario);
+                escaner.putExtras(bundle);
+                startActivity(escaner);
+            }
+        });
 
         return view;
     }
@@ -107,20 +168,62 @@ public class FeedFragment extends Fragment {
             switch (button) {
                 case "foryou":
                     btnForYou.setImageResource(R.drawable.for_you_selecionada); // Define a imagem ativa para btn1
+                    btnForYou.setContentDescription("selecionado");
                     break;
                 case "museus":
                     btnMuseusSeguidos.setImageResource(R.drawable.museus_seguidos_selecionado); // Define a imagem ativa para btn2
+                    btnMuseusSeguidos.setContentDescription("selecionado");
                     break;
             }
         } else {
             switch (button) {
                 case "museus":
                     btnMuseusSeguidos.setImageResource(R.drawable.museus_seguidos); // Define a imagem inativa para btn1
+                    btnMuseusSeguidos.setContentDescription("deselecionado");
                     break;
                 case "foryou":
                     btnForYou.setImageResource(R.drawable.for_you); // Define a imagem inativa para btn2
+                    btnForYou.setContentDescription("deselecionado");
                     break;
             }
         }
     }
+    public void selecionarIdUsuarioPorEmail(String email) {
+
+        ApiService apiService = new ApiService(getContext());
+        UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
+        Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        // Converte o corpo da resposta para string
+                        String jsonResponse = response.body().string();
+
+                        // Cria um JSONObject a partir da string
+                        JSONObject jsonObject = new JSONObject(jsonResponse);
+
+                        String idApi = jsonObject.getString("id");
+                        idUsuario = idApi;
+                        // Faça algo com os valores obtidos
+                        Log.d("API_RESPONSE_GET_EMAIL", "Campo obtido: id: " + idApi);
+
+                    } catch (Exception e) {
+                        Log.e("API_RESPONSE_GET_EMAIL", "Erro ao processar resposta: " + e.getMessage());
+
+                    }
+                } else {
+                    Log.e("API_ERROR_GET_EMAIL", "Erro na resposta da API: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("API_ERROR_GET_EMAIL", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(getContext(), "Erro inesperado", "Erro ao obter id\nMensagem: " + throwable.getMessage());
+            }
+        });
+    }
+
 }

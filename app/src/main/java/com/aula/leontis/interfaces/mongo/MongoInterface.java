@@ -2,6 +2,7 @@ package com.aula.leontis.interfaces.mongo;
 import com.aula.leontis.models.avaliacao.Avaliacao;
 import com.aula.leontis.models.comentario.Comentario;
 import com.aula.leontis.models.comentario.ComentarioResponse;
+import com.aula.leontis.models.historico.Historico;
 
 import java.util.List;
 
@@ -20,9 +21,13 @@ public interface MongoInterface {
 
     @PUT("/api/usuarios/{userId}/avaliacoes")
     Call<ResponseBody> inserirAvaliacao(@Path("userId") long userId, @Body Avaliacao avaliacao);
+    @PUT("/api/usuarios/{userId}/historico-obras")
+    Call<ResponseBody> inserirHistorico(@Path("userId") long userId, @Body Historico historico);
 
     @GET("/api/usuarios/comentarios/{obraId}")
     Call<List<ComentarioResponse>> buscarComentariosPorIdObra(@Path("obraId") long obraId);
+    @GET("api/usuarios/{userId}/historicoObras")
+    Call<List<Historico>> buscarHistoricoPorId(@Path("userId") long userId);
     @GET("/api/usuarios/media-nota/{obraId}")
     Call<ResponseBody> buscarMediaNotaPorIdObra(@Path("obraId") long obraId);
     @GET("/api/usuarios/porcentagem")

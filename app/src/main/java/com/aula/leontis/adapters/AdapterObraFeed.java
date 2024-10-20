@@ -15,6 +15,7 @@ import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaInfoObra;
 import com.aula.leontis.models.obra.Obra;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class AdapterObraFeed extends RecyclerView.Adapter<AdapterObraFeed.viewHo
         if(url == null){
             url= "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
         }
-        Glide.with(holder.imagemObra.getContext()).asBitmap().load(url).into(holder.imagemObra);
+        Glide.with(holder.imagemObra.getContext()).asBitmap().load(url).override(Target.SIZE_ORIGINAL).into(holder.imagemObra);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

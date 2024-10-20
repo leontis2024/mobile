@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +18,12 @@ import android.widget.TextView;
 import com.aula.leontis.TokenManager;
 import com.aula.leontis.activitys.TelaAreaRestrita;
 import com.aula.leontis.activitys.TelaEditarPerfil;
+import com.aula.leontis.adapters.AdapterHistorico;
+import com.aula.leontis.adapters.AdapterObra;
+import com.aula.leontis.models.historico.Historico;
+import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ApiService;
+import com.aula.leontis.services.MongoService;
 import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
@@ -25,6 +32,9 @@ import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -37,8 +47,12 @@ public class PerfilFragment extends Fragment {
     MetodosAux aux = new MetodosAux();
     ImageButton btnAreaRestrita, btnLogout, btnDeletarConta,btnEditarPerfil;
     TextView nome,biografia,erro;
+    MongoService mongoService = new MongoService();
     ImageView foto;
     String id;
+    List<Historico> listaHistoricos = new ArrayList<>();
+    AdapterHistorico adapterHistorico = new AdapterHistorico(listaHistoricos);
+    RecyclerView rvHistorico;
 
 
     public PerfilFragment() {
@@ -66,7 +80,8 @@ public class PerfilFragment extends Fragment {
         btnEditarPerfil = view.findViewById(R.id.btnEditarPerfil);
         btnLogout = view.findViewById(R.id.btnLogout);
         btnDeletarConta = view.findViewById(R.id.btnDeletarConta);
-
+        rvHistorico = view.findViewById(R.id.historicodeObras);
+        rvHistorico.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         nome = view.findViewById(R.id.apelido);
         biografia = view.findViewById(R.id.biografia);
         foto = view.findViewById(R.id.fotoPerfil);
@@ -145,6 +160,7 @@ public class PerfilFragment extends Fragment {
 
                         String idApi = jsonObject.getString("id");
                         id=idApi;
+                        mongoService.buscarHistoricoObraPorIdUsuario(erro,id,getContext(),rvHistorico,listaHistoricos,adapterHistorico);
 
                         // Faça algo com os valores obtidos
                         Log.d("API_RESPONSE_GET_EMAIL", "Campo obtido: id: "+idApi);

@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -31,10 +30,7 @@ import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.DataBaseFotos;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
-import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
-import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.usuario.Usuario;
-import com.aula.leontis.models.usuario.UsuarioGenero;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -47,16 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaCadastroFotoPerfil extends AppCompatActivity {
     UsuarioService usuarioService = new UsuarioService();
@@ -180,7 +167,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                             usuarioService.inserirUsuarioMongo(usuarioMongo,TelaCadastroFotoPerfil.this);
                                             if(!(id[0].equals(""))) {
                                                 // upload do Bitmap para o Firebase Storage retornando a url dela
-                                                dataBase.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, id[0]).addOnSuccessListener(new OnSuccessListener<String>() {
+                                                dataBase.subirFoto(TelaCadastroFotoPerfil.this, bitmap, id[0],"usuarios","usuario").addOnSuccessListener(new OnSuccessListener<String>() {
                                                     @Override
                                                     public void onSuccess(String url) {
                                                         // Aqui você pode usar a URL da imagem
