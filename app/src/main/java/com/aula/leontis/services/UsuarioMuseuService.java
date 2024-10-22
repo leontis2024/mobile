@@ -169,13 +169,11 @@ public class UsuarioMuseuService {
                         Log.e("API_ERROR_GET_MUSEUS_USUARIO", "Erro ao processar resposta: " + e.getMessage());
                     }
                 } else {
+                    museusSeguidos.clear();
                     Log.e("API_ERROR_GET_MUSEUS_USUARIO", "Erro na resposta da API: " + response.code()+" "+response.message());
                 }
-                if(museusSeguidos.size()>0) {
-                    obraService.buscarObrasPorVariosMuseus(museusSeguidos, erro, context, rvObras, listaObras, adapterObra, progressBar);
-                }else{
-                    obraService.buscarTodasobras(erro, context, rvObras, listaObras, adapterObra, progressBar);
-                }
+
+                obraService.buscarObrasPorVariosMuseus(museusSeguidos, erro, context, rvObras, listaObras, adapterObra, progressBar);
             }
 
             @Override

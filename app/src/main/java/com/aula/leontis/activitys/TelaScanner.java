@@ -59,7 +59,8 @@ public class TelaScanner extends AppCompatActivity {
     ImageView foto;
     ObraService obraService = new ObraService();
     ProgressBar carregar;
-    String urlFoto;
+    String urlFoto,idGuia;
+    int nrOrdem;
     TextView idObra;
     ImageView borda;
     private CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
@@ -81,6 +82,8 @@ public class TelaScanner extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             id= bundle.getString("id");
+            idGuia = bundle.getString("idGuia");
+            nrOrdem = bundle.getInt("nrOrdem");
         }
 
 
@@ -156,7 +159,7 @@ public class TelaScanner extends AppCompatActivity {
                         carregar.setVisibility(View.INVISIBLE);
                         //mando url para api de dados e ela me retorna o nome
                         String nome="Hora da Música";
-                        obraService.buscarObraPorNome(id,nome,idObra,TelaScanner.this,erro,borda);
+                        obraService.buscarObraPorNome(id,nome,idObra,idGuia,nrOrdem,TelaScanner.this,erro,borda);
                         Log.d("URL SCAN", "URL da imagem: " + url);
                         urlFoto = url;
                     }

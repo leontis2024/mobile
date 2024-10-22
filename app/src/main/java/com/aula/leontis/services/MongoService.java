@@ -25,6 +25,8 @@ import com.aula.leontis.models.avaliacao.Avaliacao;
 import com.aula.leontis.models.comentario.Comentario;
 import com.aula.leontis.models.comentario.ComentarioResponse;
 import com.aula.leontis.models.genero.Genero;
+import com.aula.leontis.models.guia.StatusGuia;
+import com.aula.leontis.models.guia.StatusGuiaRequest;
 import com.aula.leontis.models.historico.Historico;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
@@ -47,6 +49,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MongoService {
     MetodosAux aux = new MetodosAux();
+    ObraGuiaService obraGuiaService = new ObraGuiaService();
     String urlAPI = Geral.getInstance().getUrlApiMongo();
     public void inserirComentario(String idUsuario, Comentario comentario, Context context) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -327,6 +330,99 @@ public class MongoService {
                 Log.e("MONGO_API_ERROR_GET_HISTORICO", "Erro ao fazer a requisição: " + t.getMessage());
                 aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter o historico\nMensagem: "+t.getMessage());
             }
+        });
+    }
+
+    public void selecionarStatusGuia(String idUsuario, Context context, long idGuia,ImageView img,int nrOrdem) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<StatusGuia> call = mongoInterface.selecionarStatusGuia(idGuia,Long.parseLong(idUsuario));
+
+        call.enqueue(new Callback<StatusGuia>() {
+            @Override
+            public void onResponse(Call<StatusGuia> call, Response<StatusGuia> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                       StatusGuia statusGuia = response.body();
+                       if(statusGuia.isConcluido() && img!=null){
+                           img.setImageResource(R.drawable.guia_concluido_grande);
+
+                       }else{
+                           if(nrOrdem>0){
+                               if(statusGuia.getNumeroPassoAtual()<nrOrdem) {
+                                   obraGuiaService.selecionarTamanhoGuia(idUsuario,idGuia, context,nrOrdem);
+
+                               }
+                           }
+
+
+                       }
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("MONGO_ERROR_STATUS_GUIA", "Erro ao processar resposta: " + e.getMessage());
+                    }
+                } else {
+                    if(idGuia>0 && nrOrdem>0) {
+                        inserirStatusGuia(idUsuario, new StatusGuiaRequest(Long.parseLong(idUsuario), idGuia, false, 1), context);
+                    }
+                    Log.e("MONGO_ERROR_STATUS_GUIA", "Erro na resposta da API: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StatusGuia> call, Throwable throwable) {
+                Log.e("MONGO_ERROR_STATUS_GUIA", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter status guia\nMensagem: " + throwable.getMessage());
+            }
+        });
+    }
+
+    public void inserirStatusGuia(String idUsuario, StatusGuiaRequest statusGuiaRequest, Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<ResponseBody> call = mongoInterface.inserirStatusGuia(Long.parseLong(idUsuario),statusGuiaRequest);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String body = "";
+                if (response.isSuccessful()) {
+                    try {
+                        body = response.body().string();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Log.d("MONGO_API_RESPONSE_POST_STATUS_GUIA", "Status guia do usuário inserido via API mongo: " + body);
+                } else {
+                    try {
+                        // Obter e exibir o corpo da resposta de erro
+                        String errorBody = response.errorBody().string();
+                        Log.e("MONGO_API_ERROR_POST_STATUS_GUIA", "Erro ao adicionar status guia: " + response.code() + " - " + errorBody + " - " + response.message());
+                        aux.abrirDialogErro(context, "Erro ao adicionar status guia", "Não foi possível adicionar status guia. Erro: " + errorBody);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("MONGO_API_ERROR_POST_STATUS_GUIA", "Erro ao processar o corpo da resposta de erro.");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("MONGO_API_ERROR_POST", "Erro ao adicionar comentario: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro ao comentar", "Não foi possível comentar. Erro: " + throwable.getMessage());
+            }
+
         });
     }
 

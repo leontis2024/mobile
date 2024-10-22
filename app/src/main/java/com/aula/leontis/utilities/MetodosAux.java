@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -48,11 +47,11 @@ public class MetodosAux {
         dialog.setCanceledOnTouchOutside(true);
 
         TextView titulo = dialog.findViewById(R.id.titulo);
-        TextView introducao = dialog.findViewById(R.id.mensagem);
+        TextView introducao = dialog.findViewById(R.id.descLocalizacao);
         titulo.setText(texto);
         introducao.setText(mensagem);
 
-        Button btnFechar = dialog.findViewById(R.id.btn_fechar);
+        Button btnFechar = dialog.findViewById(R.id.btnAcessarScanner);
         btnFechar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,11 +71,11 @@ public class MetodosAux {
         TextView titulo = dialog.findViewById(R.id.titulo);
         titulo.setTextColor(c.getResources().getColor(R.color.vinho_escuro));
         titulo.setTypeface(null, Typeface.BOLD);
-        TextView introducao = dialog.findViewById(R.id.mensagem);
+        TextView introducao = dialog.findViewById(R.id.descLocalizacao);
         titulo.setText(texto);
         introducao.setText(mensagem);
 
-        Button btnFechar = dialog.findViewById(R.id.btn_fechar);
+        Button btnFechar = dialog.findViewById(R.id.btnAcessarScanner);
         btnFechar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

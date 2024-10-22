@@ -14,4 +14,5 @@ public interface GuiaInterface {
     Call<List<Guia>> selecionarGuiaPorMuseu(@Path("id") long id);
     @GET("/api/guia/pesquisarGuia")
     Call<List<Guia>> selecionarGuiaPorNome(@Query("pesquisa") String pesquisa);
+
 }

@@ -41,7 +41,7 @@ import retrofit2.Response;
 public class TelaGuias extends AppCompatActivity {
     String id,idUsuario;
     MetodosAux aux = new MetodosAux();
-    ImageView fotoGuiaDestaque;
+    ImageView fotoGuiaDestaque,fotoGuiaDestaqueTerminado;
     ImageButton btnVoltar,btnBuscar,btnFecharPesquisa;
     ProgressBar progressBar;
     EditText campoPesquisa;
@@ -65,6 +65,7 @@ public class TelaGuias extends AppCompatActivity {
         btnFecharPesquisa = findViewById(R.id.btnFecharPesquisa);
         progressBar = findViewById(R.id.progressBar6);
         campoPesquisa = findViewById(R.id.campoPesquisa);
+        fotoGuiaDestaqueTerminado = findViewById(R.id.fotoGuiaDestaqueTerminado);
         btnVoltar.setOnClickListener(v -> {
             finish();
         });
@@ -96,9 +97,9 @@ public class TelaGuias extends AppCompatActivity {
         }
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = auth.getCurrentUser().getEmail();
-   //     selecionarIdUsuarioPorEmail(email);
+        selecionarIdUsuarioPorEmail(email);
          progressBar.setVisibility(View.VISIBLE);
-         guiaService.selecionarGuiaPorMuseu(id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque,progressBar);
+
          fotoGuiaDestaque.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -125,7 +126,7 @@ public class TelaGuias extends AppCompatActivity {
                 campoPesquisa.setVisibility(View.INVISIBLE);
                 btnBuscar.setVisibility(View.VISIBLE);
                 btnFecharPesquisa.setVisibility(View.INVISIBLE);
-                guiaService.selecionarGuiaPorMuseu(id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque,progressBar);
+                guiaService.selecionarGuiaPorMuseu(idUsuario,id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque,progressBar);
             }
         });
     }
@@ -149,6 +150,7 @@ public class TelaGuias extends AppCompatActivity {
 
                         String idApi = jsonObject.getString("id");
                         idUsuario = idApi;
+                        guiaService.selecionarGuiaPorMuseu(idUsuario,id,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque,progressBar);
                         // Faça algo com os valores obtidos
                         Log.d("API_RESPONSE_GET_EMAIL", "Campo obtido: id: " + idApi);
 
@@ -170,6 +172,6 @@ public class TelaGuias extends AppCompatActivity {
     }
     public void filtrar(String nome){
         progressBar.setVisibility(View.VISIBLE);
-        guiaService.buscarGuiaPorNomePesquisa(nome,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,tituloGuiaDestaque,idGuiadestaque,progressBar);
+        guiaService.buscarGuiaPorNomePesquisa(idUsuario,nome,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,fotoGuiaDestaqueTerminado,tituloGuiaDestaque,idGuiadestaque,progressBar);
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaInfoObra;
 import com.aula.leontis.models.obra.Obra;
@@ -36,7 +37,7 @@ public class AdapterObra extends RecyclerView.Adapter<AdapterObra.viewHolderObra
     public void onBindViewHolder(@NonNull AdapterObra.viewHolderObra holder, int position) {
         String url = listaObras.get(holder.getAdapterPosition()).getUrlImagem();
         if(url == null){
-            url= "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
+            url= Geral.getInstance().getUrlImagePadrao();
         }
         Glide.with(holder.imagemObra.getContext()).asBitmap().load(url).into(holder.imagemObra);
 

@@ -12,6 +12,7 @@ import com.aula.leontis.interfaces.endereco.EnderecoMuseuInterface;
 import com.aula.leontis.interfaces.genero.GeneroInterface;
 import com.aula.leontis.interfaces.guia.GuiaInterface;
 import com.aula.leontis.interfaces.museu.MuseuInterface;
+import com.aula.leontis.interfaces.obra.ObraGuiaInterface;
 import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
@@ -35,6 +36,7 @@ public class ApiService {
         private UsuarioGeneroInterface usuarioGeneroInterface;
         private ObraInterface obraInterface;
         private UsuarioMuseuInterface usuarioMuseuInterface;
+        private ObraGuiaInterface obraGuiaInterface;
 
 
         public ApiService(Context context) {
@@ -69,7 +71,7 @@ public class ApiService {
             obraInterface = retrofit.create(ObraInterface.class);
             usuarioMuseuInterface = retrofit.create(UsuarioMuseuInterface.class);
             enderecoMuseuInterface = retrofit.create(EnderecoMuseuInterface.class);
-
+            obraGuiaInterface = retrofit.create(ObraGuiaInterface.class);
             guiaInterface = retrofit.create(GuiaInterface.class);
         }
 
@@ -113,7 +115,9 @@ public class ApiService {
             return guiaInterface;
         }
 
-    public void setGuiaInterface(GuiaInterface guiaInterface) {
-        this.guiaInterface = guiaInterface;
-    }
+        public ObraGuiaInterface getObraGuiaInterface() {
+            return obraGuiaInterface;
+        }
+
+
 }

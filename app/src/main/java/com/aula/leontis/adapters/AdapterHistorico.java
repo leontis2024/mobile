@@ -40,7 +40,7 @@ public class AdapterHistorico extends RecyclerView.Adapter<com.aula.leontis.adap
 
         @Override
         public void onBindViewHolder(@NonNull AdapterHistorico.viewHolderHistorico holder, int position) {
-            obraService.buscarObraPorIdParcial(listaHistorico.get(holder.getAdapterPosition()).getObraId().toString(), holder.itemView.getContext(),holder.imgObra);
+            obraService.buscarObraPorIdParcial(listaHistorico.get(holder.getAdapterPosition()).getObraId().toString(), holder.itemView.getContext(),holder.imgObra,null,"");
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

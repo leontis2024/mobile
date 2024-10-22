@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -136,7 +137,11 @@ public class ObraService {
         erroObra.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         ApiService apiService = new ApiService(context);
         ObraInterface obraInterface = apiService.getObraInterface();
+        if(generos.size()==0){
+            generos.add(-1L);
+        }
         Call<List<Obra>> call = obraInterface.selecionarObrasPorVariosGeneros(generos);
+
 
         call.enqueue(new Callback<List<Obra>>() {
             @Override
@@ -181,6 +186,9 @@ public class ObraService {
         erroObra.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         ApiService apiService = new ApiService(context);
         ObraInterface obraInterface = apiService.getObraInterface();
+        if(museus.size()==0){
+            museus.add(-1L);
+        }
         Call<List<Obra>> call = obraInterface.selecionarObrasPorVariosMuseus(museus);
 
         call.enqueue(new Callback<List<Obra>>() {
@@ -331,7 +339,7 @@ public class ObraService {
 
 
 
-    public void buscarObraPorIdParcial(String id, Context c,  ImageView fotoObra) {
+    public void buscarObraPorIdParcial(String id, Context c,  ImageView fotoObra,TextView nome,String localizacao) {
         ApiService apiService = new ApiService(c);
         ObraInterface obraInterface= apiService.getObraInterface();
 
@@ -343,6 +351,9 @@ public class ObraService {
                 if (response.isSuccessful() && response.body() != null) {
 
                     Obra obra = response.body();
+                    if(nome!=null) {
+                        nome.setText(obra.getNomeObra()+"\n\nLocalização: "+localizacao);
+                    }
 
                     String url = obra.getUrlImagem();
                     if (url == null) {
@@ -363,7 +374,7 @@ public class ObraService {
 
 
 
-    public void buscarObraPorNome(String idUsuario,String nome, TextView idObra,Context c,TextView erro,ImageView borda) {
+    public void buscarObraPorNome(String idUsuario,String nome, TextView idObra,String idGuia,int nrOrdem,Context c,TextView erro,ImageView borda) {
         erro.setVisibility(View.INVISIBLE);
         ApiService apiService = new ApiService(c);
         ObraInterface obraInterface= apiService.getObraInterface();
@@ -379,6 +390,7 @@ public class ObraService {
                     Obra obra = response.body();
                     idObra.setText(obra.getId().toString());
                     mongoService.inserirHistorico(idUsuario,new Historico(Long.parseLong(obra.getId()),aux.dataAtualFormatada()),c);
+                    mongoService.selecionarStatusGuia(idUsuario,c,Long.parseLong(idGuia),null,nrOrdem);
 
                     Bundle bundle = new Bundle();
                     bundle.putString("id",obra.getId().toString());
@@ -430,6 +442,10 @@ public class ObraService {
                         }
                         erro.setVisibility(View.INVISIBLE); // Esconda a mensagem de erro
                     } else {
+                        listaObras.clear();
+                        listaObras.addAll(obras);
+                        adapterObra.notifyDataSetChanged();
+                        rvObras.setAdapter(adapterObra);
                         erro.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
                         erro.setText("Nenhuma obra encontrada");
                         erro.setVisibility(View.VISIBLE);

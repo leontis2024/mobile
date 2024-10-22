@@ -168,6 +168,7 @@ public class UsuarioGeneroService {
         call.enqueue(new Callback<List<UsuarioGenero>>() {
             @Override
             public void onResponse(Call<List<UsuarioGenero>> call, Response<List<UsuarioGenero>> response) {
+
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         List<UsuarioGenero> usuariosGeneros = response.body();
@@ -181,13 +182,12 @@ public class UsuarioGeneroService {
                         Log.e("API_ERROR_GET_GENEROS_USUARIO", "Erro ao processar resposta: " + e.getMessage());
                     }
                 } else {
+                    generosInteresse.clear();
                     Log.e("API_ERROR_GET_GENEROS_USUARIO", "Erro na resposta da API: " + response.code()+" "+response.message());
                 }
-                if(generosInteresse.size()>0) {
-                    obraService.buscarObrasPorVariosGeneros(generosInteresse, erro, context, rvObras, listaObras, adapterObra, progressBar);
-                }else{
-                    obraService.buscarTodasobras(erro, context, rvObras, listaObras, adapterObra, progressBar);
-                }
+
+                obraService.buscarObrasPorVariosGeneros(generosInteresse, erro, context, rvObras, listaObras, adapterObra, progressBar);
+
             }
 
             @Override

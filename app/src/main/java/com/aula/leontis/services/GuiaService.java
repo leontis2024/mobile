@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
@@ -20,6 +21,7 @@ import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +31,8 @@ import retrofit2.Response;
 
 public class GuiaService {
     MetodosAux aux =new MetodosAux();
-    public void selecionarGuiaPorMuseu(String idMuseu, TextView erroGuia, Context context, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque, TextView nomeGuiaDestaque,TextView idGuiadestaque,ProgressBar progressBar) {
+    MongoService mongoService = new MongoService();
+    public void selecionarGuiaPorMuseu(String idUsuario,String idMuseu, TextView erroGuia, Context context, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque,TextView nomeGuiaDestaque,TextView idGuiadestaque,ProgressBar progressBar) {
         erroGuia.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroGuia.setText("Carregando...");
         erroGuia.setVisibility(View.VISIBLE);
@@ -50,9 +53,17 @@ public class GuiaService {
                         Glide.with(context).load(url).into(imgGuiaDestaque);
                         nomeGuiaDestaque.setText(guias.get(0).getTituloGuia());
                         idGuiadestaque.setText(String.valueOf(guias.get(0).getId()));
+                        mongoService.selecionarStatusGuia(idUsuario, context,guias.get(0).getId(),imgGuiaDestaque,-1);
                         guias.remove(0);
                         if(guias.size()>0) {
+                            rvGuias.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                            listaGuias.clear();
                             listaGuias.addAll(guias);
+                            adapterGuia.notifyDataSetChanged();
+                            rvGuias.setAdapter(adapterGuia);
+                        }else{
+                            rvGuias.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                            listaGuias.clear();
                             adapterGuia.notifyDataSetChanged();
                             rvGuias.setAdapter(adapterGuia);
                         }
@@ -80,7 +91,7 @@ public class GuiaService {
             }
         });
     }
-    public void buscarGuiaPorNomePesquisa(String nome, TextView erro, Context c, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque, TextView nomeGuiaDestaque,TextView idGuiadestaque,ProgressBar progressBar) {
+    public void buscarGuiaPorNomePesquisa(String idUsuario,String nome, TextView erro, Context c, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque,ImageView terminado, TextView nomeGuiaDestaque,TextView idGuiadestaque,ProgressBar progressBar) {
         erro.setVisibility(View.INVISIBLE);
         ApiService apiService = new ApiService(c);
         GuiaInterface guiaInterface= apiService.getGuiaInterface();
@@ -91,13 +102,16 @@ public class GuiaService {
             @Override
             public void onResponse(Call<List<Guia>>  call, Response<List<Guia>>  response) {
                 progressBar.setVisibility(View.INVISIBLE);
+                rvGuias.setLayoutManager(new LinearLayoutManager(c, LinearLayoutManager.HORIZONTAL, false));
                 if (response.isSuccessful() && response.body() != null) {
                     List<Guia> guias = response.body();
                     if(guias.size()>0){
+
                         String url = guias.get(0).getUrlImagem();
                         Glide.with(c).load(url).into(imgGuiaDestaque);
                         nomeGuiaDestaque.setText(guias.get(0).getTituloGuia());
                         idGuiadestaque.setText(String.valueOf(guias.get(0).getId()));
+                        mongoService.selecionarStatusGuia(idUsuario, c,guias.get(0).getId(),imgGuiaDestaque,-1);
                         guias.remove(0);
                         if(guias.size()>0) {
                             listaGuias.clear();

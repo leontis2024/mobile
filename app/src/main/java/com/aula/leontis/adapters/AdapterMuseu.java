@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaInfoGenero;
 import com.aula.leontis.activitys.TelaInfoMuseu;
@@ -44,7 +45,7 @@ public class AdapterMuseu extends RecyclerView.Adapter<AdapterMuseu.viewHolderMu
         holder.nomeMuseu.setText(listaMuseus.get(holder.getAdapterPosition()).getNomeMuseu());
         String url = listaMuseus.get(holder.getAdapterPosition()).getUrlImagem();
         if(url == null){
-            url= "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
+            url= Geral.getInstance().getUrlImagePadrao();
         }
         Glide.with(holder.imagemMuseu.getContext()).asBitmap().load(url).into(holder.imagemMuseu);
         diaFuncionamentoService.buscarDiaFuncionamentoPorIdDoMuseuParcial( listaMuseus.get(holder.getAdapterPosition()).getId(),holder.itemView.getContext(),holder.diaFuncionamentoMuseu);
