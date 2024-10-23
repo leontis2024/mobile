@@ -8,6 +8,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface MuseuInterface {
     @GET("/api/museu/selecionarTudo")
@@ -15,4 +16,7 @@ public interface MuseuInterface {
 
     @GET("/api/museu/selecionarMuseuPorId/{id}")
     Call<Museu> buscarMuseuPorId(@Path("id") String id);
+
+    @GET("/api/museu/pesquisarMuseu")
+    Call<List<Museu>> selecionarMuseusPorNome(@Query("pesquisa") String pesquisa);
 }

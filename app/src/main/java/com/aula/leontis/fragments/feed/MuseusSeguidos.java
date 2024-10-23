@@ -60,6 +60,14 @@ public class MuseusSeguidos extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String email = auth.getCurrentUser().getEmail();
+        selecionarIdUsuarioPorEmail(email,idUsuario);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

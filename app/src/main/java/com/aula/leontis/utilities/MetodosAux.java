@@ -15,8 +15,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaLogin;
+import com.aula.leontis.activitys.TelaPesquisa;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.services.ApiService;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -122,19 +124,23 @@ public class MetodosAux {
 
                     // Deletar o arquivo
                     if(storageRef!=null) {
-                        storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // Imagem deletada com sucesso
-                                Log.d("IMAGEM_DELETE", "Imagem deletada com sucesso.");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Falha ao deletar a imagem
-                                Log.e("IMAGEM_DELETE_ERROR", "Erro ao deletar a imagem: " + exception.getMessage());
-                            }
-                        });
+                        try {
+                            storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // Imagem deletada com sucesso
+                                    Log.d("IMAGEM_DELETE", "Imagem deletada com sucesso.");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Falha ao deletar a imagem
+                                    Log.e("IMAGEM_DELETE_ERROR", "Erro ao deletar a imagem: " + exception.getMessage());
+                                }
+                            });
+                        }catch (Exception e){
+                            Log.e("IMAGEM_DELETE_ERROR", "Erro ao deletar a imagem: " + e.getMessage());
+                        }
                     }
                     deletarUsuarioPorIdMongo(id, c);
                     deletarUsuarioPorId(id, c);
@@ -153,15 +159,7 @@ public class MetodosAux {
         dialog.show();
     }
     public void deletarUsuarioPorId(String id, Context context) {
-//        String urlAPI = "https://dev2-tfqz.onrender.com/";
-//
-//        // Configurar acesso à API
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(urlAPI)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
+
         ApiService apiService = new ApiService(context);
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
         Call<ResponseBody> call = usuarioInterface.deletarUsuario(id);
@@ -190,7 +188,7 @@ public class MetodosAux {
     }
 
     public void deletarUsuarioPorIdMongo(String id, Context context) {
-                String urlAPI = "https://apimongo-r613.onrender.com/";
+        String urlAPI = Geral.getInstance().getUrlApiMongo();
 
         // Configurar acesso à API
         Retrofit retrofit = new Retrofit.Builder()
@@ -219,7 +217,6 @@ public class MetodosAux {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR_DELETE", "Erro ao fazer a requisição mongo: " + throwable.getMessage());
-                abrirDialogErro(context,"Erro ao deletar usário","Houve um erro ao deletar o usuário mongo\nMensagem: "+throwable.getMessage());
             }
         });
     }
@@ -230,6 +227,31 @@ public class MetodosAux {
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             return dateFormat.format(new Date());
         }
+    public void abrirDialogPrimeiroAcesso(Context c, String texto, String mensagem){
+        Dialog dialog = new Dialog(c);
+        dialog.setContentView(R.layout.caixa_mensagem2);
+        dialog.getWindow().setLayout(WRAP_CONTENT,WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(true);
+
+        TextView titulo = dialog.findViewById(R.id.titulo);
+        TextView introducao = dialog.findViewById(R.id.descLocalizacao);
+        titulo.setText(texto);
+        introducao.setText(mensagem);
+
+        Button btnFechar = dialog.findViewById(R.id.btnAcessarScanner);
+        btnFechar.setText("Responder Pesquisa");
+        btnFechar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(c, TelaPesquisa.class);
+                Geral.getInstance().setPrimeiroAcesso(false);
+                c.startActivity(intent);
+            }
+        });
+        dialog.show();
+    }
 
 
 }

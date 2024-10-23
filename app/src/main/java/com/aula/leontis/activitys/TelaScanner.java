@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aula.leontis.R;
+import com.aula.leontis.services.ModeloService;
 import com.aula.leontis.services.ObraService;
 import com.aula.leontis.utilities.DataBaseFotos;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,6 +53,7 @@ public class TelaScanner extends AppCompatActivity {
     TextView erro;
 
     DataBaseFotos dataBaseFotos = new DataBaseFotos();
+    ModeloService modeloService  = new ModeloService();
     private ImageCapture imageCapture;
     private ExecutorService cameraExecutor;
     private androidx.camera.view.PreviewView viewFinder,viewFinder2;
@@ -74,7 +76,7 @@ public class TelaScanner extends AppCompatActivity {
         borda = findViewById(R.id.borda);
 
         btnEscanear = findViewById(R.id.btnEscanear);
-        btnVoltar = findViewById(R.id.btnVoltar);
+        btnVoltar = findViewById(R.id.btnFiltrar);
         foto = findViewById(R.id.foto);
         viewFinder = findViewById(R.id.viewFinder);;
         erro = findViewById(R.id.erroScan);
@@ -104,6 +106,8 @@ public class TelaScanner extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 carregar.setVisibility(View.VISIBLE);
+                erro.setText("Escaneando...");
+                erro.setVisibility(View.VISIBLE);
                 takePhoto();
             }
         });
@@ -114,7 +118,7 @@ public class TelaScanner extends AppCompatActivity {
             return;
         }
         //definir o nome e caminho para a imagem
-        String nome = "scan"+id+".jpg";
+        String nome = "scan"+System.currentTimeMillis()+".jpg";
         ContentValues values = new ContentValues();
         values.put(MediaStore.MediaColumns.DISPLAY_NAME, nome);
         values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
@@ -147,7 +151,7 @@ public class TelaScanner extends AppCompatActivity {
 
         orientationEventListener.enable();
 
-        //salvar imagem
+        //Salvar imagem
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
@@ -157,9 +161,10 @@ public class TelaScanner extends AppCompatActivity {
                     @Override
                     public void onSuccess(String url) {
                         carregar.setVisibility(View.INVISIBLE);
-                        //mando url para api de dados e ela me retorna o nome
-                        String nome="Hora da Música";
-                        obraService.buscarObraPorNome(id,nome,idObra,idGuia,nrOrdem,TelaScanner.this,erro,borda);
+                        erro.setVisibility(View.INVISIBLE);
+
+                        modeloService.preditarObra(url,TelaScanner.this,id,idObra,idGuia,nrOrdem,erro,borda);
+
                         Log.d("URL SCAN", "URL da imagem: " + url);
                         urlFoto = url;
                     }

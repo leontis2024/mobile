@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.Geral;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoGenero;
 import com.aula.leontis.activitys.TelaInfoMuseu;
 import com.aula.leontis.models.museu.Museu;
 import com.aula.leontis.services.DiaFuncionamentoService;

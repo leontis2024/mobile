@@ -18,17 +18,14 @@ import android.widget.TextView;
 
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterGuia;
-import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.guia.Guia;
-import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.GuiaService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TelaGuias extends AppCompatActivity {
-    String id,idUsuario;
+    String id,idUsuario,idMuseu;
     MetodosAux aux = new MetodosAux();
     ImageView fotoGuiaDestaque,fotoGuiaDestaqueTerminado;
     ImageButton btnVoltar,btnBuscar,btnFecharPesquisa;
@@ -50,6 +47,13 @@ public class TelaGuias extends AppCompatActivity {
     RecyclerView rvGuias;
     GuiaService guiaService = new GuiaService();
     TextView erroGuias,tituloGuiaDestaque,idGuiadestaque;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String email = auth.getCurrentUser().getEmail();
+        selecionarIdUsuarioPorEmail(email);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class TelaGuias extends AppCompatActivity {
         setContentView(R.layout.tela_guias);
         fotoGuiaDestaque = findViewById(R.id.fotoGuiaDestaque);
         rvGuias = findViewById(R.id.outrosGuias);
-        btnVoltar = findViewById(R.id.btnVoltar);
+        btnVoltar = findViewById(R.id.btnFiltrar);
         btnBuscar = findViewById(R.id.btnBuscar);
         erroGuias = findViewById(R.id.erroGuias);
         tituloGuiaDestaque = findViewById(R.id.tituloGuiaDestaque);
@@ -94,6 +98,7 @@ public class TelaGuias extends AppCompatActivity {
         Bundle infoGuia = info.getExtras();
         if(infoGuia != null) {
             id = infoGuia.getString("id");
+            idMuseu = infoGuia.getString("idMuseu");
         }
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = auth.getCurrentUser().getEmail();
@@ -106,6 +111,7 @@ public class TelaGuias extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 Intent infoGuia = new Intent(TelaGuias.this, TelaInfoGuia.class);
                 bundle.putString("id", idGuiadestaque.getText().toString());
+                bundle.putString("titulo", tituloGuiaDestaque.getText().toString());
                 infoGuia.putExtras(bundle);
                 startActivity(infoGuia);
              }
@@ -172,6 +178,6 @@ public class TelaGuias extends AppCompatActivity {
     }
     public void filtrar(String nome){
         progressBar.setVisibility(View.VISIBLE);
-        guiaService.buscarGuiaPorNomePesquisa(idUsuario,nome,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,fotoGuiaDestaqueTerminado,tituloGuiaDestaque,idGuiadestaque,progressBar);
+        guiaService.buscarGuiaPorNomePesquisa(idMuseu,idUsuario,nome,erroGuias, TelaGuias.this,rvGuias,listaGuias,adapterGuia,fotoGuiaDestaque,fotoGuiaDestaqueTerminado,tituloGuiaDestaque,idGuiadestaque,progressBar);
     }
 }

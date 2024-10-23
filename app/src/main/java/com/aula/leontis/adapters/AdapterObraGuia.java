@@ -22,6 +22,7 @@ import com.aula.leontis.activitys.TelaScanner;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.guia.ObraGuia;
 import com.aula.leontis.services.ApiService;
+import com.aula.leontis.services.MongoService;
 import com.aula.leontis.services.ObraService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +39,7 @@ import retrofit2.Response;
 public class AdapterObraGuia extends RecyclerView.Adapter<AdapterObraGuia.viewHolderObraGuia>{
         MetodosAux aux = new MetodosAux();
         ObraService obraService = new ObraService();
+        MongoService mongoService = new MongoService();
         private List<ObraGuia> listaObraGuias;
         String idUsuario;
         public AdapterObraGuia(List<ObraGuia> listaObraGuias){
@@ -52,53 +54,10 @@ public class AdapterObraGuia extends RecyclerView.Adapter<AdapterObraGuia.viewHo
 
         @Override
         public void onBindViewHolder(@NonNull com.aula.leontis.adapters.AdapterObraGuia.viewHolderObraGuia holder, int position) {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            String email = auth.getCurrentUser().getEmail();
+            selecionarIdUsuarioPorEmail(email,holder);
             holder.numeroOrdem.setText(listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem()+"");
-            holder.item.setImageResource(R.drawable.item_mapa);
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.item.setImageResource(R.drawable.item_mapa_apertado);
-                    Dialog dialog = new Dialog(holder.itemView.getContext());
-                    dialog.setContentView(R.layout.dialog_obra_guia);
-                    dialog.getWindow().setLayout(WRAP_CONTENT, WRAP_CONTENT);
-                    dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
-                    dialog.setCancelable(false);
-                    dialog.setCanceledOnTouchOutside(true);
-                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
-                            // Ação ao fechar o dialog
-                            holder.item.setImageResource(R.drawable.item_mapa); // Exemplo: redefinir a imagem
-                        }
-                    });
-
-                    TextView localizaco = dialog.findViewById(R.id.descLocalizacao);
-                    ImageView obra = dialog.findViewById(R.id.imagemObra);
-                    obraService.buscarObraPorIdParcial(listaObraGuias.get(holder.getAdapterPosition()).getIdObra().toString(), holder.itemView.getContext(), obra, localizaco, listaObraGuias.get(holder.getAdapterPosition()).getDescLocalizacao());
-
-                    Button acessarScanner = dialog.findViewById(R.id.btnAcessarScanner);
-                    acessarScanner.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Bundle bundle = new Bundle();
-                            Intent intent = new Intent(holder.itemView.getContext(), TelaScanner.class);
-                            FirebaseAuth auth = FirebaseAuth.getInstance();
-                            String email = auth.getCurrentUser().getEmail();
-                            selecionarIdUsuarioPorEmail(email,holder,bundle,intent);
-
-                        }
-                    });
-                    dialog.show();
-
-                }
-            });
-
-
-//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-//            params.setMargins(listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem()*10, listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem()*10, 0, 0);
-//            holder.itemView.setLayoutParams(params);
-
 
         }
 
@@ -110,7 +69,7 @@ public class AdapterObraGuia extends RecyclerView.Adapter<AdapterObraGuia.viewHo
         public class viewHolderObraGuia extends RecyclerView.ViewHolder{
             TextView numeroOrdem;
 
-            ImageView item;
+            public ImageView item;
 
             public viewHolderObraGuia(@NonNull View itemView) {
                 super(itemView);
@@ -120,7 +79,7 @@ public class AdapterObraGuia extends RecyclerView.Adapter<AdapterObraGuia.viewHo
 
             }
         }
-    public void selecionarIdUsuarioPorEmail(String email,AdapterObraGuia.viewHolderObraGuia holder,Bundle bundle, Intent intent) {
+    public void selecionarIdUsuarioPorEmail(String email,AdapterObraGuia.viewHolderObraGuia holder) {
 
             ApiService apiService = new ApiService(holder.itemView.getContext());
             UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
@@ -140,12 +99,7 @@ public class AdapterObraGuia extends RecyclerView.Adapter<AdapterObraGuia.viewHo
 
                             String idApi = jsonObject.getString("id");
                             idUsuario = idApi;
-                            bundle.putString("id", idUsuario);
-                            bundle.putString("idGuia", listaObraGuias.get(holder.getAdapterPosition()).getIdGuia().toString());
-                            bundle.putInt("nrOrdem", listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem());
-                            intent.putExtras(bundle);
-                            holder.itemView.getContext().startActivity(intent);
-
+                            mongoService.selecionarStatusGuiaAdapter(obraService,idUsuario, holder.itemView.getContext(),listaObraGuias.get(holder.getAdapterPosition()).getIdGuia(),holder,listaObraGuias);
                             // Faça algo com os valores obtidos
                             Log.d("API_RESPONSE_GET_EMAIL", "Campo obtido: id: " + idApi);
 

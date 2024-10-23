@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.aula.leontis.activitys.TelaLogin;
 import com.aula.leontis.interfaces.AuthInterface;
+import com.aula.leontis.services.RedisService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.google.firebase.auth.FirebaseAuth;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import retrofit2.Call;
 
 public class TokenInterceptor implements Interceptor {
     private TokenManager tokenManager;
+    RedisService redisService = new RedisService();
     private AuthInterface authInterface;
     private MetodosAux aux = new MetodosAux();
     private Context context;
@@ -126,6 +128,7 @@ public class TokenInterceptor implements Interceptor {
                 Log.d("TokenInterceptor", "Token de refresh expirado ou inválido");
                 tokenManager.clearTokens();
                 FirebaseAuth.getInstance().signOut();
+                redisService.decrementarAtividadeUsuario();
                 Intent intent = new Intent(context, TelaLogin.class);
                 context.startActivity(intent);
                 ((Activity) context).finish();

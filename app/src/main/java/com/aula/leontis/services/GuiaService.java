@@ -91,12 +91,12 @@ public class GuiaService {
             }
         });
     }
-    public void buscarGuiaPorNomePesquisa(String idUsuario,String nome, TextView erro, Context c, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque,ImageView terminado, TextView nomeGuiaDestaque,TextView idGuiadestaque,ProgressBar progressBar) {
+    public void buscarGuiaPorNomePesquisa(String idMuseu,String idUsuario,String nome, TextView erro, Context c, RecyclerView rvGuias, List<Guia> listaGuias, AdapterGuia adapterGuia, ImageView imgGuiaDestaque,ImageView terminado, TextView nomeGuiaDestaque,TextView idGuiadestaque,ProgressBar progressBar) {
         erro.setVisibility(View.INVISIBLE);
         ApiService apiService = new ApiService(c);
         GuiaInterface guiaInterface= apiService.getGuiaInterface();
 
-        Call<List<Guia>> call = guiaInterface.selecionarGuiaPorNome(nome);
+        Call<List<Guia>> call = guiaInterface.selecionarGuiaPorNome(Long.parseLong(idMuseu),nome);
 
         call.enqueue(new Callback<List<Guia>> () {
             @Override

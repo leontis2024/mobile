@@ -47,7 +47,7 @@ public class ObraGuiaService {
 
 
                 } else {
-                    erroGuia.setText("Nenhuma guia encontrada");
+                    erroGuia.setText("Nenhuma obra do guia encontrada");
                 }
             }
 

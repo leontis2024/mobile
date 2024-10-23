@@ -10,14 +10,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aula.leontis.R;
-import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.adapters.AdapterObraGuia;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.guia.ObraGuia;
-import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.ObraGuiaService;
 import com.aula.leontis.utilities.MetodosAux;
@@ -43,6 +40,10 @@ public class TelaInfoGuia extends AppCompatActivity {
     RecyclerView rvObrasGuias;
     ObraGuiaService obraGuiaService = new ObraGuiaService();
     ProgressBar progressBar;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        obraGuiaService.selecionarObraGuiaPorIdGuia(id,tituloGuia,TelaInfoGuia.this,rvObrasGuias,listaObraGuias,adapterObraGuia,progressBar);    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class TelaInfoGuia extends AppCompatActivity {
         String email = auth.getCurrentUser().getEmail();
         selecionarIdUsuarioPorEmail(email);
 
-        btnVoltar = findViewById(R.id.btnVoltar);
+        btnVoltar = findViewById(R.id.btnFiltrar);
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

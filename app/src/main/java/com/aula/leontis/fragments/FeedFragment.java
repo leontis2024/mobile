@@ -1,10 +1,16 @@
 package com.aula.leontis.fragments;
 
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,19 +18,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
+import com.aula.leontis.activitys.TelaPrincipal;
 import com.aula.leontis.activitys.TelaScanner;
+import com.aula.leontis.adapters.AdapterGenero;
+import com.aula.leontis.adapters.AdapterGeneroFiltro;
 import com.aula.leontis.fragments.feed.ForYou;
 import com.aula.leontis.fragments.feed.MuseusSeguidos;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
+import com.aula.leontis.models.genero.Genero;
 import com.aula.leontis.services.ApiService;
+import com.aula.leontis.services.GeneroService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -37,6 +54,7 @@ public class FeedFragment extends Fragment {
     MuseusSeguidos museusSeguidos = new MuseusSeguidos();
     MetodosAux aux = new MetodosAux();
     EditText campoPesquisa;
+    GeneroService generoService = new GeneroService();
     String idUsuario;
 
 
@@ -65,11 +83,16 @@ public class FeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
         btnBuscar = view.findViewById(R.id.btnBuscar);
-        btnFiltrar = view.findViewById(R.id.btnVoltar);
+        btnFiltrar = view.findViewById(R.id.btnFiltrar);
         btnForYou = view.findViewById(R.id.btnForYou);
         btnScanner = view.findViewById(R.id.btnScanner);
         btnMuseusSeguidos = view.findViewById(R.id.btnMuseusSeguidos);
         btnFecharPesquisa = view.findViewById(R.id.btnFecharPesquisa);
+
+            if(Geral.getInstance().isPrimeiroAcesso()) {
+                aux.abrirDialogPrimeiroAcesso(getContext(),"Seja bem-vindo!","Para ajudar a equipe do Leontis, por favor responda a nossa pesquisa!");
+            }
+
 
         campoPesquisa = view.findViewById(R.id.campoPesquisa);
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -160,6 +183,38 @@ public class FeedFragment extends Fragment {
                 startActivity(escaner);
             }
         });
+        btnFiltrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.dialog_filtro);
+                dialog.getWindow().setLayout(WRAP_CONTENT,WRAP_CONTENT);
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(true);
+                RecyclerView rvGeneros = dialog.findViewById(R.id.recyclerView);
+                List<Genero> generos = new ArrayList<>();
+                AdapterGeneroFiltro adapterGeneroFiltro = new AdapterGeneroFiltro(generos);
+                rvGeneros.setLayoutManager(new LinearLayoutManager(getContext()));
+                rvGeneros.setAdapter(adapterGeneroFiltro);
+                generoService.buscarGenerosFiltro(null,getContext(),rvGeneros,generos,adapterGeneroFiltro);
+                Button btnAplicar = dialog.findViewById(R.id.btnAplicarFiltro);
+                btnAplicar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        List<Long> generosId = new ArrayList<>();
+                        for(Genero genero : generos) {
+                            if(genero.getCheckInteresse()) {
+                                generosId.add(genero.getId());
+                            }
+                        }
+                        foryou.buscarGenerosId(generosId);
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
 
         return view;
     }
@@ -192,6 +247,9 @@ public class FeedFragment extends Fragment {
 
         ApiService apiService = new ApiService(getContext());
         UsuarioInterface usuarioInterface = apiService.getUsuarioInterface();
+        if(email == null){
+            return;
+        }
         Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

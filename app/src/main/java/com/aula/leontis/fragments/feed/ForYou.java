@@ -73,6 +73,14 @@ public class ForYou extends Fragment {
 
         }
     }
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String email = auth.getCurrentUser().getEmail();
+        selecionarIdUsuarioPorEmail(email,idUsuario);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -135,5 +143,9 @@ public class ForYou extends Fragment {
     public void buscar(String nome){
         progressBar4.setVisibility(View.VISIBLE);
         obraService.buscarObraPorNomePesquisa(nome,getContext(),erroForYou,rvForYou,adapterObraFeed,listaObras,progressBar4);
+    }
+    public void buscarGenerosId(List<Long> generos){
+        progressBar4.setVisibility(View.VISIBLE);
+        obraService.buscarObrasPorVariosGeneros(generos,erroForYou,getContext(),rvForYou,listaObras,adapterObraFeed,progressBar4);
     }
 }

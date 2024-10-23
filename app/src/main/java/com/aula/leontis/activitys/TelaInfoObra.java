@@ -20,19 +20,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterComentario;
-import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.avaliacao.Avaliacao;
 import com.aula.leontis.models.comentario.Comentario;
 import com.aula.leontis.models.comentario.ComentarioResponse;
-import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.MongoService;
 import com.aula.leontis.services.ObraService;
+import com.aula.leontis.services.RedisService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -52,6 +50,7 @@ public class TelaInfoObra extends AppCompatActivity {
     ImageView fotoObra,fotoMuseu,fotoArtista;
     MetodosAux aux = new MetodosAux();
     List<ComentarioResponse> listaComentarios = new ArrayList<>();
+    RedisService redisService = new RedisService();
     AdapterComentario adapterComentario = new AdapterComentario(listaComentarios);
     RecyclerView rvComentarios;
     ImageButton btnVoltar;
@@ -100,7 +99,7 @@ public class TelaInfoObra extends AppCompatActivity {
         btnAcessarGenero = findViewById(R.id.btnAcessarGenero);
         btnAcessarMuseu = findViewById(R.id.btnAcessarMuseu);
 
-        btnVoltar = findViewById(R.id.btnVoltar);
+        btnVoltar = findViewById(R.id.btnFiltrar);
         btnVoltar.setOnClickListener(v -> {
             finish();
         });
@@ -139,6 +138,19 @@ public class TelaInfoObra extends AppCompatActivity {
             }
         });
         obraService.buscarObraPorId(id,TelaInfoObra.this,erroObraInfo,nomeObra,descObra,fotoObra,descMuseu,fotoMuseu,descArtista,fotoArtista,urlText,idGenero,idArtista,idMuseu);
+        redisService.incrementarVizualizacao(id);
+        mongoService.selecionarMediaNotaPorIdObra(id, TelaInfoObra.this,avaliacaoObra,erroObraInfo);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"1","2",um,erroObraInfo);
+                mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"2","3",dois,erroObraInfo);
+                mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"3","4",tres,erroObraInfo);
+                mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"4","5",quatro,erroObraInfo);
+                mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"5","6",cinco,erroObraInfo);
+            }
+        }, 1000);
         mongoService.buscarComentariosPorIdObra(erroObraInfo,id,TelaInfoObra.this,rvComentarios,listaComentarios,adapterComentario,um,dois,tres,quatro,cinco,avaliacaoObra);
         btnComentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +204,7 @@ public class TelaInfoObra extends AppCompatActivity {
                             erroComentario.setVisibility(View.INVISIBLE);
                             if(!(comentario.getText().toString().equals(""))&&comentario.getText()!=null){
                                 mongoService.inserirComentario(idUsuario,new Comentario(Long.parseLong(id),comentario.getText().toString(),aux.dataAtualFormatada()),TelaInfoObra.this);
+                                redisService.incrementarComentarioObra(id);
                             }
                             Handler handler1 = new Handler();
                             handler1.postDelayed(new Runnable() {
@@ -199,7 +212,7 @@ public class TelaInfoObra extends AppCompatActivity {
                                 public void run() {
                                     if(avaliacao.getRating()>0){
                                         mongoService.inserirAvaliacao(idUsuario,new Avaliacao(Long.parseLong(id),avaliacao.getRating(),aux.dataAtualFormatada()),TelaInfoObra.this);
-
+                                        redisService.incrementarAvaliacaoObra(id);
                                     }
                                 }
                             }, 1000);
@@ -211,6 +224,18 @@ public class TelaInfoObra extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     mongoService.buscarComentariosPorIdObra(erroObraInfo,id,TelaInfoObra.this,rvComentarios,listaComentarios,adapterComentario,um,dois,tres,quatro,cinco,avaliacaoObra);
+                                    mongoService.selecionarMediaNotaPorIdObra(id, TelaInfoObra.this,avaliacaoObra,erroComentario);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"1","2",um,erroComentario);
+                                            mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"2","3",dois,erroComentario);
+                                            mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"3","4",tres,erroComentario);
+                                            mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"4","5",quatro,erroComentario);
+                                            mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"5","6",cinco,erroComentario);
+                                        }
+                                    }, 1000);
 
                                 }
                             }, 1000);

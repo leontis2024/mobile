@@ -134,13 +134,13 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/historicodeObras"
-            android:layout_width="370dp"
+            android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_margin="10dp"
-            android:layout_marginStart="1dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nomeMuseu"
             tools:listitem="@layout/item_obra" />

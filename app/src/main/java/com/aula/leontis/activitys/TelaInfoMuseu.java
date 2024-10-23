@@ -12,13 +12,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterObra;
-import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
-import com.aula.leontis.interfaces.usuario.UsuarioMuseuInterface;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.MuseuService;
@@ -62,7 +59,7 @@ public class TelaInfoMuseu extends AppCompatActivity {
             nomeMuseu = findViewById(R.id.nomeMuseu);
             descMuseu = findViewById(R.id.descMuseu);
             fotoMuseu = findViewById(R.id.fotoMuseu);
-            btnVoltar = findViewById(R.id.btnVoltar);
+            btnVoltar = findViewById(R.id.btnFiltrar);
             rvObras = findViewById(R.id.obrasRelacionadasMuseu);
             btnSeguir = findViewById(R.id.btnSeguir);
             btnGuia = findViewById(R.id.btnGuia);
@@ -86,6 +83,7 @@ public class TelaInfoMuseu extends AppCompatActivity {
                     Intent intent = new Intent(TelaInfoMuseu.this, TelaGuias.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("id", id);
+                    bundle.putString("idMuseu", id);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }

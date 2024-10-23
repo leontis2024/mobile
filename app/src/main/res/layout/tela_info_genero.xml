@@ -66,7 +66,7 @@
         tools:listitem="@layout/item_obra" />
 
     <ImageButton
-        android:id="@+id/btnVoltar"
+        android:id="@+id/btnFiltrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

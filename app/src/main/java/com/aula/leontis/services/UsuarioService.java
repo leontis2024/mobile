@@ -239,7 +239,6 @@ public class UsuarioService {
                     try {
                         String errorBody = response.errorBody().string();
                         Log.e("API_ERROR_POST_USUARIO", "Erro ao inserir o usuário: " + response.code() + " - " + errorBody + " - " + response.message());
-                        aux.abrirDialogErro(c, "Erro ao cadastrar usuário", "Não foi possível realizar seu cadastro. Erro: " + errorBody);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.e("API_ERROR_POST_USUARIO", "Erro ao processar o corpo da resposta de erro.");
@@ -258,7 +257,6 @@ public class UsuarioService {
         return id[0];
     }
     public void atualizarUsuario(String id, Map<String, Object> campo, TextView erro, Context c) {
-        String urlAPI = "http://ec2-52-22-92-75.compute-1.amazonaws.com:8080/";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
@@ -304,11 +302,10 @@ public class UsuarioService {
         });
     }
 
-    public void inserirUsuarioMongo(UsuarioMongo usuario, Context context) {
-        String urlAPI = "https://apimongo-r613.onrender.com/";
-
+    public void inserirUsuarioMongo(UsuarioMongo usuario, Context context) {;
+        String urlApi2 = Geral.getInstance().getUrlApiMongo();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
+                .baseUrl(urlApi2)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -330,7 +327,6 @@ public class UsuarioService {
                     try {
                         String errorBody = response.errorBody().string();
                         Log.e("MONGO_API_ERROR_POST_USUARIO", "Erro ao inserir o usuário mongo: " + response.code() + " - " + errorBody + " - " + response.message());
-                        aux.abrirDialogErro(context, "Erro ao cadastrar usuário mongo", "Não foi possível realizar seu cadastro. Erro: " + errorBody);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.e("MONGO_API_ERROR_POST_USUARIO", "Erro ao processar o corpo da resposta de erro.");

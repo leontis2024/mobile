@@ -18,6 +18,10 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface MongoInterface {
+    @GET("/api/usuarios/{userId}/avaliacoes")
+    Call<List<Avaliacao>> buscarAvaliacoesPorId(@Path("userId") long userId);
+    @GET("/api/usuarios/{userId}/comentarios")
+    Call<List<Comentario>> buscarComentariosPorId(@Path("userId") long userId);
     @PUT("/api/usuarios/{userId}/comentarios")
     Call<ResponseBody> inserirComentario(@Path("userId") long userId, @Body Comentario comentario);
     @PUT("/api/usuarios/{userId}/avaliacoes")

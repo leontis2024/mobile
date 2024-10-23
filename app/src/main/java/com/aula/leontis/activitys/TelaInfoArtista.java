@@ -17,7 +17,6 @@ import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ArtistaService;
 import com.aula.leontis.services.ObraService;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class TelaInfoArtista extends AppCompatActivity {
         nomeArtista = findViewById(R.id.nomeArtista);
         descArtista = findViewById(R.id.descArtista);
         fotoArtista = findViewById(R.id.fotoArtista);
-        btnVoltar = findViewById(R.id.btnVoltar);
+        btnVoltar = findViewById(R.id.btnFiltrar);
         rvObras = findViewById(R.id.obrasRelacionadasArtista);
         rvObras.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 

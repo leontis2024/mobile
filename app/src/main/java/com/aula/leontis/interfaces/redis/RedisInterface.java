@@ -13,4 +13,16 @@ public interface RedisInterface {
 
     @POST("/api/estatisticas/visualizacao/{obraId}")
     Call<ResponseBody> incrementarVisualizacaoObra(@Path("obraId") long obraId);
+
+    @POST("/api/estatisticas/nota/{obraId}")
+    Call<ResponseBody> incrementarNotaObra(@Path("obraId") long obraId);
+
+    @POST("/api/estatisticas/comentario/{obraId}")
+    Call<ResponseBody> incrementarComentariosObra(@Path("obraId") long obraId);
+
+    @POST("/api/estatisticas/nota/decrementar/{obraId}")
+    Call<ResponseBody> decrementarNotaObra(@Path("obraId") long obraId);
+
+    @POST("/api/estatisticas/comentario/decrementar/{obraId}")
+    Call<ResponseBody> decrementarComentariosObra(@Path("obraId") long obraId);
 }

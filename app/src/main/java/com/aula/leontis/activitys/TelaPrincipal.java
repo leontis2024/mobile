@@ -15,6 +15,7 @@ import com.aula.leontis.interfaces.AuthInterface;
 import com.aula.leontis.models.auth.AuthResponse;
 import com.aula.leontis.models.auth.LoginRequest;
 import com.aula.leontis.services.ApiService;
+import com.aula.leontis.utilities.MetodosAux;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
@@ -24,6 +25,7 @@ import retrofit2.Response;
 public class TelaPrincipal extends AppCompatActivity {
     private NavHostFragment navHostFragment;
     private NavController navController;
+    MetodosAux aux = new MetodosAux();
     private Bundle idBundle = new Bundle();
 
 
@@ -31,12 +33,6 @@ public class TelaPrincipal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_principal);
-
-        String id = getIntent().getStringExtra("id");
-
-        idBundle.putString("id", id);
-
-
 
         initNavigation();
     }

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.TokenManager;
 import com.aula.leontis.interfaces.AuthInterface;
@@ -36,7 +37,6 @@ public class TelaBemVindo extends AppCompatActivity {
     UsuarioService usuarioService = new UsuarioService();
     Button btnFinalizar;
     String  url,id,senha,email;
-    long[] listaGenerosInteresse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +66,11 @@ public class TelaBemVindo extends AppCompatActivity {
             public void run() {
                 btnFinalizar.setBackground(getResources().getDrawable(R.drawable.botao));
                 btnFinalizar.setOnClickListener(v -> {
+                    Bundle info = new Bundle();
                     Intent feed = new Intent(TelaBemVindo.this, TelaLogin.class);
-                    feed.putExtra("id", id);
+                    Geral.getInstance().setPrimeiroAcesso(true);
+                    info.putBoolean("cadastro",true);
+                    feed.putExtras(info);
                     startActivity(feed);
                     finish();
 

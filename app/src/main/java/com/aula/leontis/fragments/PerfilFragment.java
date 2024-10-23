@@ -24,6 +24,7 @@ import com.aula.leontis.models.historico.Historico;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.MongoService;
+import com.aula.leontis.services.RedisService;
 import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
@@ -44,6 +45,7 @@ import retrofit2.Response;
 
 public class PerfilFragment extends Fragment {
     UsuarioService usuarioService = new UsuarioService();
+    RedisService redisService = new RedisService();
     MetodosAux aux = new MetodosAux();
     ImageButton btnAreaRestrita, btnLogout, btnDeletarConta,btnEditarPerfil;
     TextView nome,biografia,erro;
@@ -136,6 +138,7 @@ public class PerfilFragment extends Fragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if(auth.getCurrentUser() == null){
             Intent feed = new Intent(getContext(), TelaLogin.class);
+            redisService.decrementarAtividadeUsuario();
             startActivity(feed);
             getActivity().finish();
         }

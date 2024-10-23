@@ -1,9 +1,16 @@
 package com.aula.leontis.services;
 
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,10 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaInfoObra;
+import com.aula.leontis.activitys.TelaScanner;
 import com.aula.leontis.adapters.AdapterComentario;
 import com.aula.leontis.adapters.AdapterGenero;
 import com.aula.leontis.adapters.AdapterHistorico;
 import com.aula.leontis.adapters.AdapterObra;
+import com.aula.leontis.adapters.AdapterObraGuia;
 import com.aula.leontis.interfaces.mongo.MongoInterface;
 import com.aula.leontis.interfaces.mongo.MongoInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
@@ -25,6 +34,7 @@ import com.aula.leontis.models.avaliacao.Avaliacao;
 import com.aula.leontis.models.comentario.Comentario;
 import com.aula.leontis.models.comentario.ComentarioResponse;
 import com.aula.leontis.models.genero.Genero;
+import com.aula.leontis.models.guia.ObraGuia;
 import com.aula.leontis.models.guia.StatusGuia;
 import com.aula.leontis.models.guia.StatusGuiaRequest;
 import com.aula.leontis.models.historico.Historico;
@@ -383,6 +393,144 @@ public class MongoService {
             }
         });
     }
+
+
+    public void selecionarStatusGuiaAdapter(ObraService obraService,String idUsuario, Context context, long idGuia, AdapterObraGuia.viewHolderObraGuia holder,List<ObraGuia> listaObraGuias) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<StatusGuia> call = mongoInterface.selecionarStatusGuia(idGuia,Long.parseLong(idUsuario));
+
+        call.enqueue(new Callback<StatusGuia>() {
+            @Override
+            public void onResponse(Call<StatusGuia> call, Response<StatusGuia> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        StatusGuia statusGuia = response.body();
+                        if(statusGuia.isConcluido()==false && holder.item!=null){
+                            if(listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem()<=statusGuia.getNumeroPassoAtual()) {
+                                holder.item.setImageResource(R.drawable.item_mapa_concluido);
+                            }else if(listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem()==statusGuia.getNumeroPassoAtual()+1){
+                                holder.item.setImageResource(R.drawable.item_mapa);
+                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        holder.item.setImageResource(R.drawable.item_mapa_apertado);
+                                        Dialog dialog = new Dialog(holder.itemView.getContext());
+                                        dialog.setContentView(R.layout.dialog_obra_guia);
+                                        dialog.getWindow().setLayout(WRAP_CONTENT, WRAP_CONTENT);
+                                        dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
+                                        dialog.setCancelable(false);
+                                        dialog.setCanceledOnTouchOutside(true);
+                                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialogInterface) {
+                                                // Ação ao fechar o dialog
+                                                holder.item.setImageResource(R.drawable.item_mapa); // Exemplo: redefinir a imagem
+                                            }
+                                        });
+
+                                        TextView localizaco = dialog.findViewById(R.id.descLocalizacao);
+                                        ImageView obra = dialog.findViewById(R.id.imagemObra);
+                                        obraService.buscarObraPorIdParcial(listaObraGuias.get(holder.getAdapterPosition()).getIdObra().toString(), holder.itemView.getContext(), obra, localizaco, listaObraGuias.get(holder.getAdapterPosition()).getDescLocalizacao());
+
+                                        Button acessarScanner = dialog.findViewById(R.id.btnAcessarScanner);
+                                        acessarScanner.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Bundle bundle = new Bundle();
+                                                Intent intent = new Intent(holder.itemView.getContext(), TelaScanner.class);
+
+                                                bundle.putString("id", idUsuario);
+                                                bundle.putString("idGuia", listaObraGuias.get(holder.getAdapterPosition()).getIdGuia().toString());
+                                                bundle.putInt("nrOrdem", listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem());
+                                                intent.putExtras(bundle);
+                                                holder.itemView.getContext().startActivity(intent);
+
+
+                                            }
+                                        });
+                                        dialog.show();
+
+                                    }
+                                });
+
+                            }else{
+                                holder.item.setImageResource(R.drawable.item_mapa_desabilitado);
+                            }
+                        }else{
+                            holder.item.setImageResource(R.drawable.item_mapa_concluido);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("MONGO_ERROR_STATUS_GUIA", "Erro ao processar resposta: " + e.getMessage());
+                    }
+                } else {
+                    if(response.code()==404) {
+                        if(listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem()==1){
+                            holder.item.setImageResource(R.drawable.item_mapa);
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    holder.item.setImageResource(R.drawable.item_mapa_apertado);
+                                    Dialog dialog = new Dialog(holder.itemView.getContext());
+                                    dialog.setContentView(R.layout.dialog_obra_guia);
+                                    dialog.getWindow().setLayout(WRAP_CONTENT, WRAP_CONTENT);
+                                    dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
+                                    dialog.setCancelable(false);
+                                    dialog.setCanceledOnTouchOutside(true);
+                                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialogInterface) {
+                                            // Ação ao fechar o dialog
+                                            holder.item.setImageResource(R.drawable.item_mapa); // Exemplo: redefinir a imagem
+                                        }
+                                    });
+
+                                    TextView localizaco = dialog.findViewById(R.id.descLocalizacao);
+                                    ImageView obra = dialog.findViewById(R.id.imagemObra);
+                                    obraService.buscarObraPorIdParcial(listaObraGuias.get(holder.getAdapterPosition()).getIdObra().toString(), holder.itemView.getContext(), obra, localizaco, listaObraGuias.get(holder.getAdapterPosition()).getDescLocalizacao());
+
+                                    Button acessarScanner = dialog.findViewById(R.id.btnAcessarScanner);
+                                    acessarScanner.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Bundle bundle = new Bundle();
+                                            Intent intent = new Intent(holder.itemView.getContext(), TelaScanner.class);
+
+                                            bundle.putString("id", idUsuario);
+                                            bundle.putString("idGuia", listaObraGuias.get(holder.getAdapterPosition()).getIdGuia().toString());
+                                            bundle.putInt("nrOrdem", listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem());
+                                            intent.putExtras(bundle);
+                                            holder.itemView.getContext().startActivity(intent);
+
+
+                                        }
+                                    });
+                                    dialog.show();
+
+                                }
+                            });
+                        }else{
+                            holder.item.setImageResource(R.drawable.item_mapa_desabilitado);
+                        }
+                    }
+                    Log.e("MONGO_ERROR_STATUS_GUIA", "Erro na resposta da API: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StatusGuia> call, Throwable throwable) {
+                Log.e("MONGO_ERROR_STATUS_GUIA", "Erro ao fazer a requisição: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro inesperado", "Erro ao obter status guia\nMensagem: " + throwable.getMessage());
+            }
+        });
+    }
+
 
     public void inserirStatusGuia(String idUsuario, StatusGuiaRequest statusGuiaRequest, Context context) {
         Retrofit retrofit = new Retrofit.Builder()

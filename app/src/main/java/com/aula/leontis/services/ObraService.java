@@ -29,6 +29,8 @@ import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.w3c.dom.Text;
 
@@ -359,7 +361,7 @@ public class ObraService {
                     if (url == null) {
                         url = "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
                     }
-                    Glide.with(c).asBitmap().load(url).into(fotoObra);
+                    Glide.with(c).asBitmap().apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).load(url).into(fotoObra);
 
                 }
             }
@@ -403,6 +405,57 @@ public class ObraService {
                     erro.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
                     erro.setText("Não foi possível escanear esta obra");
                     erro.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Obra> call, Throwable t) {
+                Log.e("API_ERROR_GET_ID_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(c, "Erro inesperado", "Erro ao obter dados da obra\nMensagem: " + t.getMessage());
+            }
+        });
+    }
+
+
+    public void buscarObraPorIdScanner(String idUsuario,String id, TextView idObra,String idGuia,int nrOrdem,Context c,TextView erro,ImageView borda) {
+        erro.setVisibility(View.INVISIBLE);
+        ApiService apiService = new ApiService(c);
+        ObraInterface obraInterface= apiService.getObraInterface();
+
+        Call<Obra> call = obraInterface.selecionarObraPorId(Long.parseLong(id));
+
+        call.enqueue(new Callback<Obra>() {
+            @Override
+            public void onResponse(Call<Obra> call, Response<Obra> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    borda.setImageResource(R.drawable.borda_escaner);
+                    erro.setVisibility(View.INVISIBLE);
+                    Obra obra = response.body();
+                    idObra.setText(obra.getId().toString());
+                    mongoService.inserirHistorico(idUsuario, new Historico(Long.parseLong(obra.getId()), aux.dataAtualFormatada()), c);
+                    if(idGuia!=null) {
+                        mongoService.selecionarStatusGuia(idUsuario, c, Long.parseLong(idGuia), null, nrOrdem);
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id",obra.getId().toString());
+                    Intent i = new Intent(c, TelaInfoObra.class);
+                    i.putExtras(bundle);
+                    c.startActivity(i);
+
+                }else{
+                    borda.setImageResource(R.drawable.borda_scan_erro);
+                    erro.setTextColor(ContextCompat.getColor(c, R.color.vermelho_erro));
+                    erro.setText("Não foi possível escanear esta obra");
+                    erro.setVisibility(View.VISIBLE);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            erro.setVisibility(View.INVISIBLE);
+                            borda.setImageResource(R.drawable.borda_escaner);
+                        }
+                    }, 3000);
                 }
             }
 
