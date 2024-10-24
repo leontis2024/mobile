@@ -44,6 +44,9 @@ public class TelaCadastro2 extends AppCompatActivity {
 
         biografia = findViewById(R.id.biografia_cadastro);
 
+// Armazene a cor original do TextView
+        int originalTextColor = qntCaracter.getCurrentTextColor();
+
         biografia.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -53,6 +56,16 @@ public class TelaCadastro2 extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int remainingChars = 100 - s.length();
+
+                // Altere a cor quando restarem 10 ou menos caracteres
+                if (remainingChars <= 10) {
+                    qntCaracter.setTextColor(ContextCompat.getColor(TelaCadastro2.this, R.color.vermelho_erro));
+                } else {
+                    // Restaure a cor original
+                    qntCaracter.setTextColor(originalTextColor);
+                }
+
+                // Atualize o texto com o número de caracteres restantes
                 qntCaracter.setText(String.valueOf(remainingChars));
             }
 
@@ -61,6 +74,7 @@ public class TelaCadastro2 extends AppCompatActivity {
                 // Não precisa implementar
             }
         });
+
 
         continuar = findViewById(R.id.btn_continuar);
 

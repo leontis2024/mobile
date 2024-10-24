@@ -3,6 +3,7 @@ package com.aula.leontis.activitys;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
@@ -165,6 +166,9 @@ public class TelaInfoObra extends AppCompatActivity {
                 EditText comentario = dialog.findViewById(R.id.comentario);
                 TextView qntCaracter = dialog.findViewById(R.id.qntCaracter);
 
+                // Armazene a cor original do TextView
+                int originalTextColor = qntCaracter.getCurrentTextColor();
+
                 comentario.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -174,6 +178,16 @@ public class TelaInfoObra extends AppCompatActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         int remainingChars = 100 - s.length();
+
+                        // Altere a cor quando restarem 10 ou menos caracteres
+                        if (remainingChars <= 10) {
+                            qntCaracter.setTextColor(ContextCompat.getColor(TelaInfoObra.this, R.color.vermelho_erro));
+                        } else {
+                            // Restaure a cor original
+                            qntCaracter.setTextColor(originalTextColor);
+                        }
+
+                        // Atualize o texto com o número de caracteres restantes
                         qntCaracter.setText(String.valueOf(remainingChars));
                     }
 
@@ -182,6 +196,7 @@ public class TelaInfoObra extends AppCompatActivity {
                         // Não precisa implementar
                     }
                 });
+
 
 
                 RatingBar avaliacao = dialog.findViewById(R.id.avaliacao);
@@ -204,7 +219,16 @@ public class TelaInfoObra extends AppCompatActivity {
                             erroComentario.setVisibility(View.INVISIBLE);
                             if(!(comentario.getText().toString().equals(""))&&comentario.getText()!=null){
                                 mongoService.inserirComentario(idUsuario,new Comentario(Long.parseLong(id),comentario.getText().toString(),aux.dataAtualFormatada()),TelaInfoObra.this);
-                                redisService.incrementarComentarioObra(id);
+                                boolean jaComentou = false;
+                                for(ComentarioResponse c:listaComentarios){
+                                    if(c.getUsuarioId()==Long.parseLong(idUsuario)) {
+                                        jaComentou = true;
+                                    }
+                                }
+                                if(!jaComentou){
+                                    redisService.incrementarComentarioObra(id);
+                                }
+
                             }
                             Handler handler1 = new Handler();
                             handler1.postDelayed(new Runnable() {
@@ -212,10 +236,28 @@ public class TelaInfoObra extends AppCompatActivity {
                                 public void run() {
                                     if(avaliacao.getRating()>0){
                                         mongoService.inserirAvaliacao(idUsuario,new Avaliacao(Long.parseLong(id),avaliacao.getRating(),aux.dataAtualFormatada()),TelaInfoObra.this);
-                                        redisService.incrementarAvaliacaoObra(id);
+                                        List<Avaliacao> avaliacoes = new ArrayList<>();
+                                        mongoService.buscarAvaliacaoPorIdUsuario(idUsuario,TelaInfoObra.this,avaliacoes);
+                                        Handler esperar = new Handler();
+                                        esperar.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                boolean jaAvaliou = false;
+                                                for(Avaliacao a:avaliacoes){
+                                                    if(a.getObraId()==Long.parseLong(id)){
+                                                        jaAvaliou = true;
+                                                    }
+                                                }
+                                                if(!jaAvaliou){
+                                                    redisService.incrementarAvaliacaoObra(id);
+                                                }
+
+                                            }
+                                        }, 2200);
+
                                     }
                                 }
-                            }, 1000);
+                            }, 1500);
 
 
                             dialog.dismiss();

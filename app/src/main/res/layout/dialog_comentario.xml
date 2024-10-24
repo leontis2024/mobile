@@ -26,6 +26,7 @@
             android:gravity="start|top"
             android:hint="Diga algo sobre a obra..."
             android:inputType="text|textMultiLine"
+            android:maxLength="100"
             android:textAlignment="textStart"
             android:textColorHint="@color/hint"
             app:layout_constraintEnd_toEndOf="parent"

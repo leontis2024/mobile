@@ -121,13 +121,19 @@ public class UsuarioService {
                         JSONObject jsonObject = new JSONObject(jsonResponse);
 
                         String nomeApi = jsonObject.getString("nome");
+                        String apelidoApi = jsonObject.getString("apelido");
                         String urlFotoApi = jsonObject.getString("urlImagem");
                         String sobrenomeApi = jsonObject.getString("sobrenome");
 
                         if (urlFotoApi == null) {
                             urlFotoApi = "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png";
                         }
-                        nome.setText(nomeApi+" "+sobrenomeApi);
+                        if(apelidoApi == null|| apelidoApi.isEmpty()){
+                            nome.setText(nomeApi+" "+sobrenomeApi);
+                        }else{
+                            nome.setText(apelidoApi);
+                        }
+
                         Glide.with(context).load(urlFotoApi).circleCrop().into(foto);
 
                         // Faça algo com os valores obtidos

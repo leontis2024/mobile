@@ -3,6 +3,7 @@ package com.aula.leontis;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class TokenInterceptor implements Interceptor {
     private AuthInterface authInterface;
     private MetodosAux aux = new MetodosAux();
     private Context context;
+    Bundle bundle = new Bundle();
 
     public TokenInterceptor(TokenManager tokenManager, AuthInterface authInterface, Context context) {
         this.tokenManager = tokenManager;
@@ -93,6 +95,8 @@ public class TokenInterceptor implements Interceptor {
                 public void run() {
                     Toast.makeText(context, "Login expirado", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, TelaLogin.class);
+                    bundle.putBoolean("tokenExpirado",true);
+                    intent.putExtras(bundle);
                     context.startActivity(intent);
                     ((Activity) context).finish();
                 }
@@ -128,8 +132,9 @@ public class TokenInterceptor implements Interceptor {
                 Log.d("TokenInterceptor", "Token de refresh expirado ou inválido");
                 tokenManager.clearTokens();
                 FirebaseAuth.getInstance().signOut();
-                redisService.decrementarAtividadeUsuario();
                 Intent intent = new Intent(context, TelaLogin.class);
+                bundle.putBoolean("tokenExpirado",true);
+                intent.putExtras(bundle);
                 context.startActivity(intent);
                 ((Activity) context).finish();
             }

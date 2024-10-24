@@ -574,5 +574,64 @@ public class MongoService {
         });
     }
 
+    public void buscarComentariosPorIdUsuario( String usuarioId,Context context, List<Comentario> listaComentarios) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<List<Comentario>> call = mongoInterface.buscarComentariosPorId(Long.parseLong(usuarioId));
+
+        call.enqueue(new Callback<List<Comentario>>() {
+            @Override
+            public void onResponse(Call<List<Comentario>> call, Response<List<Comentario>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+
+                    listaComentarios.clear();
+                    listaComentarios.addAll(response.body());
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comentario>> call, Throwable t) {
+                Log.e("MONGO_API_ERROR_GET_COMENTARIOS", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter comentarios\nMensagem: "+t.getMessage());
+            }
+        });
+    }
+
+    public void buscarAvaliacaoPorIdUsuario( String usuarioId,Context context, List<Avaliacao> listaAvaliacoes) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<List<Avaliacao>> call = mongoInterface.buscarAvaliacoesPorId(Long.parseLong(usuarioId));
+
+        call.enqueue(new Callback<List<Avaliacao>>() {
+            @Override
+            public void onResponse(Call<List<Avaliacao>> call, Response<List<Avaliacao>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+
+                    listaAvaliacoes.clear();
+                    listaAvaliacoes.addAll(response.body());
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Avaliacao>> call, Throwable t) {
+                Log.e("MONGO_API_ERROR_GET_COMENTARIOS", "Erro ao fazer a requisição: " + t.getMessage());
+                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter comentarios\nMensagem: "+t.getMessage());
+            }
+        });
+    }
+
+
 
 }

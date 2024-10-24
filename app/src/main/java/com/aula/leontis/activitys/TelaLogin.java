@@ -52,10 +52,15 @@ public class TelaLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_login);
         Bundle bundle = getIntent().getExtras();
-        Boolean cadastroUsuario = false;
+        boolean cadastroUsuario = false;
+        boolean tokenExpirado = false;
 
         if(bundle != null) {
             cadastroUsuario = bundle.getBoolean("cadastro",false);
+            tokenExpirado = bundle.getBoolean("tokenExpirado",false);
+            if(tokenExpirado==true){
+                redisService.decrementarAtividadeUsuario();
+            }
 
         }
         if(!cadastroUsuario) {

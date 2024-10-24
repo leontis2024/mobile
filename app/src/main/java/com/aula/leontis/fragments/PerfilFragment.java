@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.TokenManager;
 import com.aula.leontis.activitys.TelaAreaRestrita;
 import com.aula.leontis.activitys.TelaEditarPerfil;
@@ -66,6 +67,13 @@ public class PerfilFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        selecionarIdUsuarioPorEmail(email);
+        usuarioService.selecionarUsuarioPorEmail(email,getContext(),nome,biografia,foto,erro);
     }
 
 
@@ -139,6 +147,7 @@ public class PerfilFragment extends Fragment {
         if(auth.getCurrentUser() == null){
             Intent feed = new Intent(getContext(), TelaLogin.class);
             redisService.decrementarAtividadeUsuario();
+
             startActivity(feed);
             getActivity().finish();
         }

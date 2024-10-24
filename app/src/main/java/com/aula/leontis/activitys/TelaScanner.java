@@ -167,6 +167,10 @@ public class TelaScanner extends AppCompatActivity {
 
                         Log.d("URL SCAN", "URL da imagem: " + url);
                         urlFoto = url;
+                        if (outputFileResults.getSavedUri() != null) {
+                            getContentResolver().delete(outputFileResults.getSavedUri(), null, null);
+                            Log.d("EXCLUIR_FOTO", "Imagem excluída da galeria: " + outputFileResults.getSavedUri().toString());
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

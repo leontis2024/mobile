@@ -19,8 +19,13 @@ import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaLogin;
 import com.aula.leontis.activitys.TelaPesquisa;
+import com.aula.leontis.interfaces.mongo.MongoInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
+import com.aula.leontis.models.avaliacao.Avaliacao;
+import com.aula.leontis.models.comentario.Comentario;
 import com.aula.leontis.services.ApiService;
+import com.aula.leontis.services.MongoService;
+import com.aula.leontis.services.RedisService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,9 +41,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 public class MetodosAux {
+    RedisService redisService = new RedisService();
 
     public void abrirDialog(Context c, String texto, String mensagem){
         Dialog dialog = new Dialog(c);
@@ -116,6 +124,7 @@ public class MetodosAux {
                 if(deletar) {
                     abrirDialog(dialog.getContext(), "Tchau tchau 😭...", "É triste que você queira ir embora, espero que nos encontremos algum outro dia 🥺");
                     FirebaseAuth.getInstance().getCurrentUser().delete();
+                    redisService.decrementarAtividadeUsuario();
                     FirebaseAuth.getInstance().signOut();
                     FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -142,8 +151,25 @@ public class MetodosAux {
                             Log.e("IMAGEM_DELETE_ERROR", "Erro ao deletar a imagem: " + e.getMessage());
                         }
                     }
-                    deletarUsuarioPorIdMongo(id, c);
-                    deletarUsuarioPorId(id, c);
+                    List<Comentario> comentarios = new ArrayList<>();
+                    List<Avaliacao> avaliacaos = new ArrayList<>();
+                    buscarComentariosPorIdUsuario(id, c,comentarios);
+                    buscarAvaliacaoPorIdUsuario(id, c,avaliacaos);
+                    Handler esperar = new Handler();
+                    esperar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(Comentario c:comentarios){
+                                redisService.decrementarComentarioObra(c.getObraId()+"");
+                            }
+                            for(Avaliacao a:avaliacaos){
+                                redisService.decrementarAvaliacaoObra(a.getObraId()+"");
+                            }
+                            deletarUsuarioPorIdMongo(id, c);
+                            deletarUsuarioPorId(id, c);
+                        }
+                    },4000);
+
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -152,7 +178,7 @@ public class MetodosAux {
                             c.startActivity(intent);
                             ((Activity) c).finish();
                         }
-                    },3000);
+                    },7000);
                 }
             }
         });
@@ -252,6 +278,63 @@ public class MetodosAux {
         });
         dialog.show();
     }
+    public void buscarComentariosPorIdUsuario( String usuarioId,Context context, List<Comentario> listaComentarios) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Geral.getInstance().getUrlApiMongo())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<List<Comentario>> call = mongoInterface.buscarComentariosPorId(Long.parseLong(usuarioId));
+
+        call.enqueue(new Callback<List<Comentario>>() {
+            @Override
+            public void onResponse(Call<List<Comentario>> call, Response<List<Comentario>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+
+                    listaComentarios.clear();
+                    listaComentarios.addAll(response.body());
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comentario>> call, Throwable t) {
+                Log.e("MONGO_API_ERROR_GET_COMENTARIOS", "Erro ao fazer a requisição: " + t.getMessage());
+                abrirDialogErro(context,"Erro inesperado","Erro ao obter comentarios\nMensagem: "+t.getMessage());
+            }
+        });
+    }
+
+    public void buscarAvaliacaoPorIdUsuario( String usuarioId,Context context, List<Avaliacao> listaAvaliacoes) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Geral.getInstance().getUrlApiMongo())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<List<Avaliacao>> call = mongoInterface.buscarAvaliacoesPorId(Long.parseLong(usuarioId));
+
+        call.enqueue(new Callback<List<Avaliacao>>() {
+            @Override
+            public void onResponse(Call<List<Avaliacao>> call, Response<List<Avaliacao>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+
+                    listaAvaliacoes.clear();
+                    listaAvaliacoes.addAll(response.body());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Avaliacao>> call, Throwable t) {
+                Log.e("MONGO_API_ERROR_GET_COMENTARIOS", "Erro ao fazer a requisição: " + t.getMessage());
+                abrirDialogErro(context,"Erro inesperado","Erro ao obter comentarios\nMensagem: "+t.getMessage());
+            }
+        });
+    }
+
 
 
 }
