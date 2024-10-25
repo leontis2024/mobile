@@ -2,11 +2,21 @@ package com.aula.leontis.fragments;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +52,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -86,6 +97,7 @@ public class FeedFragment extends Fragment {
         btnFiltrar = view.findViewById(R.id.btnFiltrar);
         btnForYou = view.findViewById(R.id.btnForYou);
         btnScanner = view.findViewById(R.id.btnScanner);
+        aux.agendarNotificacaoHoraEmHora(getContext());
         btnMuseusSeguidos = view.findViewById(R.id.btnMuseusSeguidos);
         btnFecharPesquisa = view.findViewById(R.id.btnFecharPesquisa);
 
@@ -283,5 +295,6 @@ public class FeedFragment extends Fragment {
             }
         });
     }
+
 
 }

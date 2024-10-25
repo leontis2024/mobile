@@ -271,6 +271,7 @@ public class TelaInfoObra extends AppCompatActivity {
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
+                                            mongoService.selecionarMediaNotaPorIdObra(id, TelaInfoObra.this,avaliacaoObra,erroComentario);
                                             mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"1","2",um,erroComentario);
                                             mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"2","3",dois,erroComentario);
                                             mongoService.selecionarPorcentagemPorAvaliacao(id,TelaInfoObra.this,"3","4",tres,erroComentario);

@@ -3,10 +3,17 @@ package com.aula.leontis.utilities;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.os.Handler;
 import android.view.View;
@@ -14,8 +21,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.aula.leontis.Geral;
+
+import com.aula.leontis.NotificationReceiver;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaLogin;
 import com.aula.leontis.activitys.TelaPesquisa;
@@ -42,16 +54,19 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.TimeZone;
 public class MetodosAux {
     RedisService redisService = new RedisService();
 
-    public void abrirDialog(Context c, String texto, String mensagem){
+
+    public void abrirDialog(Context c, String texto, String mensagem) {
         Dialog dialog = new Dialog(c);
         dialog.setContentView(R.layout.caixa_mensagem);
-        dialog.getWindow().setLayout(WRAP_CONTENT,WRAP_CONTENT);
+        dialog.getWindow().setLayout(WRAP_CONTENT, WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(true);
@@ -70,10 +85,11 @@ public class MetodosAux {
         });
         dialog.show();
     }
-    public void abrirDialogErro(Context c, String texto, String mensagem){
+
+    public void abrirDialogErro(Context c, String texto, String mensagem) {
         Dialog dialog = new Dialog(c);
         dialog.setContentView(R.layout.caixa_mensagem);
-        dialog.getWindow().setLayout(WRAP_CONTENT,WRAP_CONTENT);
+        dialog.getWindow().setLayout(WRAP_CONTENT, WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(true);
@@ -94,10 +110,11 @@ public class MetodosAux {
         });
         dialog.show();
     }
-    public void abrirDialogConfirmacao(Context c,String texto, String mensagem, boolean deletar,String id){
+
+    public void abrirDialogConfirmacao(Context c, String texto, String mensagem, boolean deletar, String id) {
         Dialog dialog = new Dialog(c);
         dialog.setContentView(R.layout.aviso_confirmacao);
-        dialog.getWindow().setLayout(WRAP_CONTENT,WRAP_CONTENT);
+        dialog.getWindow().setLayout(WRAP_CONTENT, WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(true);
@@ -121,7 +138,7 @@ public class MetodosAux {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                if(deletar) {
+                if (deletar) {
                     abrirDialog(dialog.getContext(), "Tchau tchau 😭...", "É triste que você queira ir embora, espero que nos encontremos algum outro dia 🥺");
                     FirebaseAuth.getInstance().getCurrentUser().delete();
                     redisService.decrementarAtividadeUsuario();
@@ -129,10 +146,10 @@ public class MetodosAux {
                     FirebaseStorage storage = FirebaseStorage.getInstance();
 
                     //  Referenciar o arquivo com o caminho completo (pode variar dependendo da sua organização de pastas)
-                    StorageReference storageRef = storage.getReference().child("usuarios/usuario" + id+".jpg");
+                    StorageReference storageRef = storage.getReference().child("usuarios/usuario" + id + ".jpg");
 
                     // Deletar o arquivo
-                    if(storageRef!=null) {
+                    if (storageRef != null) {
                         try {
                             storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -147,28 +164,28 @@ public class MetodosAux {
                                     Log.e("IMAGEM_DELETE_ERROR", "Erro ao deletar a imagem: " + exception.getMessage());
                                 }
                             });
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             Log.e("IMAGEM_DELETE_ERROR", "Erro ao deletar a imagem: " + e.getMessage());
                         }
                     }
                     List<Comentario> comentarios = new ArrayList<>();
                     List<Avaliacao> avaliacaos = new ArrayList<>();
-                    buscarComentariosPorIdUsuario(id, c,comentarios);
-                    buscarAvaliacaoPorIdUsuario(id, c,avaliacaos);
+                    buscarComentariosPorIdUsuario(id, c, comentarios);
+                    buscarAvaliacaoPorIdUsuario(id, c, avaliacaos);
                     Handler esperar = new Handler();
                     esperar.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            for(Comentario c:comentarios){
-                                redisService.decrementarComentarioObra(c.getObraId()+"");
+                            for (Comentario c : comentarios) {
+                                redisService.decrementarComentarioObra(c.getObraId() + "");
                             }
-                            for(Avaliacao a:avaliacaos){
-                                redisService.decrementarAvaliacaoObra(a.getObraId()+"");
+                            for (Avaliacao a : avaliacaos) {
+                                redisService.decrementarAvaliacaoObra(a.getObraId() + "");
                             }
                             deletarUsuarioPorIdMongo(id, c);
                             deletarUsuarioPorId(id, c);
                         }
-                    },4000);
+                    }, 4000);
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -178,12 +195,13 @@ public class MetodosAux {
                             c.startActivity(intent);
                             ((Activity) c).finish();
                         }
-                    },7000);
+                    }, 7000);
                 }
             }
         });
         dialog.show();
     }
+
     public void deletarUsuarioPorId(String id, Context context) {
 
         ApiService apiService = new ApiService(context);
@@ -205,10 +223,11 @@ public class MetodosAux {
                     Log.e("API_RESPONSE_DELETE", "Erro na resposta da API: " + response.code());
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR_DELETE", "Erro ao fazer a requisição: " + throwable.getMessage());
-                abrirDialogErro(context,"Erro ao deletar usário","Houve um erro ao deletar o usuário\nMensagem: "+throwable.getMessage());
+                abrirDialogErro(context, "Erro ao deletar usário", "Houve um erro ao deletar o usuário\nMensagem: " + throwable.getMessage());
             }
         });
     }
@@ -237,9 +256,10 @@ public class MetodosAux {
                     }
 
                 } else {
-                    Log.e("API_RESPONSE_DELETE", "Erro na resposta da API mongo: " + response.code()+" "+response.message());
+                    Log.e("API_RESPONSE_DELETE", "Erro na resposta da API mongo: " + response.code() + " " + response.message());
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e("API_ERROR_DELETE", "Erro ao fazer a requisição mongo: " + throwable.getMessage());
@@ -248,15 +268,16 @@ public class MetodosAux {
     }
 
 
-        public  String dataAtualFormatada() {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            return dateFormat.format(new Date());
-        }
-    public void abrirDialogPrimeiroAcesso(Context c, String texto, String mensagem){
+    public String dataAtualFormatada() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return dateFormat.format(new Date());
+    }
+
+    public void abrirDialogPrimeiroAcesso(Context c, String texto, String mensagem) {
         Dialog dialog = new Dialog(c);
         dialog.setContentView(R.layout.caixa_mensagem2);
-        dialog.getWindow().setLayout(WRAP_CONTENT,WRAP_CONTENT);
+        dialog.getWindow().setLayout(WRAP_CONTENT, WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.caixa_mensagem_fundo);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(true);
@@ -278,7 +299,8 @@ public class MetodosAux {
         });
         dialog.show();
     }
-    public void buscarComentariosPorIdUsuario( String usuarioId,Context context, List<Comentario> listaComentarios) {
+
+    public void buscarComentariosPorIdUsuario(String usuarioId, Context context, List<Comentario> listaComentarios) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Geral.getInstance().getUrlApiMongo())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -302,12 +324,12 @@ public class MetodosAux {
             @Override
             public void onFailure(Call<List<Comentario>> call, Throwable t) {
                 Log.e("MONGO_API_ERROR_GET_COMENTARIOS", "Erro ao fazer a requisição: " + t.getMessage());
-                abrirDialogErro(context,"Erro inesperado","Erro ao obter comentarios\nMensagem: "+t.getMessage());
+                abrirDialogErro(context, "Erro inesperado", "Erro ao obter comentarios\nMensagem: " + t.getMessage());
             }
         });
     }
 
-    public void buscarAvaliacaoPorIdUsuario( String usuarioId,Context context, List<Avaliacao> listaAvaliacoes) {
+    public void buscarAvaliacaoPorIdUsuario(String usuarioId, Context context, List<Avaliacao> listaAvaliacoes) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Geral.getInstance().getUrlApiMongo())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -330,11 +352,58 @@ public class MetodosAux {
             @Override
             public void onFailure(Call<List<Avaliacao>> call, Throwable t) {
                 Log.e("MONGO_API_ERROR_GET_COMENTARIOS", "Erro ao fazer a requisição: " + t.getMessage());
-                abrirDialogErro(context,"Erro inesperado","Erro ao obter comentarios\nMensagem: "+t.getMessage());
+                abrirDialogErro(context, "Erro inesperado", "Erro ao obter comentarios\nMensagem: " + t.getMessage());
             }
         });
     }
 
+    public void agendarNotificacaoDiaria(Context context) {
+        // Defina a hora para exibir a notificação
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
 
+        // Se a hora definida já passou no dia atual, agendar para o próximo dia
+        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        // Intent para o BroadcastReceiver
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Agendar o alarme
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            // Repetir o alarme uma vez por dia
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
+    }
+
+    public void agendarNotificacaoHoraEmHora(Context context) {
+        // Defina o horário inicial para o próximo início de hora
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        // Se a hora já passou, configurar para o próximo início de hora
+        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+            calendar.add(Calendar.HOUR_OF_DAY, 1);
+        }
+
+        // Intent para o BroadcastReceiver
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Agendar o alarme
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            // Agendar alarme exato para o próximo início de hora
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+    }
 
 }

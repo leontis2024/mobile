@@ -38,6 +38,7 @@ import retrofit2.Response;
 
 public class AdapterObraGuia extends RecyclerView.Adapter<AdapterObraGuia.viewHolderObraGuia>{
         MetodosAux aux = new MetodosAux();
+    boolean esquerda = true;
         ObraService obraService = new ObraService();
         MongoService mongoService = new MongoService();
         private List<ObraGuia> listaObraGuias;
@@ -57,6 +58,19 @@ public class AdapterObraGuia extends RecyclerView.Adapter<AdapterObraGuia.viewHo
             FirebaseAuth auth = FirebaseAuth.getInstance();
             String email = auth.getCurrentUser().getEmail();
             selecionarIdUsuarioPorEmail(email,holder);
+            ViewGroup.MarginLayoutParams paramsImageView = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
+            int left = 260;
+            int right= 260;
+            if(esquerda){
+               paramsImageView.setMargins(left, 100, 0, 0);
+            }else{
+               paramsImageView.setMargins(0,100 , right,0 );
+            }
+            esquerda = !esquerda;
+
+            holder.itemView.setLayoutParams(paramsImageView);
+
+
             holder.numeroOrdem.setText(listaObraGuias.get(holder.getAdapterPosition()).getNrOrdem()+"");
 
         }

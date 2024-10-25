@@ -523,8 +523,12 @@ public class ObraService {
     }
 
 
-    public void buscarTodasobras(TextView erroObra, Context context, RecyclerView rvObras, List<Obra> listaObras, AdapterObraFeed adapterObra,ProgressBar progressBar) {
 
+    public interface ObraCallback {
+        void onObrasReceived(List<Obra> obras);
+    }
+
+    public void buscarTodasobras(Context context, final ObraCallback callback) {
         ApiService apiService = new ApiService(context);
         ObraInterface obraInterface = apiService.getObraInterface();
         Call<List<Obra>> call = obraInterface.selecionarTudasObras();
@@ -532,33 +536,18 @@ public class ObraService {
         call.enqueue(new Callback<List<Obra>>() {
             @Override
             public void onResponse(Call<List<Obra>> call, Response<List<Obra>> response) {
-                progressBar.setVisibility(View.INVISIBLE);
                 if (response.isSuccessful() && response.body() != null) {
-                    erroObra.setVisibility(View.INVISIBLE);
-                    List<Obra> obras = response.body();
-                    if(obras.size()!=0){
-                        listaObras.clear();
-                        listaObras.addAll(response.body());
-                        adapterObra.notifyDataSetChanged();
-                        rvObras.setAdapter(adapterObra);
-                    }
-
+                    callback.onObrasReceived(response.body()); // Chama o callback quando a resposta é recebida
                 } else {
-                    if(response.code()!=404) {
-                        erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                        Log.e("API_ERROR_GET_OBRA", "Não foi possivel fazer a requisição: " + response.code() + " " + response.errorBody());
-                        erroObra.setText("Falha ao obter dados das obras");
-                        erroObra.setVisibility(View.VISIBLE);
-                    }
+                    callback.onObrasReceived(new ArrayList<>()); // Chama o callback com lista vazia em caso de erro
+                    Log.e("API_ERROR_GET_OBRA", "Não foi possível fazer a requisição: " + response.code() + " " + response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<List<Obra>> call, Throwable t) {
-                erroObra.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
+                callback.onObrasReceived(new ArrayList<>()); // Chama o callback com lista vazia em caso de falha
                 Log.e("API_ERROR_GET_OBRA", "Erro ao fazer a requisição: " + t.getMessage());
-                erroObra.setText("Falha ao obter dados das obras");
-                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter dados das obras\nMensagem: "+t.getMessage());
             }
         });
     }

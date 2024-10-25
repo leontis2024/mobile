@@ -22,7 +22,7 @@ import retrofit2.Response;
 
 public class ArtistaService {
     MetodosAux aux =new MetodosAux();
-    public void buscarArtistaPorId(String id, Context c, TextView erroArtista, TextView nomeArtista, TextView descArtista, ImageView fotoArtista) {
+    public void buscarArtistaPorId(String id, Context c, TextView erroArtista, TextView nomeArtista, TextView descArtista, ImageView fotoArtista,TextView urlText) {
         ApiService apiService = new ApiService(c);
         ArtistaInterface artistaInterface = apiService.getArtistaInterface();
 
@@ -39,6 +39,7 @@ public class ArtistaService {
                     nomeArtista.setText(artista.getNomeArtista());
                     descArtista.setText(artista.getDescArtista());
                     String url = artista.getUrlImagem();
+                    urlText.setText(url);
                     Glide.with(c).asBitmap().load(url).into(fotoArtista);
 
 

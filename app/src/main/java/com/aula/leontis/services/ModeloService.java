@@ -46,6 +46,7 @@ public class ModeloService {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         erro.setVisibility(View.INVISIBLE);
+                        erro.setTextColor(ContextCompat.getColor(context, R.color.bege_claro));
                         borda.setImageResource(R.drawable.borda_escaner);
                         ModeloResponse modeloResponse = response.body();
                         if(Integer.parseInt(modeloResponse.getObra_predita())>0) {

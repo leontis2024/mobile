@@ -22,12 +22,13 @@ public class DataBaseFotos {
        public Task<String> subirFoto(Context c, Bitmap foto, String idUser,String path, String nome) {
            if(path.equals("scanner")){
                Bitmap foto2 = foto;
-               int x = (foto2.getWidth() - 1300) / 2;
-               int y = (foto2.getHeight() - 1500) / 2;
-               int width = 1300;
-               int height = 1600;
-               Bitmap teste = Bitmap.createBitmap(foto2, x, y, width, height);
+               int proporcaoWidth = (int) (foto2.getWidth() * 0.5);
+               int proporcaoHeight = (int) (foto2.getHeight() * 0.5);
+               int x = (foto2.getWidth() - proporcaoWidth) / 2;
+               int y = (foto2.getHeight() - proporcaoHeight) / 2;
+               Bitmap teste = Bitmap.createBitmap(foto2, x, y, proporcaoWidth, proporcaoHeight);
                foto = teste;
+
 
            }
         // Criação do TaskCompletionSource para retornar a URL

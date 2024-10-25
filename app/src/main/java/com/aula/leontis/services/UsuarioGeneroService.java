@@ -52,35 +52,42 @@ public class UsuarioGeneroService {
         UsuarioGeneroInterface usuarioGeneroInterface = retrofit.create(UsuarioGeneroInterface.class);
 
         for (long idGenero : listaGenerosInteresse) {
-            Call<ResponseBody> call = usuarioGeneroInterface.inserirUsuarioGenero(Long.parseLong(id[0]), idGenero);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        try {
-                            Log.d("API_RESPONSE_POST_USUARIO_GENERO", "Conexão usuário e genero criada: " + response.body().string());
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+            String value = id[0];
+            long number=0;;
+            if (value != null && !value.isEmpty()) {
+                number = Long.parseLong(value);
+
+
+                Call<ResponseBody> call = usuarioGeneroInterface.inserirUsuarioGenero(number, idGenero);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            try {
+                                Log.d("API_RESPONSE_POST_USUARIO_GENERO", "Conexão usuário e genero criada: " + response.body().string());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        } else {
+                            try {
+                                // Obter e exibir o corpo da resposta de erro
+                                String errorBody = response.errorBody().string();
+                                Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao fazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao processar o corpo da resposta de erro.");
+                            }
                         }
-                    } else {
-                        try {
-                            // Obter e exibir o corpo da resposta de erro
-                            String errorBody = response.errorBody().string();
-                            Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao fazer conexão usuario e genero: " + response.code() + " - " + errorBody + " - " + response.message());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao processar o corpo da resposta de erro.");
-                        }
+
                     }
 
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                    Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao fazer conexão usuario e genero: " + throwable.getMessage());
-                    aux.abrirDialogErro(context, "Erro inesperado", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                        Log.e("API_ERROR_POST_USUARIO_GENERO", "Erro ao fazer conexão usuario e genero: " + throwable.getMessage());
+                        aux.abrirDialogErro(context, "Erro inesperado", "Não foi possível realizar seu cadastro. Erro: " + throwable.getMessage());
+                    }
+                });
+            }
         }
 
 

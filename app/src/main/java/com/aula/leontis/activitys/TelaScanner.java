@@ -105,6 +105,7 @@ public class TelaScanner extends AppCompatActivity {
         btnEscanear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                erro.setTextColor(ContextCompat.getColor(TelaScanner.this, R.color.bege_claro));
                 carregar.setVisibility(View.VISIBLE);
                 erro.setText("Escaneando...");
                 erro.setVisibility(View.VISIBLE);

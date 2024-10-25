@@ -310,11 +310,11 @@
 
                 <Button
                     android:id="@+id/btnAcessarGenero"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:text="Gênero"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <TextView
