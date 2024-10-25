@@ -51,15 +51,6 @@ public class AdapterGenero extends RecyclerView.Adapter<AdapterGenero.viewHolder
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                String teste ="";
-                teste += listaGeneros.get(holder.getAdapterPosition()).getNome() +" " + listaGeneros.get(holder.getAdapterPosition()).getCheckInteresse();
-                Toast.makeText(holder.itemView.getContext(), teste, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
 
         holder.btnInfo.setOnClickListener(new View.OnClickListener() {
             @Override

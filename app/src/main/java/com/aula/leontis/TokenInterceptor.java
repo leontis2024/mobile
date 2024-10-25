@@ -3,11 +3,15 @@ package com.aula.leontis;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.aula.leontis.activitys.TelaLogin;
 import com.aula.leontis.interfaces.AuthInterface;
+import com.aula.leontis.services.RedisService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.google.firebase.auth.FirebaseAuth;
 import java.io.IOException;
@@ -20,9 +24,11 @@ import retrofit2.Call;
 
 public class TokenInterceptor implements Interceptor {
     private TokenManager tokenManager;
+    RedisService redisService = new RedisService();
     private AuthInterface authInterface;
     private MetodosAux aux = new MetodosAux();
     private Context context;
+    Bundle bundle = new Bundle();
 
     public TokenInterceptor(TokenManager tokenManager, AuthInterface authInterface, Context context) {
         this.tokenManager = tokenManager;
@@ -46,9 +52,9 @@ public class TokenInterceptor implements Interceptor {
             }
         }
 
-        // Adicionar "Bearer " antes do token
+        // Não adicionar "Bearer " antes do token, pois a API já retorna o token com esse prefixo
         Request requestWithToken = originalRequest.newBuilder()
-                .header("Authorization",   accessToken)
+                .header("Authorization", accessToken)
                 .build();
 
         Response response = chain.proceed(requestWithToken);
@@ -67,7 +73,7 @@ public class TokenInterceptor implements Interceptor {
 
                         // Refazer a requisição original com o novo Token de Acesso
                         Request newRequestWithToken = originalRequest.newBuilder()
-                                .header("Authorization",  newAccessToken)
+                                .header("Authorization", newAccessToken)
                                 .build();
 
                         // Prossiga com a nova requisição
@@ -80,16 +86,21 @@ public class TokenInterceptor implements Interceptor {
         // Se o refresh token também estiver expirado ou não disponível
         if (response.code() == 401 && (tokenManager.getRefreshToken() == null || !tokenManager.isTokenValid(tokenManager.getRefreshToken()))) {
             // Limpar tokens e redirecionar para login
-            aux.abrirDialogErro(context, "Login expirado", "Você será deslogado automaticamente");
             tokenManager.clearTokens();  // Método para limpar tokens
-           // FirebaseAuth.getInstance().signOut();
+            FirebaseAuth.getInstance().signOut();
 
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                Intent intent = new Intent(context, TelaLogin.class);
-               // context.startActivity(intent);
-              //  ((Activity) context).finish();
-            }, 5000);
+            // Exibir mensagem e redirecionar para login na thread principal
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Login expirado", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, TelaLogin.class);
+                    bundle.putBoolean("tokenExpirado",true);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                    ((Activity) context).finish();
+                }
+            });
 
             throw new IOException("Refresh token está expirado");
         }
@@ -105,18 +116,29 @@ public class TokenInterceptor implements Interceptor {
         Call<Map<String, String>> call = authInterface.refreshToken(tokens);
         retrofit2.Response<Map<String, String>> refreshResponse = call.execute();  // Executa de forma síncrona
 
+        Log.d("TokenInterceptor", "Código de resposta: " + refreshResponse.code());
+
         if (refreshResponse.isSuccessful() && refreshResponse.body() != null) {
-            return refreshResponse.body().get("accessToken");  // Retorna o novo Token de Acesso
+            String newToken = refreshResponse.body().get("accessToken");
+            if (newToken != null) {
+                return newToken;  // Retorna o novo Token de Acesso
+            } else {
+                Log.d("TokenInterceptor", "A resposta não contém um novo accessToken");
+                throw new IOException("A resposta da API não contém um novo accessToken");
+            }
         } else {
             // Tratamento de falhas ao renovar o token
             if (refreshResponse.code() == 401) {
-             //   Toast.makeText(context, "Token expirado", Toast.LENGTH_SHORT).show();
+                Log.d("TokenInterceptor", "Token de refresh expirado ou inválido");
                 tokenManager.clearTokens();
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(context, TelaLogin.class);
+                bundle.putBoolean("tokenExpirado",true);
+                intent.putExtras(bundle);
                 context.startActivity(intent);
                 ((Activity) context).finish();
             }
+            Log.d("TokenInterceptor", "Erro na resposta: " + refreshResponse.errorBody().string());
             throw new IOException("Falha ao obter novo Token de Acesso. Código: " + refreshResponse.code());
         }
     }

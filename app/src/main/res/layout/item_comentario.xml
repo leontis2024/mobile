@@ -15,9 +15,9 @@
 
         <ImageView
             android:id="@+id/imgComentario"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginStart="15dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="30dp"
 
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -48,10 +48,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="30dp"
             android:background="@drawable/shape_texto3"
             android:fontFamily="@font/inter"
-            android:minLines="2"
+            android:maxLines="5"
+            android:minLines="1"
             android:text="Carregando..."
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +61,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="3dp"
+            android:layout_height="2dp"
             android:background="@color/vinho_claro"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

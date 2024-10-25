@@ -137,6 +137,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/senha_login" />
+        <ImageButton
+            android:id="@+id/verSenha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="#00FFFFFF"
+            android:contentDescription="fechado"
+            app:layout_constraintBottom_toBottomOf="@+id/senha_login"
+            app:layout_constraintEnd_toEndOf="@+id/senha_login"
+            app:layout_constraintTop_toTopOf="@+id/senha_login"
+            app:srcCompat="@drawable/olhinho_fechado" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

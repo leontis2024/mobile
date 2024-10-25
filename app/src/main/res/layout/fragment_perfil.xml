@@ -38,7 +38,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="35dp"
             android:backgroundTint="#00FFFFFF"
             android:src="@drawable/perfil"
             app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:fontFamily="@font/lexend_exa"
             android:text="Nome"
             android:textColor="@color/preto"
@@ -65,7 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/lexend_exa"
             android:text="Biografia"
             android:textColor="@color/preto"
@@ -131,6 +131,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.737"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historicodeObras"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_margin="10dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nomeMuseu"
+            tools:listitem="@layout/item_obra" />
+
+        <TextView
+            android:id="@+id/nomeMuseu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_titulo"
+            android:fontFamily="@font/lexend_exa"
+            android:maxLines="3"
+            android:text="Histórico de obras escaneadas"
+            android:textAlignment="center"
+            android:textColor="@color/bege_claro"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnDeletarConta" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

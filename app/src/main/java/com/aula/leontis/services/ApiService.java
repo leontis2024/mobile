@@ -2,6 +2,7 @@ package com.aula.leontis.services;
 
 import android.content.Context;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.TokenInterceptor;
 import com.aula.leontis.TokenManager;
 import com.aula.leontis.interfaces.AuthInterface;
@@ -9,7 +10,9 @@ import com.aula.leontis.interfaces.artista.ArtistaInterface;
 import com.aula.leontis.interfaces.diaFuncionamento.DiaFuncionamentoInterface;
 import com.aula.leontis.interfaces.endereco.EnderecoMuseuInterface;
 import com.aula.leontis.interfaces.genero.GeneroInterface;
+import com.aula.leontis.interfaces.guia.GuiaInterface;
 import com.aula.leontis.interfaces.museu.MuseuInterface;
+import com.aula.leontis.interfaces.obra.ObraGuiaInterface;
 import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
@@ -20,8 +23,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
+    String urlApi = Geral.getInstance().getUrlApiSql();
+    ;
         private EnderecoMuseuInterface enderecoMuseuInterface;
         private DiaFuncionamentoInterface diaFuncionamentoInterface;
+        private GuiaInterface guiaInterface;
         private ArtistaInterface artistaInterface;
         private UsuarioInterface usuarioInterface;
         private GeneroInterface generoInterface;
@@ -30,6 +36,7 @@ public class ApiService {
         private UsuarioGeneroInterface usuarioGeneroInterface;
         private ObraInterface obraInterface;
         private UsuarioMuseuInterface usuarioMuseuInterface;
+        private ObraGuiaInterface obraGuiaInterface;
 
 
         public ApiService(Context context) {
@@ -37,7 +44,7 @@ public class ApiService {
 
             // Retrofit usado para login/renovação do token
             Retrofit authRetrofit = new Retrofit.Builder()
-                    .baseUrl("https://dev2-tfqz.onrender.com/")
+                    .baseUrl(urlApi)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             authInterface = authRetrofit.create(AuthInterface.class);
@@ -49,7 +56,7 @@ public class ApiService {
 
             // Retrofit principal
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://dev2-tfqz.onrender.com/")
+                    .baseUrl(urlApi)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
@@ -64,6 +71,8 @@ public class ApiService {
             obraInterface = retrofit.create(ObraInterface.class);
             usuarioMuseuInterface = retrofit.create(UsuarioMuseuInterface.class);
             enderecoMuseuInterface = retrofit.create(EnderecoMuseuInterface.class);
+            obraGuiaInterface = retrofit.create(ObraGuiaInterface.class);
+            guiaInterface = retrofit.create(GuiaInterface.class);
         }
 
         // Métodos para obter os serviços
@@ -101,5 +110,14 @@ public class ApiService {
         public EnderecoMuseuInterface getEnderecoMuseuInterface() {
             return this.enderecoMuseuInterface;
         }
+
+        public GuiaInterface getGuiaInterface() {
+            return guiaInterface;
+        }
+
+        public ObraGuiaInterface getObraGuiaInterface() {
+            return obraGuiaInterface;
+        }
+
 
 }

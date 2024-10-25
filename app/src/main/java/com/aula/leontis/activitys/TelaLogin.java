@@ -6,19 +6,24 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.TokenManager;
 import com.aula.leontis.interfaces.AuthInterface;
 import com.aula.leontis.models.auth.AuthResponse;
 import com.aula.leontis.models.auth.LoginRequest;
 import com.aula.leontis.services.ApiService;
+import com.aula.leontis.services.RedisService;
+import com.aula.leontis.utilities.MetodosAux;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -36,14 +41,31 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TelaLogin extends AppCompatActivity {
     Button entrar;
     EditText email,senha;
+    RedisService redisService = new RedisService();
+    Bundle novo = new Bundle();
     TextView errorEmail, errorSenha, cadastro, erroGeral;
+    ImageButton btnOlho;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_login);
+        Bundle bundle = getIntent().getExtras();
+        boolean cadastroUsuario = false;
+        boolean tokenExpirado = false;
 
-        verificarUsuarioLogado();
+        if(bundle != null) {
+            cadastroUsuario = bundle.getBoolean("cadastro",false);
+            tokenExpirado = bundle.getBoolean("tokenExpirado",false);
+            if(tokenExpirado==true){
+                redisService.decrementarAtividadeUsuario();
+            }
+
+        }
+        if(!cadastroUsuario) {
+            verificarUsuarioLogado();
+        }
 
         entrar = findViewById(R.id.btn_entrar);
         email = findViewById(R.id.email_login);
@@ -52,12 +74,35 @@ public class TelaLogin extends AppCompatActivity {
         errorSenha = findViewById(R.id.erro_senha);
         cadastro = findViewById(R.id.cadastrar);
         erroGeral = findViewById(R.id.erro_geral);
+        btnOlho= findViewById(R.id.verSenha);
+        btnOlho.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btnOlho.getContentDescription().equals("fechado")) {
+
+                    if (senha != null && !(senha.getText().equals(""))) {
+                        btnOlho.setContentDescription("aberto");
+                        btnOlho.setImageResource(R.drawable.olhinho);
+                        senha.setInputType(InputType.TYPE_CLASS_TEXT);
+                    }
+                }else{
+
+                    if (senha != null && !(senha.getText().equals(""))) {
+                        btnOlho.setContentDescription("fechado");
+                        btnOlho.setImageResource(R.drawable.olhinho_fechado);
+                        senha.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    }
+                }
+            }
+        });
+
 
         cadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Abrindo a tela de cadastro
                 Intent telCadastro = new Intent(TelaLogin.this, TelaCadastro.class);
+
                 startActivity(telCadastro);
             }
         });
@@ -136,6 +181,7 @@ public class TelaLogin extends AppCompatActivity {
                             //redirecionar para a proxima tela
                             erroGeral.setVisibility(View.INVISIBLE);
                             pegarToken();
+                            redisService.incrementarAtividadeUsuario();
                         }else{
                             try{
                                 throw task.getException();
@@ -155,14 +201,16 @@ public class TelaLogin extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if(auth.getCurrentUser() != null){
             Intent feed = new Intent(TelaLogin.this, TelaPrincipal.class);
+            feed.putExtras(novo);
             startActivity(feed);
             finish();
         }
     }
     public void pegarToken() {
         // Instancia ApiService para lidar com a autenticação
+        String urlApi = Geral.getInstance().getUrlApiSql();
         Retrofit authRetrofit = new Retrofit.Builder()
-                .baseUrl("https://dev2-tfqz.onrender.com/")
+                .baseUrl(urlApi)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         AuthInterface authInterface = authRetrofit.create(AuthInterface.class);// Obtém a interface de autenticação
@@ -207,6 +255,7 @@ public class TelaLogin extends AppCompatActivity {
             }
         });
     }
+
 
 
 }

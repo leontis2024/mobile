@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -31,10 +30,7 @@ import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.DataBaseFotos;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
-import com.aula.leontis.interfaces.usuario.UsuarioGeneroInterface;
-import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.usuario.Usuario;
-import com.aula.leontis.models.usuario.UsuarioGenero;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -47,16 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaCadastroFotoPerfil extends AppCompatActivity {
     UsuarioService usuarioService = new UsuarioService();
@@ -104,7 +91,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
         btnContinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,"https://cdn-icons-png.flaticon.com/512/4675/4675159.png");
+                Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,"https://firebasestorage.googleapis.com/v0/b/leontisfotos.appspot.com/o/usuarios%2FusuarioDefault.png?alt=media&token=04ef6067-fef3-4a33-9065-8788b3b44f96");
                 usuarioService.inserirUsuario(usuario,TelaCadastroFotoPerfil.this,id);
 
                 Handler esperarGenero = new Handler();
@@ -180,7 +167,7 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                             usuarioService.inserirUsuarioMongo(usuarioMongo,TelaCadastroFotoPerfil.this);
                                             if(!(id[0].equals(""))) {
                                                 // upload do Bitmap para o Firebase Storage retornando a url dela
-                                                dataBase.subirFotoUsuario(TelaCadastroFotoPerfil.this, bitmap, id[0]).addOnSuccessListener(new OnSuccessListener<String>() {
+                                                dataBase.subirFoto(TelaCadastroFotoPerfil.this, bitmap, id[0],"usuarios","usuario").addOnSuccessListener(new OnSuccessListener<String>() {
                                                     @Override
                                                     public void onSuccess(String url) {
                                                         // Aqui você pode usar a URL da imagem
@@ -223,7 +210,6 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Bundle info = new Bundle();
                                     info.putString("id", id[0]);
-                                 //   info.putLongArray("listaGenerosInteresse", listaGenerosInteresse);
                                     info.putString("urlFoto", urlFoto);
                                     info.putString("email", email);
                                     info.putString("senha", senha);
@@ -274,52 +260,6 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
                         }
                     });
                 }
-            }
-        });
-    }
-    public void selecionarIdUsuarioPorEmail(String email, Context context) {
-        String urlAPI = "https://dev2-tfqz.onrender.com/";
-
-        // Configurar acesso à API
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(urlAPI)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UsuarioInterface usuarioInterface = retrofit.create(UsuarioInterface.class);
-
-        Call<ResponseBody> call = usuarioInterface.selecionarUsuarioPorEmail(email);
-
-        //executar chamada
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        // Converte o corpo da resposta para string
-                        String jsonResponse = response.body().string();
-
-                        // Cria um JSONObject a partir da string
-                        JSONObject jsonObject = new JSONObject(jsonResponse);
-
-                        String idApi = jsonObject.getString("id");
-
-                        // Faça algo com os valores obtidos
-                        Log.d("API_RESPONSE_GET_EMAIL", "Campo obtido: id: "+idApi);
-
-                    } catch (Exception e) {
-                        Log.e("API_RESPONSE_GET_EMAIL", "Erro ao processar resposta: " + e.getMessage());
-
-                    }
-                } else {
-                    Log.e("API_ERROR_GET_EMAIL", "Erro na resposta da API: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Log.e("API_ERROR_GET_EMAIL", "Erro ao fazer a requisição: " + throwable.getMessage());
-                aux.abrirDialogErro(context,"Erro inesperado","Erro ao obter idl\nMensagem: "+throwable.getMessage());
             }
         });
     }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
 import com.aula.leontis.activitys.TelaInfoGenero;
@@ -37,7 +38,7 @@ public class AdapterGeneroCompleto extends RecyclerView.Adapter<AdapterGeneroCom
         holder.nomeGenero.setText(listaGeneros.get(position).getNomeGenero());
         String url = listaGeneros.get(holder.getAdapterPosition()).getUrlImagem();
         if(url == null){
-            url= "https://gamestation.com.br/wp-content/themes/game-station/images/image-not-found.png";
+            url= Geral.getInstance().getUrlImagePadrao();
         }
         Glide.with(holder.imagemGenero.getContext()).asBitmap().load(url).into(holder.imagemGenero);
 

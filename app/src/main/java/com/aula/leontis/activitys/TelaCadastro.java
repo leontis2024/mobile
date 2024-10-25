@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
@@ -19,17 +20,24 @@ import android.widget.TextView;
 import com.aula.leontis.R;
 
 import java.util.Calendar;
+import java.util.Date;
+
+import java.util.Calendar;
 
 public class TelaCadastro extends AppCompatActivity {
-    ImageButton btCalendar;
+    ImageButton btCalendar,btnOlho1, btnOlho2;
     EditText nome,sobrenome,email,telefone,dtNasc,senha,senha2;
     Button continuar;
+    boolean valida=false;
     TextView erroNome,erroSobrenome,erroEmail,erroTelefone,erroDtNasc,erroSenha,erroSenha2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela_cadastro);
+        btnOlho1 = findViewById(R.id.verSenha1);
+        btnOlho2 = findViewById(R.id.verSenha2);
+
 
         nome = findViewById(R.id.nome_cadastro);
         erroNome = findViewById(R.id.erro_nome_cadastro);
@@ -41,6 +49,7 @@ public class TelaCadastro extends AppCompatActivity {
         erroEmail = findViewById(R.id.erro_email_cadastro);
 
         telefone = findViewById(R.id.telefone_cadastro);
+
 
 
         telefone.addTextChangedListener(new TextWatcher() {
@@ -152,8 +161,52 @@ public class TelaCadastro extends AppCompatActivity {
         senha = findViewById(R.id.senha_cadastro);
         erroSenha = findViewById(R.id.erro_senha_cadastro);
 
+        btnOlho1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btnOlho1.getContentDescription().equals("fechado")) {
+
+                    if (senha != null && !(senha.getText().equals(""))) {
+                        btnOlho1.setContentDescription("aberto");
+                        btnOlho1.setImageResource(R.drawable.olhinho);
+                        senha.setInputType(InputType.TYPE_CLASS_TEXT);
+                    }
+                }else{
+
+                    if (senha != null && !(senha.getText().equals(""))) {
+                        btnOlho1.setContentDescription("fechado");
+                        btnOlho1.setImageResource(R.drawable.olhinho_fechado);
+                        senha.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    }
+                }
+            }
+        });
+
+
         senha2 = findViewById(R.id.senha_cadastro2);
         erroSenha2 = findViewById(R.id.erro_senha_cadastro2);
+
+        btnOlho2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btnOlho2.getContentDescription().equals("fechado")) {
+
+                    if (senha2 != null && !(senha2.getText().equals(""))) {
+                        btnOlho2.setContentDescription("aberto");
+                        btnOlho2.setImageResource(R.drawable.olhinho);
+                        senha2.setInputType(InputType.TYPE_CLASS_TEXT);
+                    }
+                }else{
+
+                    if (senha2 != null && !(senha2.getText().equals(""))) {
+                        btnOlho2.setContentDescription("fechado");
+                        btnOlho2.setImageResource(R.drawable.olhinho_fechado);
+                        senha2.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    }
+                }
+            }
+        });
+
 
         continuar = findViewById(R.id.btn_continuar_cadastro);
         btCalendar = findViewById(R.id.calendario_cadastro);
@@ -195,11 +248,32 @@ public class TelaCadastro extends AppCompatActivity {
                     semErroInput(erroTelefone,telefone);
                 }
 
-                if(dtNasc.getText().toString()==null || dtNasc.getText().toString().equals("")){
-                    erroInput("Digite sua data de nascimento",erroDtNasc,dtNasc);
-                }else{
-                    semErroInput(erroDtNasc,dtNasc);
+
+                String dataNascimento = dtNasc.getText().toString();
+                if (dataNascimento.equals("")) {
+                    erroInput("Digite sua data de nascimento", erroDtNasc, dtNasc);
+                } else {
+                    try {
+                        // Extrair o ano de nascimento da string
+                        int anoNascimento = Integer.parseInt(dataNascimento.substring(dataNascimento.length() - 4));
+
+                        // Obter o ano atual e o limite de 100 anos atrás
+                        Calendar calendar = Calendar.getInstance();
+                        int anoAtual = calendar.get(Calendar.YEAR);
+
+                        // Verificar se o ano de nascimento é válido (entre o ano atual e 100 anos atrás)
+                        if (anoNascimento > anoAtual || anoNascimento < (anoAtual - 100) || anoNascimento > (anoAtual - 10)) {
+                            erroInput("Digite uma data de nascimento válida", erroDtNasc, dtNasc);
+                        } else {
+                            semErroInput(erroDtNasc, dtNasc);
+                            valida=true;
+                        }
+
+                    } catch (NumberFormatException e) {
+                        erroInput("Formato de data inválido", erroDtNasc, dtNasc);
+                    }
                 }
+
 
                 if(senha.getText().toString()==null || senha.getText().toString().equals("")){
                     erroInput("Digite sua senha",erroSenha,senha);
@@ -265,7 +339,7 @@ public class TelaCadastro extends AppCompatActivity {
         boolean sobrenomeValido = true;
         boolean emailValido = true;
         boolean telefoneValido = true;
-        boolean dtNascValido = true;
+        boolean dtNascValido = valida;
         boolean senhaValido = true;
         boolean senha2Valido = true;
 

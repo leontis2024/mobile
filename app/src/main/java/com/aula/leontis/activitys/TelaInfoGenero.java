@@ -7,13 +7,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
@@ -24,9 +22,6 @@ import com.aula.leontis.services.ObraService;
 import com.aula.leontis.services.UsuarioGeneroService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
-import com.aula.leontis.interfaces.genero.GeneroInterface;
-import com.aula.leontis.models.genero.GeneroCompleto;
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
@@ -38,8 +33,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaInfoGenero extends AppCompatActivity {
     TextView erroGenero, nomeGenero, descGenero,interesse;
@@ -62,7 +55,7 @@ public class TelaInfoGenero extends AppCompatActivity {
         nomeGenero = findViewById(R.id.nomeGenero);
         descGenero = findViewById(R.id.descGenero);
         fotoGenero = findViewById(R.id.fotoGenero);
-        btnVoltar = findViewById(R.id.btnVoltar);
+        btnVoltar = findViewById(R.id.btnFiltrar);
         interesse = findViewById(R.id.interesse);
         btnInteresse = findViewById(R.id.btnInteresse);
         rvObras = findViewById(R.id.obrasRelacionadas); // Inicialização do RecyclerView

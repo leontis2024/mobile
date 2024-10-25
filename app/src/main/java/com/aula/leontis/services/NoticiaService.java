@@ -22,18 +22,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NoticiaService {
-    String[] palavrasChave = {"Arte","Obra","Museu","Pintura artística"};
 
     public void buscarNoticias(Context context, OnFetchDataListener listener, TextView erroNoticia){
         erroNoticia.setTextColor(ContextCompat.getColor(context, R.color.azul_carregando));
         erroNoticia.setText("Carregando...");
         erroNoticia.setVisibility(View.VISIBLE);
-        Random random = new Random();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         NoticiaInterface noticiaInterface = retrofit.create(NoticiaInterface.class);
-        Call<NewsApiResponse> call = noticiaInterface.callHeadlines("pt",palavrasChave[random.nextInt(palavrasChave.length)],context.getString(R.string.api_key),"publishedAt");
+        Call<NewsApiResponse> call = noticiaInterface.callHeadlines("pt","Arte",context.getString(R.string.api_key),"publishedAt");
 
         try {
             call.enqueue(new Callback<NewsApiResponse>() {
@@ -49,14 +47,14 @@ public class NoticiaService {
                 @Override
                 public void onFailure(Call<NewsApiResponse> call, Throwable throwable) {
                     erroNoticia.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-                    Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + throwable.getMessage());
+                    Log.e("API_ERROR_GET_NOTICIAS", "Erro ao fazer a requisição: " + throwable.getMessage());
                     erroNoticia.setText("Falha ao obter dados das notícias");
                     listener.onError("Request Failed");
                 }
             });
         }catch (Exception e){
             erroNoticia.setTextColor(ContextCompat.getColor(context, R.color.vermelho_erro));
-            Log.e("API_ERROR_GET", "Erro ao fazer a requisição: " + e.getMessage());
+            Log.e("API_ERROR_GET_NOTICIAS", "Erro ao fazer a requisição: " + e.getMessage());
             erroNoticia.setText("Falha ao obter dados das notícias");
             e.printStackTrace();
         }

@@ -33,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aula.leontis.R;
-import com.aula.leontis.models.usuario.Usuario;
 import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.DataBaseFotos;
 import com.bumptech.glide.Glide;
@@ -43,7 +42,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -474,7 +472,7 @@ public class TelaEditarPerfil extends AppCompatActivity {
                                         public void run() {
                                             if(!(id.equals(""))) {
                                                 // upload do Bitmap para o Firebase Storage retornando a url dela
-                                                dataBase.subirFotoUsuario(TelaEditarPerfil.this, bitmap, id).addOnSuccessListener(new OnSuccessListener<String>() {
+                                                dataBase.subirFoto(TelaEditarPerfil.this, bitmap, id,"usuarios","usuario").addOnSuccessListener(new OnSuccessListener<String>() {
                                                     @Override
                                                     public void onSuccess(String url) {
                                                         // Aqui você pode usar a URL da imagem

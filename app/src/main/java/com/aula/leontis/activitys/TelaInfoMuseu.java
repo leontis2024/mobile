@@ -12,19 +12,17 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aula.leontis.R;
 import com.aula.leontis.adapters.AdapterObra;
-import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
-import com.aula.leontis.interfaces.usuario.UsuarioMuseuInterface;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.MuseuService;
 import com.aula.leontis.services.ObraService;
 import com.aula.leontis.services.UsuarioMuseuService;
 import com.aula.leontis.utilities.MetodosAux;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
@@ -41,6 +39,7 @@ public class TelaInfoMuseu extends AppCompatActivity {
 
     TextView erroMuseu, nomeMuseu, descMuseu;
     ImageView fotoMuseu;
+    FloatingActionButton btnGuia;
     ImageButton btnVoltar,btnSeguir;
     MuseuService museuService = new MuseuService();
     List<Obra> listaObras = new ArrayList<>();
@@ -60,9 +59,10 @@ public class TelaInfoMuseu extends AppCompatActivity {
             nomeMuseu = findViewById(R.id.nomeMuseu);
             descMuseu = findViewById(R.id.descMuseu);
             fotoMuseu = findViewById(R.id.fotoMuseu);
-            btnVoltar = findViewById(R.id.btnVoltar);
+            btnVoltar = findViewById(R.id.btnFiltrar);
             rvObras = findViewById(R.id.obrasRelacionadasMuseu);
             btnSeguir = findViewById(R.id.btnSeguir);
+            btnGuia = findViewById(R.id.btnGuia);
 
             rvObras.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
@@ -77,6 +77,17 @@ public class TelaInfoMuseu extends AppCompatActivity {
             if(infoMuseu != null) {
                 id = infoMuseu.getString("id");
             }
+            btnGuia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(TelaInfoMuseu.this, TelaGuias.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", id);
+                    bundle.putString("idMuseu", id);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
         erroMuseu.setTextColor(ContextCompat.getColor(this, R.color.azul_carregando));
         erroMuseu.setText("Carregando...");
         erroMuseu.setVisibility(View.VISIBLE);

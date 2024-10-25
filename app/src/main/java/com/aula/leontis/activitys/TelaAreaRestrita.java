@@ -53,6 +53,7 @@ public class TelaAreaRestrita extends AppCompatActivity {
                 super.onPageFinished(view, url);
                 carregar.setVisibility(View.INVISIBLE);
             }
+            
         });
     }
     public boolean onKeyDown(int keyCode, KeyEvent event){

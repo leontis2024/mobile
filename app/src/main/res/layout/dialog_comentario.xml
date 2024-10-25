@@ -18,6 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/input"
             android:ems="10"
@@ -25,11 +26,12 @@
             android:gravity="start|top"
             android:hint="Diga algo sobre a obra..."
             android:inputType="text|textMultiLine"
+            android:maxLength="100"
             android:textAlignment="textStart"
             android:textColorHint="@color/hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="15dp" />
+            app:layout_constraintTop_toBottomOf="@+id/erroComentario" />
 
         <RatingBar
             android:id="@+id/avaliacao"
@@ -37,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginTop="20dp"
+            android:stepSize="0.5"
             android:layout_marginEnd="5dp"
             android:foregroundGravity="left"
             android:scaleX="0.7"
@@ -66,5 +69,16 @@
             android:textSize="9sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/comentario" />
+
+        <TextView
+            android:id="@+id/erroComentario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/vermelho_erro"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

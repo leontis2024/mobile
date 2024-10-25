@@ -2,6 +2,8 @@ package com.aula.leontis.interfaces.usuario;
 
 import com.aula.leontis.models.usuario.UsuarioMuseu;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -18,4 +20,6 @@ public interface UsuarioMuseuInterface {
 
     @DELETE("/api/usuarioMuseu/deletar")
     Call<ResponseBody> deletarUsuarioMuseu(@Query("id_user") long idUsuario, @Query("id_museu") long idMuseu);
+    @GET("/api/usuarioMuseu/buscarPorUsuario")
+    Call<List<UsuarioMuseu>> buscarMuseusPorUsuario(@Query("usuario") long idUsuario);
 }

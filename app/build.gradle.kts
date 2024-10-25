@@ -14,6 +14,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -46,4 +47,9 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation ("com.squareup.picasso:picasso:2.8")
+    implementation("androidx.camera:camera-core:1.2.2")
+    implementation("androidx.camera:camera-camera2:1.2.2")
+    implementation("androidx.camera:camera-lifecycle:1.2.2")
+    implementation("androidx.camera:camera-view:1.2.2")
+    implementation("androidx.camera:camera-extensions:1.2.2")
 }
