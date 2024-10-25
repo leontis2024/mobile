@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.PerfilFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/btnAreaRestrita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:backgroundTint="#00FFFFFF"
+            android:clickable="true"
+            android:src="@drawable/area_restrita"
+            app:layout_constraintEnd_toStartOf="@+id/btnLogout"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="#00FFFFFF"
+            android:clickable="true"
+            android:src="@drawable/logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/fotoPerfil"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="35dp"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/perfil"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/perfil_ic" />
+
+        <TextView
+            android:id="@+id/apelido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/lexend_exa"
+            android:text="Nome"
+            android:textColor="@color/preto"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fotoPerfil" />
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/lexend_exa"
+            android:text="Biografia"
+            android:textColor="@color/preto"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/apelido" />
+
+        <TextView
+            android:id="@+id/biografia"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="45dp"
+            android:background="@drawable/input"
+            android:fontFamily="@font/inter"
+            android:text="Biografia"
+            android:textColor="@color/preto"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label" />
+
+        <ImageButton
+            android:id="@+id/btnDeletarConta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/deletar_conta"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/biografia" />
+
+        <TextView
+            android:id="@+id/erroUsuario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="100dp"
+            android:fontFamily="@font/inter"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/vermelho_erro"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnEditarPerfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="80dp"
+            android:background="#00FFFFFF"
+            android:src="@drawable/icon_editar_perfil"
+            app:layout_constraintBottom_toTopOf="@+id/biografia"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.737"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historicodeObras"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_margin="10dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nomeMuseu"
+            tools:listitem="@layout/item_obra" />
+
+        <TextView
+            android:id="@+id/nomeMuseu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_titulo"
+            android:fontFamily="@font/lexend_exa"
+            android:maxLines="3"
+            android:text="Histórico de obras escaneadas"
+            android:textAlignment="center"
+            android:textColor="@color/bege_claro"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnDeletarConta" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

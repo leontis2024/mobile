@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Leontis</string>
+    <string name="app_name_upper_case">LEONTIS</string>
+    <string-array name="sexo_array">
+        <item>Selecione seu gênero</item>
+        <item>Feminino</item>
+        <item>Masculino</item>
+        <item>Não binário</item>
+        <item>Outro</item>
+    </string-array>
+    <string name="api_key">7cdbdc19ca1845cc804ac3d06d4bc11c</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

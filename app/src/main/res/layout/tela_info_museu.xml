@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitys.TelaInfoMuseu">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/fotoMuseu"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/nomeMuseu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/shape_titulo"
+                android:fontFamily="@font/lexend_exa"
+                android:maxLines="3"
+                android:text="Nome do Museu"
+                android:textAlignment="center"
+                android:textColor="@color/bege_claro"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fotoMuseu" />
+
+            <TextView
+                android:id="@+id/descMuseu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/shape_texto"
+                android:fontFamily="@font/inter"
+                android:minLines="15"
+                android:text="TextView"
+                android:textColor="@color/preto"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nomeMuseu" />
+
+            <TextView
+                android:id="@+id/tituloRecyclerMuseu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_titulo"
+                android:fontFamily="@font/lexend_exa"
+                android:text="Obras relacionadas"
+                android:textAlignment="center"
+                android:textColor="@color/bege_claro"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descMuseu" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/obrasRelacionadasMuseu"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_margin="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tituloRecyclerMuseu"
+                tools:listitem="@layout/item_obra" />
+
+            <ImageButton
+                android:id="@+id/btnFiltrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:background="#00FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/set_voltar_branca" />
+
+            <ImageButton
+                android:id="@+id/btnSeguir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="#00FFFFFF"
+                app:layout_constraintBottom_toBottomOf="@id/fotoMuseu"
+                app:layout_constraintEnd_toEndOf="@id/fotoMuseu"
+                app:srcCompat="@drawable/btn_seguir" />
+
+            <TextView
+                android:id="@+id/erroMuseuInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="100dp"
+                android:fontFamily="@font/inter"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="@color/vermelho_erro"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnGuia"
+        style="@style/CustomFloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="90dp"
+        android:backgroundTint="@color/preto"
+        android:elevation="0dp"
+        android:src="@drawable/ic_guia"
+        app:rippleColor="@android:color/transparent"
+        app:tint="@null" />
+
+</FrameLayout>

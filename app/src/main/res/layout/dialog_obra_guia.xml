@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/bege_claro"
+        android:padding="25dp">
+
+        <TextView
+            android:id="@+id/descLocalizacao"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:lines="7"
+            android:maxLines="7"
+            android:minLines="3"
+            android:textColor="@color/preto"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnAcessarScanner"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/botao"
+            android:fontFamily="@font/lexend_exa"
+            android:text="Acessar scanner"
+            android:textColor="@color/branco"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imagemObra" />
+
+        <ImageView
+            android:id="@+id/imagemObra"
+            android:layout_width="145dp"
+            android:layout_height="170dp"
+            android:layout_marginEnd="20dp"
+            android:elevation="15dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toStartOf="@+id/descLocalizacao"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

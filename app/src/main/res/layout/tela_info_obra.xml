@@ -1,0 +1,377 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- O ScrollView permanece com o seu conteúdo -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".activitys.TelaInfoObra">
+
+            <ImageView
+                android:id="@+id/fotoObra"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/nomeObra"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/shape_titulo"
+                android:fontFamily="@font/lexend_exa"
+                android:maxLines="3"
+                android:text="Carregando..."
+                android:textAlignment="center"
+                android:textColor="@color/bege_claro"
+                android:textSize="19sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fotoObra" />
+
+            <TextView
+                android:id="@+id/descObra"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/shape_texto"
+                android:fontFamily="@font/inter"
+                android:minLines="10"
+                android:text="Carregando..."
+                android:textColor="@color/preto"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nomeObra" />
+
+
+            <ImageButton
+                android:id="@+id/btnFiltrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:background="#00FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/set_voltar_branca" />
+
+            <TextView
+                android:id="@+id/erroObraInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="100dp"
+                android:fontFamily="@font/inter"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="@color/vermelho_erro"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/avaliacaoObra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/shape_texto2"
+                android:fontFamily="@font/lexend_exa"
+                android:minLines="1"
+                android:text="0,0"
+                android:textColor="@color/bege_claro"
+                android:textSize="60sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgMuseu" />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="46dp"
+                android:layout_marginEnd="60dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/avaliacaoObra"
+                app:layout_constraintTop_toBottomOf="@+id/descMuseu">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ProgressBar
+                        android:id="@+id/cinco"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressTint="#8B0000" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ProgressBar
+                        android:id="@+id/quatro"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressTint="#8B0000" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ProgressBar
+                        android:id="@+id/tres"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressTint="#8B0000" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ProgressBar
+                        android:id="@+id/dois"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressTint="#8B0000" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ProgressBar
+                        android:id="@+id/um"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressTint="#8B0000" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgMuseu"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descArtista"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/descMuseu"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/shape_titulo"
+                android:fontFamily="@font/inter"
+                android:gravity="center_vertical"
+                android:lines="3"
+                android:maxLines="8"
+                android:text="Carregando..."
+                android:textColor="@color/bege_claro"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgMuseu"
+                app:layout_constraintTop_toBottomOf="@+id/descArtista" />
+
+            <ImageView
+                android:id="@+id/imgArtista"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descObra"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/descArtista"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/shape_titulo"
+                android:fontFamily="@font/inter"
+                android:gravity="center_vertical"
+                android:lines="3"
+                android:maxLines="8"
+                android:text="Carregando..."
+                android:textColor="@color/bege_claro"
+                app:layout_constraintEnd_toStartOf="@+id/imgArtista"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descObra" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/comentarios"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/avaliacaoObra"
+                tools:listitem="@layout/item_comentario" />
+
+            <TextView
+                android:id="@+id/urlText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnAcessarArtista"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1.5"
+                android:text="VER"
+                app:layout_constraintBottom_toBottomOf="@+id/imgArtista"
+                app:layout_constraintEnd_toEndOf="@+id/imgArtista" />
+
+            <LinearLayout
+                android:id="@+id/botoes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="@+id/descObra"
+                app:layout_constraintTop_toTopOf="@+id/descObra">
+
+                <Button
+                    android:id="@+id/btnAcessarGenero"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Gênero"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/idGenero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/idArtista"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/idMuseu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnAcessarMuseu"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="Ver"
+                app:layout_constraintBottom_toBottomOf="@+id/imgMuseu"
+                app:layout_constraintStart_toStartOf="@+id/imgMuseu" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <!-- FloatingActionButton ancorado no canto inferior direito -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnComentar"
+        style="@style/CustomFloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="90dp"
+        android:backgroundTint="@color/preto"
+        android:elevation="0dp"
+        android:src="@drawable/ic_comentar"
+        app:rippleColor="@android:color/transparent"
+        app:tint="@null" />
+
+</FrameLayout>
