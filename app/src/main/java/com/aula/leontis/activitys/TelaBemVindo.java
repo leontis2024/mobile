@@ -70,6 +70,7 @@ public class TelaBemVindo extends AppCompatActivity {
                     Intent feed = new Intent(TelaBemVindo.this, TelaLogin.class);
                     Geral.getInstance().setPrimeiroAcesso(true);
                     info.putBoolean("cadastro",true);
+                    info.putString("email",email);
                     feed.putExtras(info);
                     startActivity(feed);
                     finish();

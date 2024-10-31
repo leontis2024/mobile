@@ -603,7 +603,7 @@ public class MongoService {
         });
     }
 
-    public void buscarAvaliacaoPorIdUsuario( String usuarioId,Context context, List<Avaliacao> listaAvaliacoes) {
+    public void buscarAvaliacaoPorIdUsuario(String usuarioId,String idObra,Context context, List<Avaliacao> listaAvaliacoes,RedisService redisService) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -616,9 +616,27 @@ public class MongoService {
             @Override
             public void onResponse(Call<List<Avaliacao>> call, Response<List<Avaliacao>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
                     listaAvaliacoes.clear();
                     listaAvaliacoes.addAll(response.body());
+                    Handler esperar = new Handler();
+                    esperar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean jaAvaliou = false;
+                            for(Avaliacao a:listaAvaliacoes){
+                                if(a.getObraId()==Long.parseLong(idObra)){
+                                    jaAvaliou = true;
+                                }
+                            }
+                            if(!jaAvaliou){
+                                redisService.incrementarAvaliacaoObra(idObra);
+                            }
+
+                        }
+                    }, 2200);
+
+
+
 
 
                 }

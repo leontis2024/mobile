@@ -391,7 +391,7 @@ public class ObraService {
                     erro.setVisibility(View.INVISIBLE);
                     Obra obra = response.body();
                     idObra.setText(obra.getId().toString());
-                    mongoService.inserirHistorico(idUsuario,new Historico(Long.parseLong(obra.getId()),aux.dataAtualFormatada()),c);
+                 //   mongoService.inserirHistorico(idUsuario,new Historico(Long.parseLong(obra.getId()),aux.dataAtualFormatada()),c);
                     mongoService.selecionarStatusGuia(idUsuario,c,Long.parseLong(idGuia),null,nrOrdem);
 
                     Bundle bundle = new Bundle();

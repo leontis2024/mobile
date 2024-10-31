@@ -48,7 +48,7 @@ public class PerfilFragment extends Fragment {
     UsuarioService usuarioService = new UsuarioService();
     RedisService redisService = new RedisService();
     MetodosAux aux = new MetodosAux();
-    ImageButton btnAreaRestrita, btnLogout, btnDeletarConta,btnEditarPerfil;
+    ImageButton btnAreaRestrita, btnLogout,btnEditarPerfil;
     TextView nome,biografia,erro;
     MongoService mongoService = new MongoService();
     ImageView foto;
@@ -89,7 +89,6 @@ public class PerfilFragment extends Fragment {
         btnAreaRestrita = view.findViewById(R.id.btnAreaRestrita);
         btnEditarPerfil = view.findViewById(R.id.btnEditarPerfil);
         btnLogout = view.findViewById(R.id.btnLogout);
-        btnDeletarConta = view.findViewById(R.id.btnDeletarConta);
         rvHistorico = view.findViewById(R.id.historicodeObras);
         rvHistorico.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         nome = view.findViewById(R.id.apelido);
@@ -105,12 +104,7 @@ public class PerfilFragment extends Fragment {
             }
         });
 
-        btnDeletarConta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aux.abrirDialogConfirmacao(getContext(),"Deletar Conta?","Deseja realmente deletar sua conta? Você não poderá recupera-la depois",true,id);
-            }
-        });
+
         btnEditarPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,10 +139,11 @@ public class PerfilFragment extends Fragment {
     public void verificarUsuarioLogado(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if(auth.getCurrentUser() == null){
-            Intent feed = new Intent(getContext(), TelaLogin.class);
-            redisService.decrementarAtividadeUsuario();
-
-            startActivity(feed);
+            Bundle bundle = new Bundle();
+            Intent login = new Intent(getContext(), TelaLogin.class);
+            bundle.putBoolean("logout",true);
+            login.putExtras(bundle);
+            startActivity(login);
             getActivity().finish();
         }
     }

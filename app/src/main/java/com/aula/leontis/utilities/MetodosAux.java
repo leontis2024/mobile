@@ -62,7 +62,6 @@ import java.util.TimeZone;
 public class MetodosAux {
     RedisService redisService = new RedisService();
 
-
     public void abrirDialog(Context c, String texto, String mensagem) {
         Dialog dialog = new Dialog(c);
         dialog.setContentView(R.layout.caixa_mensagem);
@@ -141,7 +140,6 @@ public class MetodosAux {
                 if (deletar) {
                     abrirDialog(dialog.getContext(), "Tchau tchau 😭...", "É triste que você queira ir embora, espero que nos encontremos algum outro dia 🥺");
                     FirebaseAuth.getInstance().getCurrentUser().delete();
-                    redisService.decrementarAtividadeUsuario();
                     FirebaseAuth.getInstance().signOut();
                     FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -185,17 +183,20 @@ public class MetodosAux {
                             deletarUsuarioPorIdMongo(id, c);
                             deletarUsuarioPorId(id, c);
                         }
-                    }, 4000);
+                    }, 3000);
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            Bundle bundle = new Bundle();
                             Intent intent = new Intent(c, TelaLogin.class);
+                            bundle.putBoolean("deletado",true);
+                            intent.putExtras(bundle);
                             c.startActivity(intent);
                             ((Activity) c).finish();
                         }
-                    }, 7000);
+                    }, 6000);
                 }
             }
         });

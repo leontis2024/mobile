@@ -54,19 +54,20 @@ public class TelaLogin extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         boolean cadastroUsuario = false;
         boolean tokenExpirado = false;
+        boolean logout = false;
+        boolean deletado = false;
+        String emailCadastro = "";
 
         if(bundle != null) {
             cadastroUsuario = bundle.getBoolean("cadastro",false);
             tokenExpirado = bundle.getBoolean("tokenExpirado",false);
-            if(tokenExpirado==true){
+            logout = bundle.getBoolean("logout",false);
+            deletado = bundle.getBoolean("deletado",false);
+            if(tokenExpirado==true || logout==true || deletado==true) {
                 redisService.decrementarAtividadeUsuario();
             }
 
         }
-        if(!cadastroUsuario) {
-            verificarUsuarioLogado();
-        }
-
         entrar = findViewById(R.id.btn_entrar);
         email = findViewById(R.id.email_login);
         senha = findViewById(R.id.senha_login);
@@ -75,6 +76,13 @@ public class TelaLogin extends AppCompatActivity {
         cadastro = findViewById(R.id.cadastrar);
         erroGeral = findViewById(R.id.erro_geral);
         btnOlho= findViewById(R.id.verSenha);
+        if(!cadastroUsuario) {
+            email.setText("");
+            verificarUsuarioLogado();
+        }else{
+            emailCadastro = bundle.getString("email");
+            email.setText(emailCadastro);
+        }
         btnOlho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
