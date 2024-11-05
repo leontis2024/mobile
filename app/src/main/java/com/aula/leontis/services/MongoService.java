@@ -574,6 +574,52 @@ public class MongoService {
         });
     }
 
+    public void atualizarPremium(String idUsuario, String premium, Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlAPI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MongoInterface mongoInterface = retrofit.create(MongoInterface.class);
+        Call<ResponseBody> call = mongoInterface.atualizarPremium(Long.parseLong(idUsuario), Boolean.parseBoolean(premium));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String body = "";
+                if (response.isSuccessful()) {
+                    try {
+                        body = response.body().string();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Log.d("MONGO_API_RESPONSE_POST_PREMIUM", "Status guia do usuário inserido via API mongo: " + body);
+                } else {
+                    try {
+                        // Obter e exibir o corpo da resposta de erro
+                        String errorBody = response.errorBody().string();
+                        Log.e("MONGO_API_ERROR_POST_PREMIUM", "Erro ao adicionar possivel premium: " + response.code() + " - " + errorBody + " - " + response.message());
+                        aux.abrirDialogErro(context, "Erro ao adicionar possivel premium", "Não foi possível adicionar possivel premium. Erro: " + errorBody);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("MONGO_API_ERROR_POST_PREMIUM", "Erro ao processar o corpo da resposta de erro.");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e("MONGO_API_ERROR_POST", "Erro ao adicionar comentario: " + throwable.getMessage());
+                aux.abrirDialogErro(context, "Erro ao comentar", "Não foi possível comentar. Erro: " + throwable.getMessage());
+            }
+
+        });
+    }
+
+
+
+
+
     public void buscarComentariosPorIdUsuario( String usuarioId,Context context, List<Comentario> listaComentarios) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
@@ -603,7 +649,7 @@ public class MongoService {
         });
     }
 
-    public void buscarAvaliacaoPorIdUsuario( String usuarioId,Context context, List<Avaliacao> listaAvaliacoes) {
+    public void buscarAvaliacaoPorIdUsuario(String usuarioId,String idObra,Context context, List<Avaliacao> listaAvaliacoes,RedisService redisService) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(urlAPI)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -616,9 +662,27 @@ public class MongoService {
             @Override
             public void onResponse(Call<List<Avaliacao>> call, Response<List<Avaliacao>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
                     listaAvaliacoes.clear();
                     listaAvaliacoes.addAll(response.body());
+                    Handler esperar = new Handler();
+                    esperar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean jaAvaliou = false;
+                            for(Avaliacao a:listaAvaliacoes){
+                                if(a.getObraId()==Long.parseLong(idObra)){
+                                    jaAvaliou = true;
+                                }
+                            }
+                            if(!jaAvaliou){
+                                redisService.incrementarAvaliacaoObra(idObra);
+                            }
+
+                        }
+                    }, 2200);
+
+
+
 
 
                 }

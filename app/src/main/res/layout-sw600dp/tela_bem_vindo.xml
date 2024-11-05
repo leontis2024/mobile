@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bege_claro"
+    tools:context=".activitys.TelaBemVindo">
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="10dp"
+        android:text="Seja Bem-vindo(a) ao Leontis!"
+        android:textAlignment="center"
+        android:textColor="@color/preto"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/inter"
+        android:gravity="center_vertical"
+        android:padding="20sp"
+        android:text="Nosso aplicativo espera ajudá-lo a conhecer mais sobre a cultura artística de seu país e também a proporcionar a melhor experiência na hora de visitar museus.  Leontis, a arte na palma da sua mão!"
+        android:textAlignment="center"
+        android:textColor="@color/preto"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+        app:layout_constraintEnd_toEndOf="@+id/imageView4"
+        app:layout_constraintStart_toStartOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="@+id/imageView4" />
+
+    <Button
+        android:id="@+id/btn_finalizar_bem_vindo"
+        android:layout_width="160dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="90dp"
+        android:background="@drawable/botao"
+        android:fontFamily="@font/lexend_exa"
+        android:text="Finalizar"
+        android:textColor="@color/branco"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="30dp"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_finalizar_bem_vindo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        app:srcCompat="@drawable/moldura" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

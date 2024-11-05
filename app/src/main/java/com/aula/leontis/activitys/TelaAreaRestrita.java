@@ -34,7 +34,7 @@ public class TelaAreaRestrita extends AppCompatActivity {
         webView.getSettings().setSupportZoom(false);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
-        webView.loadUrl("https://arearestrita.onrender.com/");
+        webView.loadUrl("http://arearestritaleontis.s3.us-east-1.amazonaws.com/index.html");
         btVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
