@@ -106,6 +106,10 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="#00FFFFFF"
+                android:shadowColor="@color/preto"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="4"
                 app:layout_constraintBottom_toBottomOf="@id/fotoMuseu"
                 app:layout_constraintEnd_toEndOf="@id/fotoMuseu"
                 app:srcCompat="@drawable/btn_seguir" />

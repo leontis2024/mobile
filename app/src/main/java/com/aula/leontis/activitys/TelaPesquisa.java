@@ -51,7 +51,7 @@ public class TelaPesquisa extends AppCompatActivity {
         webView.getSettings().setSupportZoom(false);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
-        webView.loadUrl("http://ec2-34-200-118-26.compute-1.amazonaws.com:5000");
+        webView.loadUrl(Geral.getInstance().getApiModeloPremium());
         btVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,11 +71,10 @@ public class TelaPesquisa extends AppCompatActivity {
                                 String predicao = jsonObject.getString("predicao");
                                 if(terminou != null && predicao != null) {
                                     if (terminou.toLowerCase().equals("true")) {
-                                        if (predicao.toLowerCase().equals("true")) {
                                             FirebaseAuth auth = FirebaseAuth.getInstance();
                                             String email = auth.getCurrentUser().getEmail();
                                             selecionarIdUsuarioPorEmail(email, predicao);
-                                        }
+
 
                                     }
                                 }
@@ -89,14 +88,15 @@ public class TelaPesquisa extends AppCompatActivity {
                         }
                 );
 
-
+                carregar.setVisibility(View.VISIBLE);
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        carregar.setVisibility(View.INVISIBLE);
                         TelaPesquisa.this.finish();
                     }
-                },4500);
+                },3000);
 
             }
         });
