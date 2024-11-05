@@ -35,7 +35,7 @@
             android:minLines="2"
             android:text="Carregando..."
             android:textAlignment="center"
-            android:textColor="@color/bege_claro"
+            android:textColor="@color/branco"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/imgGuia"
             app:layout_constraintEnd_toEndOf="parent"

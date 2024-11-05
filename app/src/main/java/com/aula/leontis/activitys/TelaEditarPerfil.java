@@ -89,14 +89,6 @@ public class TelaEditarPerfil extends AppCompatActivity {
                 aux.abrirDialogConfirmacao(TelaEditarPerfil.this,"Deletar Conta?","Deseja realmente deletar sua conta? Você não poderá recupera-la depois",true,id);
             }
         });
-        btnRemoverFoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("urlImagem", Geral.getInstance().getUrlImagePadrao());
-                usuarioService.atualizarUsuario(id,map,erroUsuarioEditar,TelaEditarPerfil.this);
-            }
-        });
 
         telefone.addTextChangedListener(new TextWatcher() {
             private boolean isUpdating;
@@ -216,6 +208,27 @@ public class TelaEditarPerfil extends AppCompatActivity {
         btnFinalizar = findViewById(R.id.btnFinalizarEdicao);
         sexo = findViewById(R.id.sexo_editar);
         erroUsuarioEditar = findViewById(R.id.erroUsuarioEdit);
+        Bundle info = getIntent().getExtras();
+        if(info!=null) {
+            id = info.getString("id");
+            usuarioService.selecionarUsuarioPorId(id,this,apelido,biografia,fotoPerfil,nome,sobrenome,telefone,sexoTxt,dtNasc,erroUsuarioEditar);
+        }
+        btnRemoverFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("urlImagem", Geral.getInstance().getUrlImagePadrao());
+                usuarioService.atualizarUsuario(id,map,null,TelaEditarPerfil.this);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        usuarioService.selecionarUsuarioPorId(id,TelaEditarPerfil.this,apelido,biografia,fotoPerfil,nome,sobrenome,telefone,sexoTxt,dtNasc,erroUsuarioEditar);
+                    }
+                },1500);
+
+            }
+        });
 
 
         final Boolean[] generoValido = {false};
@@ -243,11 +256,7 @@ public class TelaEditarPerfil extends AppCompatActivity {
         });
 
 
-        Bundle info = getIntent().getExtras();
-        if(info!=null) {
-            id = info.getString("id");
-            usuarioService.selecionarUsuarioPorId(id,this,apelido,biografia,fotoPerfil,nome,sobrenome,telefone,sexoTxt,dtNasc,erroUsuarioEditar);
-        }
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

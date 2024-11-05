@@ -101,7 +101,7 @@ public class FeedFragment extends Fragment {
         btnMuseusSeguidos = view.findViewById(R.id.btnMuseusSeguidos);
         btnFecharPesquisa = view.findViewById(R.id.btnFecharPesquisa);
 
-            if(Geral.getInstance().isPrimeiroAcesso()) {
+          if(Geral.getInstance().isPrimeiroAcesso()) {
                 aux.abrirDialogPrimeiroAcesso(getContext(),"Seja bem-vindo!","Para ajudar a equipe do Leontis, por favor responda a nossa pesquisa!");
             }
 

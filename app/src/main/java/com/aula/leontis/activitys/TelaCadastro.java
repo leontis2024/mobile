@@ -170,6 +170,7 @@ public class TelaCadastro extends AppCompatActivity {
                         btnOlho1.setContentDescription("aberto");
                         btnOlho1.setImageResource(R.drawable.olhinho);
                         senha.setInputType(InputType.TYPE_CLASS_TEXT);
+                        senha.setSelection(senha.length());
                     }
                 }else{
 
@@ -177,6 +178,7 @@ public class TelaCadastro extends AppCompatActivity {
                         btnOlho1.setContentDescription("fechado");
                         btnOlho1.setImageResource(R.drawable.olhinho_fechado);
                         senha.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        senha.setSelection(senha.length());
                     }
                 }
             }
@@ -195,6 +197,7 @@ public class TelaCadastro extends AppCompatActivity {
                         btnOlho2.setContentDescription("aberto");
                         btnOlho2.setImageResource(R.drawable.olhinho);
                         senha2.setInputType(InputType.TYPE_CLASS_TEXT);
+                        senha2.setSelection(senha2.length());
                     }
                 }else{
 
@@ -202,6 +205,7 @@ public class TelaCadastro extends AppCompatActivity {
                         btnOlho2.setContentDescription("fechado");
                         btnOlho2.setImageResource(R.drawable.olhinho_fechado);
                         senha2.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        senha2.setSelection(senha2.length());
                     }
                 }
             }

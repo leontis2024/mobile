@@ -30,7 +30,6 @@ public interface MongoInterface {
     Call<ResponseBody> inserirHistorico(@Path("userId") long userId, @Body Historico historico);
     @PUT("/api/usuarios/{userId}/status-guia")
     Call<ResponseBody> inserirStatusGuia(@Path("userId") long userId, @Body StatusGuiaRequest statusGuia);
-
     @GET("/api/usuarios/comentarios/{obraId}")
     Call<List<ComentarioResponse>> buscarComentariosPorIdObra(@Path("obraId") long obraId);
     @GET("api/usuarios/{userId}/historicoObras")
@@ -41,5 +40,7 @@ public interface MongoInterface {
     Call<ResponseBody> buscarPorcentagem(@Query("obraId") long obraId, @Query("notaMinima") double notaMinima, @Query("notaMaxima") double notaMaxima);
     @GET("/api/usuarios/{usuarioId}/status-guia/{guiaId}")
     Call<StatusGuia> selecionarStatusGuia(@Path("guiaId") long guiaId, @Path("usuarioId") long usuarioId);
+    @PUT("/api/usuarios/{userId}/premium")
+    Call<ResponseBody> atualizarPremium(@Path("userId") long userId, @Query ("possivelPremium") boolean possivelPremium);
 }
 
