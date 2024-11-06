@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -88,38 +89,42 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
             listaGenerosInteresse = informacoes.getLongArray("generosInteressados");
         }
         btnContinuar.setBackgroundResource(R.drawable.botao);
-        btnContinuar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,"https://firebasestorage.googleapis.com/v0/b/leontisfotos.appspot.com/o/usuarios%2FusuarioDefault.png?alt=media&token=04ef6067-fef3-4a33-9065-8788b3b44f96");
-                usuarioService.inserirUsuario(usuario,TelaCadastroFotoPerfil.this,id);
+        btnContinuar.setContentDescription("ativo");
+        if(btnContinuar.getContentDescription().equals("ativo")) {
+            btnContinuar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Usuario usuario = new Usuario(nome, sobrenome, email, telefone, dtNasc, biografia, sexo, apelido, senha, "https://firebasestorage.googleapis.com/v0/b/leontisfotos.appspot.com/o/usuarios%2FusuarioDefault.png?alt=media&token=04ef6067-fef3-4a33-9065-8788b3b44f96");
+                    usuarioService.inserirUsuario(usuario, TelaCadastroFotoPerfil.this, id);
 
-                Handler esperarGenero = new Handler();
-                esperarGenero.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        usuarioGeneroService.inserirUsuarioGenero(TelaCadastroFotoPerfil.this,id,listaGenerosInteresse);
-                        UsuarioMongo usuarioMongo = new UsuarioMongo(id[0],nome,email);
-                        usuarioService.inserirUsuarioMongo(usuarioMongo,TelaCadastroFotoPerfil.this);
+                    Handler esperarGenero = new Handler();
+                    esperarGenero.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            usuarioGeneroService.inserirUsuarioGenero(TelaCadastroFotoPerfil.this, id, listaGenerosInteresse);
+                            UsuarioMongo usuarioMongo = new UsuarioMongo(id[0], nome, email);
+                            usuarioService.inserirUsuarioMongo(usuarioMongo, TelaCadastroFotoPerfil.this);
 
-                    }
-                },4000);
-                Bundle info = new Bundle();
-                info.putString("id", id[0]);
-                info.putString("email", email);
-                info.putString("senha", senha);
-                Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
-                telBemVindo.putExtras(info);
-                startActivity(telBemVindo);
-                cadastrarUsuarioFirebase(email, senha, nome);
-                finish();
-            }
-        });
+                        }
+                    }, 4000);
+                    Bundle info = new Bundle();
+                    info.putString("id", id[0]);
+                    info.putString("email", email);
+                    info.putString("senha", senha);
+                    Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
+                    telBemVindo.putExtras(info);
+                    startActivity(telBemVindo);
+                    cadastrarUsuarioFirebase(email, senha, nome);
+                    finish();
+                }
+            });
+        }
 
 
         //abrindo galeria
         btnAbrirGaleria.setOnClickListener(v -> {
             btnContinuar.setBackgroundResource(R.drawable.botao_inativo);
+            btnContinuar.setContentDescription("inativo");
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             resultLauncherGaleria.launch(intent);
         });
@@ -130,99 +135,107 @@ public class TelaCadastroFotoPerfil extends AppCompatActivity {
     private ActivityResultLauncher<Intent> resultLauncherGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                imagemUri = result.getData().getData();
-                if(imagemUri != null){
-                    btnAbrirGaleria.setVisibility(View.INVISIBLE);
-                    fotoPerfil.setVisibility(View.VISIBLE);
-                    //Glide para carregar a imagem no firebase
-                    Glide.with(this)
-                            .load(imagemUri)
-                            .into(new SimpleTarget<Drawable>() {
-                                @Override
-                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    // acessar o Drawable e convertê-lo em Bitmap
-                                    Bitmap bitmap = drawableToBitmap(resource);
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    imagemUri = result.getData().getData();
+                    if (imagemUri != null) {
+                        btnAbrirGaleria.setVisibility(View.INVISIBLE);
+                        fotoPerfil.setVisibility(View.VISIBLE);
+                        //Glide para carregar a imagem no firebase
+                        Glide.with(this)
+                                .load(imagemUri)
+                                .into(new SimpleTarget<Drawable>() {
+                                    @Override
+                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                        // acessar o Drawable e convertê-lo em Bitmap
+                                        Bitmap bitmap = drawableToBitmap(resource);
 
-                                    //inserindo usuario via api
-                                   Usuario usuario =new Usuario(nome, sobrenome, email, telefone, dtNasc,biografia, sexo, apelido, senha,null);
-                                   usuarioService.inserirUsuario(usuario,TelaCadastroFotoPerfil.this,id);
-                                   //falta cadastrar usuario genero
-                                    Handler esperarGenero = new Handler();
-                                    esperarGenero.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            usuarioGeneroService.inserirUsuarioGenero(TelaCadastroFotoPerfil.this,id,listaGenerosInteresse);
+                                        //inserindo usuario via api
+                                        Usuario usuario = new Usuario(nome, sobrenome, email, telefone, dtNasc, biografia, sexo, apelido, senha, null);
+                                        usuarioService.inserirUsuario(usuario, TelaCadastroFotoPerfil.this, id);
+                                        //falta cadastrar usuario genero
+                                        Handler esperarGenero = new Handler();
+                                        esperarGenero.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                usuarioGeneroService.inserirUsuarioGenero(TelaCadastroFotoPerfil.this, id, listaGenerosInteresse);
 
-                                        }
-                                    },4000);
-
-                                   Toast.makeText(TelaCadastroFotoPerfil.this, "Aguarde enquanto cadastramos seu usuário...", Toast.LENGTH_SHORT).show();
-                                   carregando.setVisibility(View.VISIBLE);
-
-                                    Handler esperar = new Handler();
-                                    esperar.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            UsuarioMongo usuarioMongo = new UsuarioMongo(id[0],nome,email);
-                                            usuarioService.inserirUsuarioMongo(usuarioMongo,TelaCadastroFotoPerfil.this);
-                                            if(!(id[0].equals(""))) {
-                                                // upload do Bitmap para o Firebase Storage retornando a url dela
-                                                dataBase.subirFoto(TelaCadastroFotoPerfil.this, bitmap, id[0],"usuarios","usuario").addOnSuccessListener(new OnSuccessListener<String>() {
-                                                    @Override
-                                                    public void onSuccess(String url) {
-                                                        // Aqui você pode usar a URL da imagem
-                                                        Log.d("URL", "URL da imagem: " + url);
-                                                        urlFoto = url;
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.e("URL", "Erro ao obter a URL da imagem", e);
-
-                                                    }
-                                                });
                                             }
-                                        }
-                                    }, 5000);
-                                }
-                            });
+                                        }, 4000);
 
-                    //Glide para carregar a imagem na tela
-                    Glide.with(this)
-                            .load(imagemUri)
-                            .circleCrop()
-                            .into(fotoPerfil);
-                    titulo.setText("Tudo pronto!");
-                    descricao.setText("Uh lá lá, bela foto");
+                                        Toast.makeText(TelaCadastroFotoPerfil.this, "Aguarde enquanto cadastramos seu usuário...", Toast.LENGTH_SHORT).show();
+                                        carregando.setVisibility(View.VISIBLE);
+                                        btnContinuar.setBackgroundResource(R.drawable.botao_inativo);
+                                        btnContinuar.setContentDescription("inativo");
+
+                                        Handler esperar = new Handler();
+                                        esperar.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                UsuarioMongo usuarioMongo = new UsuarioMongo(id[0], nome, email);
+                                                usuarioService.inserirUsuarioMongo(usuarioMongo, TelaCadastroFotoPerfil.this);
+                                                if (!(id[0].equals(""))) {
+                                                    // upload do Bitmap para o Firebase Storage retornando a url dela
+                                                    dataBase.subirFoto(TelaCadastroFotoPerfil.this, bitmap, id[0], "usuarios", "usuario").addOnSuccessListener(new OnSuccessListener<String>() {
+                                                        @Override
+                                                        public void onSuccess(String url) {
+                                                            // Aqui você pode usar a URL da imagem
+                                                            Log.d("URL", "URL da imagem: " + url);
+                                                            urlFoto = url;
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.e("URL", "Erro ao obter a URL da imagem", e);
+
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }, 5000);
+                                    }
+                                });
+
+                        //Glide para carregar a imagem na tela
+                        Glide.with(this)
+                                .load(imagemUri)
+                                .circleCrop()
+                                .into(fotoPerfil);
+                        titulo.setText("Tudo pronto!");
+                        descricao.setText("Uh lá lá, bela foto");
 
 
-                    Handler handler = new Handler();
+                        Handler handler = new Handler();
 
-                    //Esperando 10 segundos para abrir a tela de bem-vindo
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            carregando.setVisibility(View.GONE);
-                            btnContinuar.setBackgroundResource(R.drawable.botao);
+                        //Esperando 10 segundos para abrir a tela de bem-vindo
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                carregando.setVisibility(View.GONE);
+                                btnContinuar.setBackgroundResource(R.drawable.botao);
+                                btnContinuar.setContentDescription("ativo");
 
-                            btnContinuar.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Bundle info = new Bundle();
-                                    info.putString("id", id[0]);
-                                    info.putString("urlFoto", urlFoto);
-                                    info.putString("email", email);
-                                    info.putString("senha", senha);
-                                    Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
-                                    telBemVindo.putExtras(info);
-                                    startActivity(telBemVindo);
-                                    cadastrarUsuarioFirebase(email, senha, nome);
-                                    finish();
-                                }
-                            });
-                        }
-                    }, 10000);
+                                btnContinuar.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Bundle info = new Bundle();
+                                        info.putString("id", id[0]);
+                                        info.putString("urlFoto", urlFoto);
+                                        info.putString("email", email);
+                                        info.putString("senha", senha);
+                                        Intent telBemVindo = new Intent(TelaCadastroFotoPerfil.this, TelaBemVindo.class);
+                                        telBemVindo.putExtras(info);
+                                        startActivity(telBemVindo);
+                                        cadastrarUsuarioFirebase(email, senha, nome);
+                                        finish();
+                                    }
+                                });
+                            }
+                        }, 12000);
 
+                    }
+                }else if(result.getResultCode() == Activity.RESULT_CANCELED) {
+                     btnContinuar.setBackgroundResource(R.drawable.botao);
+                    btnContinuar.setContentDescription("ativo");
                 }
             });
 

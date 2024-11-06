@@ -237,23 +237,7 @@ public class TelaInfoObra extends AppCompatActivity {
                                     if(avaliacao.getRating()>0){
                                         mongoService.inserirAvaliacao(idUsuario,new Avaliacao(Long.parseLong(id),avaliacao.getRating(),aux.dataAtualFormatada()),TelaInfoObra.this);
                                         List<Avaliacao> avaliacoes = new ArrayList<>();
-                                        mongoService.buscarAvaliacaoPorIdUsuario(idUsuario,TelaInfoObra.this,avaliacoes);
-                                        Handler esperar = new Handler();
-                                        esperar.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                boolean jaAvaliou = false;
-                                                for(Avaliacao a:avaliacoes){
-                                                    if(a.getObraId()==Long.parseLong(id)){
-                                                        jaAvaliou = true;
-                                                    }
-                                                }
-                                                if(!jaAvaliou){
-                                                    redisService.incrementarAvaliacaoObra(id);
-                                                }
-
-                                            }
-                                        }, 2200);
+                                        mongoService.buscarAvaliacaoPorIdUsuario(idUsuario,id,TelaInfoObra.this,avaliacoes,redisService);
 
                                     }
                                 }

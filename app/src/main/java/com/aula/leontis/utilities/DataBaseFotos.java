@@ -26,10 +26,8 @@ public class DataBaseFotos {
                int proporcaoHeight = (int) (foto2.getHeight() * 0.5);
                int x = (foto2.getWidth() - proporcaoWidth) / 2;
                int y = (foto2.getHeight() - proporcaoHeight) / 2;
-               Bitmap teste = Bitmap.createBitmap(foto2, x, y, proporcaoWidth, proporcaoHeight);
-               foto = teste;
-
-
+               Bitmap fotoCortada = Bitmap.createBitmap(foto2, x, y, proporcaoWidth, proporcaoHeight);
+               foto = fotoCortada;
            }
         // Criação do TaskCompletionSource para retornar a URL
         TaskCompletionSource<String> tcs = new TaskCompletionSource<>();

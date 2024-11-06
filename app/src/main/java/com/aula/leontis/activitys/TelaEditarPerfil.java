@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,9 +33,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.DataBaseFotos;
+import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -56,11 +59,12 @@ import java.util.Map;
 public class TelaEditarPerfil extends AppCompatActivity {
     EditText apelido,biografia,nome,telefone,dtNasc,sobrenome;
     ImageView fotoPerfil;
-    ImageButton btnVoltar,btnFinalizar,btCalendar,btnMudarFotos;
+    ImageButton btnVoltar,btnFinalizar,btCalendar,btnMudarFotos, btnDeletarConta,btnRemoverFoto;
     DataBaseFotos dataBase = new DataBaseFotos();
     ProgressBar carregando;
     UsuarioService usuarioService = new UsuarioService();
     String id;
+    MetodosAux aux = new MetodosAux();
     Spinner sexo;
     TextView erroUsuarioEditar, sexoTxt, erroNome, erroSobrenome, erroApelido, erroBiografia, erroTelefone, erroDtNasc,erroSexo;
     String  urlFoto;
@@ -77,6 +81,14 @@ public class TelaEditarPerfil extends AppCompatActivity {
         nome = findViewById(R.id.nome_editar);
         sobrenome = findViewById(R.id.sobrenome_editar);
         telefone = findViewById(R.id.telefone_editar);
+        btnRemoverFoto = findViewById(R.id.btnRemoverFoto);
+        btnDeletarConta = findViewById(R.id.btnDeletarConta);
+        btnDeletarConta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aux.abrirDialogConfirmacao(TelaEditarPerfil.this,"Deletar Conta?","Deseja realmente deletar sua conta? Você não poderá recupera-la depois",true,id);
+            }
+        });
 
         telefone.addTextChangedListener(new TextWatcher() {
             private boolean isUpdating;
@@ -182,6 +194,7 @@ public class TelaEditarPerfil extends AppCompatActivity {
         carregando = findViewById(R.id.progressBar);
         btnMudarFotos = findViewById(R.id.btnMudarFotos);
         sexoTxt = findViewById(R.id.sexoTxt);
+        btnDeletarConta = findViewById(R.id.btnDeletarConta);
 
         erroApelido = findViewById(R.id.erro_apelido_editar);
         erroBiografia = findViewById(R.id.erro_biografia_editar);
@@ -195,6 +208,27 @@ public class TelaEditarPerfil extends AppCompatActivity {
         btnFinalizar = findViewById(R.id.btnFinalizarEdicao);
         sexo = findViewById(R.id.sexo_editar);
         erroUsuarioEditar = findViewById(R.id.erroUsuarioEdit);
+        Bundle info = getIntent().getExtras();
+        if(info!=null) {
+            id = info.getString("id");
+            usuarioService.selecionarUsuarioPorId(id,this,apelido,biografia,fotoPerfil,nome,sobrenome,telefone,sexoTxt,dtNasc,erroUsuarioEditar);
+        }
+        btnRemoverFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("urlImagem", Geral.getInstance().getUrlImagePadrao());
+                usuarioService.atualizarUsuario(id,map,null,TelaEditarPerfil.this);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        usuarioService.selecionarUsuarioPorId(id,TelaEditarPerfil.this,apelido,biografia,fotoPerfil,nome,sobrenome,telefone,sexoTxt,dtNasc,erroUsuarioEditar);
+                    }
+                },1500);
+
+            }
+        });
 
 
         final Boolean[] generoValido = {false};
@@ -222,11 +256,7 @@ public class TelaEditarPerfil extends AppCompatActivity {
         });
 
 
-        Bundle info = getIntent().getExtras();
-        if(info!=null) {
-            id = info.getString("id");
-            usuarioService.selecionarUsuarioPorId(id,this,apelido,biografia,fotoPerfil,nome,sobrenome,telefone,sexoTxt,dtNasc,erroUsuarioEditar);
-        }
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -450,64 +480,68 @@ public class TelaEditarPerfil extends AppCompatActivity {
     private ActivityResultLauncher<Intent> resultLauncherGaleria = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                imagemUri = result.getData().getData();
-                if(imagemUri != null){
-                    //Glide para carregar a imagem no firebase
-                    Glide.with(this)
-                            .load(imagemUri)
-                            .into(new SimpleTarget<Drawable>() {
-                                @Override
-                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    // acessar o Drawable e convertê-lo em Bitmap
-                                    Bitmap bitmap = drawableToBitmap(resource);
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    imagemUri = result.getData().getData();
+                    if (imagemUri != null) {
+                        //Glide para carregar a imagem no firebase
+                        Glide.with(this)
+                                .load(imagemUri)
+                                .into(new SimpleTarget<Drawable>() {
+                                    @Override
+                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                        // acessar o Drawable e convertê-lo em Bitmap
+                                        Bitmap bitmap = drawableToBitmap(resource);
 
-                                    //falta cadastrar usuario genero
+                                        //falta cadastrar usuario genero
 
-                                    Toast.makeText(TelaEditarPerfil.this, "Aguarde fazemos o upload da imagem...", Toast.LENGTH_SHORT).show();
-                                    carregando.setVisibility(View.VISIBLE);
+                                        Toast.makeText(TelaEditarPerfil.this, "Aguarde fazemos o upload da imagem...", Toast.LENGTH_SHORT).show();
+                                        carregando.setVisibility(View.VISIBLE);
 
-                                    Handler esperar = new Handler();
-                                    esperar.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if(!(id.equals(""))) {
-                                                // upload do Bitmap para o Firebase Storage retornando a url dela
-                                                dataBase.subirFoto(TelaEditarPerfil.this, bitmap, id,"usuarios","usuario").addOnSuccessListener(new OnSuccessListener<String>() {
-                                                    @Override
-                                                    public void onSuccess(String url) {
-                                                        // Aqui você pode usar a URL da imagem
-                                                        Log.d("URL", "URL da imagem: " + url);
-                                                        urlFoto = url;
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.e("URL", "Erro ao obter a URL da imagem", e);
+                                        Handler esperar = new Handler();
+                                        esperar.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (!(id.equals(""))) {
+                                                    // upload do Bitmap para o Firebase Storage retornando a url dela
+                                                    dataBase.subirFoto(TelaEditarPerfil.this, bitmap, id, "usuarios", "usuario").addOnSuccessListener(new OnSuccessListener<String>() {
+                                                        @Override
+                                                        public void onSuccess(String url) {
+                                                            // Aqui você pode usar a URL da imagem
+                                                            Log.d("URL", "URL da imagem: " + url);
+                                                            urlFoto = url;
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.e("URL", "Erro ao obter a URL da imagem", e);
 
-                                                    }
-                                                });
+                                                        }
+                                                    });
+                                                }
                                             }
-                                        }
-                                    }, 3000);
-                                }
-                            });
+                                        }, 3000);
+                                    }
+                                });
 
-                    //Glide para carregar a imagem na tela
-                    Glide.with(this)
-                            .load(imagemUri)
-                            .circleCrop()
-                            .into(fotoPerfil);
+                        //Glide para carregar a imagem na tela
+                        Glide.with(this)
+                                .load(imagemUri)
+                                .circleCrop()
+                                .into(fotoPerfil);
 
-                    Handler handler = new Handler();
+                        Handler handler = new Handler();
 
-                    //Esperando 10 segundos para abrir a tela de bem-vindo
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            carregando.setVisibility(View.GONE);
-                            atualizarUsuarioFirebase(imagemUri);
-                        }
-                    }, 5000);
+                        //Esperando 10 segundos para abrir a tela de bem-vindo
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                carregando.setVisibility(View.GONE);
+                                atualizarUsuarioFirebase(imagemUri);
+                            }
+                        }, 5000);
+
+                    }
+                }else if(result.getResultCode() == Activity.RESULT_CANCELED) {
 
                 }
             });
