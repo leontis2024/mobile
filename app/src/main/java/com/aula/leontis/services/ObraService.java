@@ -2,7 +2,6 @@ package com.aula.leontis.services;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -10,33 +9,24 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoObra;
+import com.aula.leontis.activities.TelaInfoObra;
 import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.adapters.AdapterObraFeed;
-import com.aula.leontis.interfaces.museu.MuseuInterface;
-import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.interfaces.obra.ObraInterface;
 import com.aula.leontis.models.historico.Historico;
-import com.aula.leontis.models.museu.Museu;
-import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

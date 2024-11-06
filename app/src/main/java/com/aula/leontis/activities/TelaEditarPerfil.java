@@ -1,4 +1,4 @@
-package com.aula.leontis.activitys;
+package com.aula.leontis.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -59,6 +59,7 @@ import java.util.Map;
 public class TelaEditarPerfil extends AppCompatActivity {
     EditText apelido,biografia,nome,telefone,dtNasc,sobrenome;
     ImageView fotoPerfil;
+    boolean valida=false;
     ImageButton btnVoltar,btnFinalizar,btCalendar,btnMudarFotos, btnDeletarConta,btnRemoverFoto;
     DataBaseFotos dataBase = new DataBaseFotos();
     ProgressBar carregando;
@@ -348,10 +349,79 @@ public class TelaEditarPerfil extends AppCompatActivity {
                     semErroInput(erroTelefone,telefone);
                 }
 
-                if(dtNasc.getText().toString().equals("")){
-                    erroInput("Preencha o campo data de nascimento",erroDtNasc,dtNasc);
-                }else{
-                    semErroInput(erroDtNasc,dtNasc);
+                String dataNascimento = dtNasc.getText().toString();
+                if (dataNascimento.equals("")) {
+                    erroInput("Digite sua data de nascimento", erroDtNasc, dtNasc);
+                } else {
+                    try {
+                        // Extrair o dia, mês e ano da string
+                        String[] partes = dataNascimento.split("/");
+                        if (partes.length != 3) {
+                            erroInput("Formato de data inválido. Use dd/mm/aaaa", erroDtNasc, dtNasc);
+                            valida = false;
+                            return;
+                        }
+
+                        int diaNascimento = Integer.parseInt(partes[0]);
+                        int mesNascimento = Integer.parseInt(partes[1]);
+                        int anoNascimento = Integer.parseInt(partes[2]);
+
+                        // Obter o ano atual
+                        Calendar calendar = Calendar.getInstance();
+                        int anoAtual = calendar.get(Calendar.YEAR);
+
+                        // Calcular a data mínima de nascimento (10 anos atrás)
+                        int anoMinimo = anoAtual - 10;  // Para garantir que a pessoa tenha pelo menos 10 anos
+                        int anoMaximo = anoAtual - 100; // Para garantir que a pessoa não tenha mais de 100 anos
+
+                        // Verificar se o ano de nascimento é válido
+                        if (anoNascimento > anoAtual) {
+                            erroInput("Digite uma data de nascimento válida", erroDtNasc, dtNasc);
+                            valida = false;
+                        } else if (anoNascimento < anoMaximo) {
+                            erroInput("Você deve ter no máximo 100 anos", erroDtNasc, dtNasc);
+                            valida = false;
+                        } else if (anoNascimento > anoMinimo) {
+                            erroInput("Você deve ter no mínimo 10 anos", erroDtNasc, dtNasc);
+                            valida = false;
+                        }
+                        else {
+                            // Verificar se o mês é válido
+                            if (mesNascimento < 1 || mesNascimento > 12) {
+                                erroInput("Mês inválido. Deve ser entre 01 e 12", erroDtNasc, dtNasc);
+                                valida = false;
+                            } else {
+                                // Verificar se o dia é válido para o mês e ano dados
+                                boolean diaValido = false;
+                                if (mesNascimento == 2) {
+                                    // Verifica se é um ano bissexto
+                                    if ((anoNascimento % 4 == 0 && anoNascimento % 100 != 0) || (anoNascimento % 400 == 0)) {
+                                        diaValido = diaNascimento >= 1 && diaNascimento <= 29; // Fevereiro bissexto
+                                    } else {
+                                        diaValido = diaNascimento >= 1 && diaNascimento <= 28; // Fevereiro normal
+                                    }
+                                } else if (mesNascimento == 4 || mesNascimento == 6 || mesNascimento == 9 || mesNascimento == 11) {
+                                    diaValido = diaNascimento >= 1 && diaNascimento <= 30; // Meses com 30 dias
+                                } else {
+                                    diaValido = diaNascimento >= 1 && diaNascimento <= 31; // Meses com 31 dias
+                                }
+
+                                if (!diaValido) {
+                                    erroInput("Dia inválido para o mês indicado", erroDtNasc, dtNasc);
+                                    valida = false;
+                                } else {
+                                    semErroInput(erroDtNasc, dtNasc);
+                                    valida = true;
+                                }
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        erroInput("Formato de data inválido", erroDtNasc, dtNasc);
+                        valida = false;
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        erroInput("Formato de data inválido. Use dd/mm/aaaa", erroDtNasc, dtNasc);
+                        valida = false;
+                    }
                 }
 
                 if(informacoesValidas()){
@@ -419,7 +489,7 @@ public class TelaEditarPerfil extends AppCompatActivity {
         boolean nomeValido = true;
         boolean sobrenomeValido = true;
         boolean telefoneValido = true;
-        boolean dtNascValido = true;
+        boolean dtNascValido = valida;
         boolean sexoValido = true;
 
         if(nome.getBackground().equals(R.drawable.input_erro)){

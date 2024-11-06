@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.aula.leontis.Geral;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoGenero;
+import com.aula.leontis.activities.TelaInfoGenero;
 import com.aula.leontis.models.genero.GeneroCompleto;
 import com.bumptech.glide.Glide;
 

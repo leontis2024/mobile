@@ -9,7 +9,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.aula.leontis.activitys.TelaLogin;
+import com.aula.leontis.activities.TelaLogin;
 import com.aula.leontis.interfaces.AuthInterface;
 import com.aula.leontis.services.RedisService;
 import com.aula.leontis.utilities.MetodosAux;

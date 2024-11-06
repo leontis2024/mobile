@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.Geral;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaGuias;
-import com.aula.leontis.activitys.TelaInfoGuia;
+import com.aula.leontis.activities.TelaInfoGuia;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.guia.Guia;
 import com.aula.leontis.services.ApiService;

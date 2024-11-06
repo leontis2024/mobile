@@ -1,4 +1,4 @@
-package com.aula.leontis.activitys;
+package com.aula.leontis.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -18,9 +18,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.aula.leontis.R;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import java.util.Calendar;
 

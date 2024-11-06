@@ -1,7 +1,6 @@
-package com.aula.leontis.activitys;
+package com.aula.leontis.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
