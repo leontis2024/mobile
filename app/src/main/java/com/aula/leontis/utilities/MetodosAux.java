@@ -5,14 +5,10 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.os.Handler;
@@ -21,22 +17,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.aula.leontis.Geral;
 
 import com.aula.leontis.NotificationReceiver;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaLogin;
-import com.aula.leontis.activitys.TelaPesquisa;
+import com.aula.leontis.activities.TelaLogin;
+import com.aula.leontis.activities.TelaPesquisa;
 import com.aula.leontis.interfaces.mongo.MongoInterface;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.avaliacao.Avaliacao;
 import com.aula.leontis.models.comentario.Comentario;
 import com.aula.leontis.services.ApiService;
-import com.aula.leontis.services.MongoService;
 import com.aula.leontis.services.RedisService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.TimeZone;
 public class MetodosAux {
     RedisService redisService = new RedisService();

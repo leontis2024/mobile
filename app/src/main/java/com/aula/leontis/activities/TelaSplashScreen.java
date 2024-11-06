@@ -1,4 +1,4 @@
-package com.aula.leontis.activitys;
+package com.aula.leontis.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 

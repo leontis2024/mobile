@@ -10,8 +10,7 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoObra;
+import com.aula.leontis.activities.TelaInfoObra;
 
 import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ObraService;

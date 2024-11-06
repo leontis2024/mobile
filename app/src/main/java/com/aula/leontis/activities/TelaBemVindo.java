@@ -1,37 +1,18 @@
-package com.aula.leontis.activitys;
+package com.aula.leontis.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import com.aula.leontis.Geral;
 import com.aula.leontis.R;
-import com.aula.leontis.TokenManager;
-import com.aula.leontis.interfaces.AuthInterface;
-import com.aula.leontis.models.auth.AuthResponse;
-import com.aula.leontis.models.auth.LoginRequest;
-import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.UsuarioService;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelaBemVindo extends AppCompatActivity {
     UsuarioService usuarioService = new UsuarioService();

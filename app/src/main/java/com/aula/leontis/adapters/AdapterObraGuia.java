@@ -1,16 +1,9 @@
 package com.aula.leontis.adapters;
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaScanner;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.guia.ObraGuia;
 import com.aula.leontis.services.ApiService;

@@ -11,17 +11,11 @@ import androidx.core.content.ContextCompat;
 
 import com.aula.leontis.Geral;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaScanner;
 import com.aula.leontis.interfaces.ModeloScannerInterface;
-import com.aula.leontis.interfaces.mongo.MongoInterface;
-import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.modelo.ModeloRequest;
 import com.aula.leontis.models.modelo.ModeloResponse;
-import com.bumptech.glide.Glide;
 
 
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
