@@ -2,21 +2,10 @@ package com.aula.leontis.fragments;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.app.Dialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.os.Bundle;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,13 +20,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.aula.leontis.Geral;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaPrincipal;
-import com.aula.leontis.activitys.TelaScanner;
-import com.aula.leontis.adapters.AdapterGenero;
+import com.aula.leontis.activities.TelaScanner;
 import com.aula.leontis.adapters.AdapterGeneroFiltro;
 import com.aula.leontis.fragments.feed.ForYou;
 import com.aula.leontis.fragments.feed.MuseusSeguidos;
@@ -52,7 +38,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

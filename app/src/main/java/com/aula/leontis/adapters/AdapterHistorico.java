@@ -6,18 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoObra;
-import com.aula.leontis.models.comentario.ComentarioResponse;
+import com.aula.leontis.activities.TelaInfoObra;
 import com.aula.leontis.models.historico.Historico;
-import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ObraService;
-import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.MetodosAux;
 
 import java.util.List;

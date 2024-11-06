@@ -1,4 +1,4 @@
-package com.aula.leontis.activitys;
+package com.aula.leontis.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;

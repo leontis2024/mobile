@@ -1,4 +1,4 @@
-package com.aula.leontis.activitys;
+package com.aula.leontis.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,11 +19,8 @@ import com.aula.leontis.Geral;
 import com.aula.leontis.R;
 import com.aula.leontis.TokenManager;
 import com.aula.leontis.interfaces.AuthInterface;
-import com.aula.leontis.models.auth.AuthResponse;
 import com.aula.leontis.models.auth.LoginRequest;
-import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.RedisService;
-import com.aula.leontis.utilities.MetodosAux;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

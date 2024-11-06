@@ -15,21 +15,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aula.leontis.Geral;
 import com.aula.leontis.TokenManager;
-import com.aula.leontis.activitys.TelaAreaRestrita;
-import com.aula.leontis.activitys.TelaEditarPerfil;
+import com.aula.leontis.activities.TelaAreaRestrita;
+import com.aula.leontis.activities.TelaEditarPerfil;
 import com.aula.leontis.adapters.AdapterHistorico;
-import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.models.historico.Historico;
-import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.MongoService;
 import com.aula.leontis.services.RedisService;
 import com.aula.leontis.services.UsuarioService;
 import com.aula.leontis.utilities.MetodosAux;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaLogin;
+import com.aula.leontis.activities.TelaLogin;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.google.firebase.auth.FirebaseAuth;
 

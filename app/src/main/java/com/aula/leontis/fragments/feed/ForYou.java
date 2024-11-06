@@ -3,12 +3,9 @@ package com.aula.leontis.fragments.feed;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoGenero;
-import com.aula.leontis.adapters.AdapterGeneroCompleto;
 
 import com.aula.leontis.adapters.AdapterObraFeed;
 import com.aula.leontis.interfaces.usuario.UsuarioInterface;
-import com.aula.leontis.models.genero.GeneroCompleto;
 import com.aula.leontis.models.obra.Obra;
-import com.aula.leontis.models.usuario.UsuarioGenero;
 import com.aula.leontis.services.ApiService;
 import com.aula.leontis.services.ObraService;
 import com.aula.leontis.services.UsuarioGeneroService;

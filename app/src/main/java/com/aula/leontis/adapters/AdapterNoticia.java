@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoNoticia;
+import com.aula.leontis.activities.TelaInfoNoticia;
 import com.aula.leontis.models.noticia.NewsHeadlines;
 import com.squareup.picasso.Picasso;
 

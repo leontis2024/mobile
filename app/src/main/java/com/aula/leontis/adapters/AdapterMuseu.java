@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.Geral;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoMuseu;
+import com.aula.leontis.activities.TelaInfoMuseu;
 import com.aula.leontis.models.museu.Museu;
 import com.aula.leontis.services.DiaFuncionamentoService;
 import com.aula.leontis.services.EnderecoMuseuService;

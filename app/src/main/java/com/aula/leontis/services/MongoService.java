@@ -20,33 +20,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.leontis.Geral;
 import com.aula.leontis.R;
-import com.aula.leontis.activitys.TelaInfoObra;
-import com.aula.leontis.activitys.TelaScanner;
+import com.aula.leontis.activities.TelaScanner;
 import com.aula.leontis.adapters.AdapterComentario;
-import com.aula.leontis.adapters.AdapterGenero;
 import com.aula.leontis.adapters.AdapterHistorico;
-import com.aula.leontis.adapters.AdapterObra;
 import com.aula.leontis.adapters.AdapterObraGuia;
 import com.aula.leontis.interfaces.mongo.MongoInterface;
-import com.aula.leontis.interfaces.mongo.MongoInterface;
-import com.aula.leontis.interfaces.usuario.UsuarioInterface;
 import com.aula.leontis.models.avaliacao.Avaliacao;
 import com.aula.leontis.models.comentario.Comentario;
 import com.aula.leontis.models.comentario.ComentarioResponse;
-import com.aula.leontis.models.genero.Genero;
 import com.aula.leontis.models.guia.ObraGuia;
 import com.aula.leontis.models.guia.StatusGuia;
 import com.aula.leontis.models.guia.StatusGuiaRequest;
 import com.aula.leontis.models.historico.Historico;
-import com.aula.leontis.models.obra.Obra;
 import com.aula.leontis.utilities.MetodosAux;
-import com.bumptech.glide.Glide;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
